@@ -1,9 +1,10 @@
-﻿using Flex.UiWpfFramework.Mvvm;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Netify;
 
 namespace Util;
 
-public class SmartSDRNetwork : ObservableObject, INetworkObserver
+public class SmartSDRNetwork : INotifyPropertyChanged, INetworkObserver
 {
     private bool _isInternetAvailable;
     private readonly NetworkStatusNotifier _networkStatusNotifier = new();
@@ -26,12 +27,19 @@ public class SmartSDRNetwork : ObservableObject, INetworkObserver
             }
 
             _isInternetAvailable = value;
-            RaisePropertyChanged(nameof(IsInternetAvailable));
+            OnPropertyChanged();
         }
     }
 
     public void ConnectivityChanged(ConnectivityStatus status)
     {
         IsInternetAvailable = status == ConnectivityStatus.Connected;
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

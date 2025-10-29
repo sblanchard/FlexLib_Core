@@ -7,9 +7,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+#if NET462 || NET8_0_OR_GREATER_WINDOWS
 using System.Windows;
+#endif
 
 namespace Flex.Util;
+
+#if !(NET462 || NET8_0_OR_GREATER_WINDOWS)
+// Simple Point struct for non-Windows builds
+public struct Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+    public Point(int x, int y) { X = x; Y = y; }
+}
+#endif
 
 public class DisplayMode
 {
@@ -252,7 +264,7 @@ public class DisplayMode
     public int Width => _mode.dmPelsWidth;
     public int Height => _mode.dmPelsHeight;
     public string DeviceName => _mode.dmDeviceName;
-    public Point Position => new (_mode.dmPosition.x, _mode.dmPosition.y);
+    public Point Position => new ((int)_mode.dmPosition.x, (int)_mode.dmPosition.y);
 
     [DllImport("user32.dll", CharSet = CharSet.Ansi)]
     private static extern int EnumDisplaySettings(
