@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "ranTNC3TNYs=",
+  "success": true,
+  "projectFilePath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\UiWpfFramework\\UiWpfFramework.csproj",
+  "expectedPackageFiles": [
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net462\\1.0.3\\microsoft.netframework.referenceassemblies.net462.1.0.3.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\qrcoder\\1.6.0\\qrcoder.1.6.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\qrcoder.xaml\\1.6.0\\qrcoder.xaml.1.6.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.collections.immutable\\9.0.0\\system.collections.immutable.9.0.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.21\\microsoft.aspnetcore.app.ref.8.0.21.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.21\\microsoft.netcore.app.ref.8.0.21.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.21\\microsoft.windowsdesktop.app.ref.8.0.21.nupkg.sha512"
+  ],
+  "logs": []
+}

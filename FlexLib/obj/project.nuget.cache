@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "dgSpecHash": "OfeB2/n7Hbk=",
+  "success": true,
+  "projectFilePath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\FlexLib\\FlexLib.csproj",
+  "expectedPackageFiles": [
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\dotnetzip\\1.16.0\\dotnetzip.1.16.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.1\\microsoft.netcore.platforms.3.1.1.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\netify\\1.1.1\\netify.1.1.1.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex\\5.1.2\\nito.asyncex.5.1.2.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.context\\5.1.2\\nito.asyncex.context.5.1.2.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.coordination\\5.1.2\\nito.asyncex.coordination.5.1.2.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.interop.waithandles\\5.1.2\\nito.asyncex.interop.waithandles.5.1.2.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.oop\\5.1.2\\nito.asyncex.oop.5.1.2.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.tasks\\5.1.2\\nito.asyncex.tasks.5.1.2.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.cancellation\\1.1.2\\nito.cancellation.1.1.2.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.collections.deque\\1.1.1\\nito.collections.deque.1.1.1.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.disposables\\2.2.1\\nito.disposables.2.2.1.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\restsharp\\112.1.0\\restsharp.112.1.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.collections.immutable\\9.0.0\\system.collections.immutable.9.0.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.1.0\\system.runtime.compilerservices.unsafe.6.1.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.security.permissions\\4.7.0\\system.security.permissions.4.7.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.text.encoding.codepages\\4.7.1\\system.text.encoding.codepages.4.7.1.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.text.json\\9.0.0\\system.text.json.9.0.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}

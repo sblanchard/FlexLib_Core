@@ -1,0 +1,8 @@
+is_global = true
+build_property.RootNamespace = Flex.UiWpfFramework
+build_property.ProjectDir = D:\DEV\FlexPilot\lib\FlexLib_Core\UiWpfFramework\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 
+build_property.EnableCodeStyleSeverity = 
