@@ -266,8 +266,8 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
-        "microsoft.netframework.referenceassemblies.nuspec"
+        "Microsoft.NETFramework.ReferenceAssemblies.nuspec",
+        "microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512"
       ]
     },
     "Microsoft.NETFramework.ReferenceAssemblies.net462/1.0.3": {
@@ -277,6 +277,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Microsoft.NETFramework.ReferenceAssemblies.net462.nuspec",
         "build/.NETFramework/v4.6.2/Accessibility.dll",
         "build/.NETFramework/v4.6.2/Accessibility.xml",
         "build/.NETFramework/v4.6.2/CustomMarshalers.dll",
@@ -593,8 +594,7 @@
         "build/.NETFramework/v4.6.2/sysglobl.dll",
         "build/.NETFramework/v4.6.2/sysglobl.xml",
         "build/Microsoft.NETFramework.ReferenceAssemblies.net462.targets",
-        "microsoft.netframework.referenceassemblies.net462.1.0.3.nupkg.sha512",
-        "microsoft.netframework.referenceassemblies.net462.nuspec"
+        "microsoft.netframework.referenceassemblies.net462.1.0.3.nupkg.sha512"
       ]
     },
     "Microsoft.Win32.SystemEvents/6.0.0": {
