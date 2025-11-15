@@ -31,7 +31,7 @@ using System.Threading;     // for AutoResetEvent
 using Flex.Smoothlake.Vita;
 using Flex.Smoothlake.FlexLib.Mvvm;
 using Flex.Util;
-using Ionic.Zip;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Timers;
@@ -11229,16 +11229,17 @@ namespace Flex.Smoothlake.FlexLib
                      * able to pass in whether the Memories export is passed */
 
                     memories_file = $"{path_list[1]}\\SSDR_Memories_{timestamp_string}_v{version}.csv";
-                    using (FileStream memories_stream = File.Create(memories_file))
+                    using (ZipArchive zip = ZipFile.OpenRead(config_file))
                     {
-                        using (ZipFile zip = ZipFile.Read(config_file))
+                        ZipArchiveEntry entry = zip.GetEntry("memories.csv");
+                        if (entry != null)
                         {
-                            ZipEntry entry = zip["memories.csv"];
-                            if (entry != null)
-                                entry.Extract(memories_stream);
+                            using (FileStream memories_stream = File.Create(memories_file))
+                            using (Stream entryStream = entry.Open())
+                            {
+                                entryStream.CopyTo(memories_stream);
+                            }
                         }
-
-                        memories_stream.Close();
                     }
                 }
 
