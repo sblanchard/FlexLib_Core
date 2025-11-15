@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "MvT38+UpAQg=",
+  "dgSpecHash": "O7CJ8k8k6O8=",
   "success": true,
   "projectFilePath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Vita\\Vita.csproj",
   "expectedPackageFiles": [
@@ -22,7 +22,6 @@
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\qrcoder.xaml\\1.6.0\\qrcoder.xaml.1.6.0.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\restsharp\\112.1.0\\restsharp.112.1.0.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.collections.immutable\\1.7.1\\system.collections.immutable.1.7.1.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.collections.immutable\\9.0.0\\system.collections.immutable.9.0.0.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.io.pipelines\\9.0.0\\system.io.pipelines.9.0.0.nupkg.sha512",
@@ -33,9 +32,9 @@
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.text.json\\9.0.0\\system.text.json.9.0.0.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.21\\microsoft.aspnetcore.app.ref.8.0.21.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.21\\microsoft.netcore.app.ref.8.0.21.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.21\\microsoft.windowsdesktop.app.ref.8.0.21.nupkg.sha512"
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.22\\microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.22\\microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.22\\microsoft.windowsdesktop.app.ref.8.0.22.nupkg.sha512"
   ],
   "logs": []
 }
