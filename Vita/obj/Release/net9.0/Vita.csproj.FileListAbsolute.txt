@@ -1,0 +1,16 @@
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\bin\Release\net9.0\Vita.deps.json
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\bin\Release\net9.0\Vita.dll
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\bin\Release\net9.0\Vita.pdb
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\bin\Release\net9.0\Util.dll
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\bin\Release\net9.0\Util.pdb
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.csproj.AssemblyReference.cache
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.GeneratedMSBuildEditorConfig.editorconfig
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.AssemblyInfoInputs.cache
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.AssemblyInfo.cs
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.csproj.CoreCompileInputs.cache
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.sourcelink.json
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.csproj.Up2Date
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.dll
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\refint\Vita.dll
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\Vita.pdb
+D:\DEV\FlexPilot\lib\FlexLib_Core\Vita\obj\Release\net9.0\ref\Vita.dll
