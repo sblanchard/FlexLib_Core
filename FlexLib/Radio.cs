@@ -293,6 +293,12 @@ namespace Flex.Smoothlake.FlexLib
 
         private CWX _cwx;
 
+        private DVK _dvk;
+        public DVK DVK
+        {
+            get { return _dvk; }
+        }
+
         private List<UsbCable> _usbCables;
         public List<UsbCable> UsbCables
         {
@@ -2649,6 +2655,12 @@ namespace Flex.Smoothlake.FlexLib
                     if (_cwx == null)
                         _cwx = new CWX(this);
                     _cwx.StatusUpdate(tokens[1].Substring(4)); // "cwx "
+                    break;
+
+                case "dvk":
+                    if (_dvk == null)
+                        _dvk = new DVK(this);
+                    _dvk.ParseStatus(tokens[1].Substring(4)); // "dvk "
                     break;
 
                 case "display":
