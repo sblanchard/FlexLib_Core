@@ -100,8 +100,7 @@ namespace Flex.Smoothlake.Vita
         /// Begin an asynchronous receive
         /// </summary>
         private void StartReceive()
-        {
-            //Console.WriteLine("VitaSocket::StartReceive()");
+        { 
             try
             {
                 byte[] buf = new byte[VitaFlex.MAX_VITA_PACKET_SIZE];
