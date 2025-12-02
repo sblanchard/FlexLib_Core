@@ -12,7 +12,8 @@
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TargetFramework>net10.0</TargetFramework>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- Only enable Windows targeting when building on Windows -->
+    <EnableWindowsTargeting Condition="$([MSBuild]::IsOSPlatform('Windows'))">true</EnableWindowsTargeting>
     <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU;x86;x64;arm64</Platforms>
   </PropertyGroup>
@@ -36,6 +37,14 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
+  <!-- Exclude Windows-specific files on non-Windows platforms -->
+  <ItemGroup Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
+    <Compile Remove="win32.cs" />
+    <Compile Remove="hiperftimer.cs" />
+    <Compile Remove="AudioMixerHelper.cs" />
+    <Compile Remove="WindowHelper.cs" />
+    <Compile Remove="Display.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Netify" Version="1.1.1" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
