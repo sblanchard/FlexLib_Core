@@ -40,8 +40,11 @@
     <ProjectReference Include="..\Vita\Vita.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="9.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
+    <!-- NU1510: Package is used in API.cs, Radio.cs, ModelInfo.cs but pruning falsely flags it -->
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.0">
+      <NoWarn>NU1510</NoWarn>
+    </PackageReference>
+    <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\6000-Cutout.png" />

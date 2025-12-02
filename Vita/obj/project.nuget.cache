@@ -1,13 +1,9 @@
 {
   "version": 2,
-  "dgSpecHash": "O7CJ8k8k6O8=",
+  "dgSpecHash": "KygQQoeqo5g=",
   "success": true,
   "projectFilePath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Vita\\Vita.csproj",
   "expectedPackageFiles": [
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\9.0.0\\microsoft.bcl.asyncinterfaces.9.0.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net462\\1.0.3\\microsoft.netframework.referenceassemblies.net462.1.0.3.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\netify\\1.1.1\\netify.1.1.1.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex\\5.1.2\\nito.asyncex.5.1.2.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.context\\5.1.2\\nito.asyncex.context.5.1.2.nupkg.sha512",
@@ -18,23 +14,8 @@
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.cancellation\\1.1.2\\nito.cancellation.1.1.2.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.collections.deque\\1.1.1\\nito.collections.deque.1.1.1.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.disposables\\2.2.1\\nito.disposables.2.2.1.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\qrcoder\\1.6.0\\qrcoder.1.6.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\qrcoder.xaml\\1.6.0\\qrcoder.xaml.1.6.0.nupkg.sha512",
     "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\restsharp\\112.1.0\\restsharp.112.1.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.collections.immutable\\9.0.0\\system.collections.immutable.9.0.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.io.pipelines\\9.0.0\\system.io.pipelines.9.0.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.1.0\\system.runtime.compilerservices.unsafe.6.1.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.text.encodings.web\\9.0.0\\system.text.encodings.web.9.0.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.text.json\\9.0.0\\system.text.json.9.0.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.22\\microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.22\\microsoft.netcore.app.ref.8.0.22.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.22\\microsoft.windowsdesktop.app.ref.8.0.22.nupkg.sha512"
+    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.valuetuple\\4.6.1\\system.valuetuple.4.6.1.nupkg.sha512"
   ],
   "logs": []
 }

@@ -9,7 +9,7 @@
     <Version>0.0.0.0</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TargetFrameworks>net462;net8.0-windows;net10.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <LangVersion>default</LangVersion>
     <Configurations>Debug;Release</Configurations>
@@ -36,10 +36,6 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Util\Util.csproj" />
   </ItemGroup>
