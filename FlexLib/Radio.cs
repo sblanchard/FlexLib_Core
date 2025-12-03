@@ -296,7 +296,12 @@ namespace Flex.Smoothlake.FlexLib
         private DVK _dvk;
         public DVK DVK
         {
-            get { return _dvk; }
+            get
+            {
+                if (_dvk == null)
+                    _dvk = new DVK(this);
+                return _dvk;
+            }
         }
 
         private List<UsbCable> _usbCables;
@@ -1927,6 +1932,7 @@ namespace Flex.Smoothlake.FlexLib
             SendCommand("sub gps all");
             SendCommand("sub audio_stream all");
             SendCommand("sub cwx all");
+            SendCommand("sub dvk all");
             SendCommand("sub xvtr all");
             SendCommand("sub memories all");
             SendCommand("sub daxiq all");
@@ -2658,9 +2664,7 @@ namespace Flex.Smoothlake.FlexLib
                     break;
 
                 case "dvk":
-                    if (_dvk == null)
-                        _dvk = new DVK(this);
-                    _dvk.ParseStatus(tokens[1].Substring(4)); // "dvk "
+                    DVK.ParseStatus(tokens[1].Substring(4)); // "dvk "
                     break;
 
                 case "display":
