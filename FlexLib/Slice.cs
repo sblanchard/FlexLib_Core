@@ -1086,6 +1086,194 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        #region Advanced DSP - v4.1.3 Functions
+
+        private bool _nrl_on = false;
+        /// <summary>
+        /// Enables or disables NRL (LMS Legacy Noise Reduction) for the Slice.
+        /// </summary>
+        public bool NRLOn
+        {
+            get { return _nrl_on; }
+            set
+            {
+                if (_nrl_on != value)
+                {
+                    _nrl_on = value;
+                    _radio.SendCommand("slice set " + _index + " nrl=" + Convert.ToByte(_nrl_on));
+                    RaisePropertyChanged("NRLOn");
+                }
+            }
+        }
+
+        private int _nrl_level;
+        /// <summary>
+        /// Gets or sets the NRL (LMS Legacy NR) level from 0 to 100 for the Slice.
+        /// </summary>
+        public int NRL_Level
+        {
+            get { return _nrl_level; }
+            set
+            {
+                int new_val = Math.Max(0, Math.Min(100, value));
+                if (_nrl_level != new_val)
+                {
+                    _nrl_level = new_val;
+                    _radio.SendCommand("slice set " + _index + " nrl_level=" + _nrl_level);
+                    RaisePropertyChanged("NRL_Level");
+                }
+            }
+        }
+
+        private bool _anfl_on = false;
+        /// <summary>
+        /// Enables or disables ANFL (LMS Legacy Auto Notch Filter) for the Slice.
+        /// </summary>
+        public bool ANFLOn
+        {
+            get { return _anfl_on; }
+            set
+            {
+                if (_anfl_on != value)
+                {
+                    _anfl_on = value;
+                    _radio.SendCommand("slice set " + _index + " anfl=" + Convert.ToByte(_anfl_on));
+                    RaisePropertyChanged("ANFLOn");
+                }
+            }
+        }
+
+        private int _anfl_level;
+        /// <summary>
+        /// Gets or sets the ANFL (LMS Legacy ANF) level from 0 to 100 for the Slice.
+        /// </summary>
+        public int ANFL_Level
+        {
+            get { return _anfl_level; }
+            set
+            {
+                int new_val = Math.Max(0, Math.Min(100, value));
+                if (_anfl_level != new_val)
+                {
+                    _anfl_level = new_val;
+                    _radio.SendCommand("slice set " + _index + " anfl_level=" + _anfl_level);
+                    RaisePropertyChanged("ANFL_Level");
+                }
+            }
+        }
+
+        private bool _nrs_on = false;
+        /// <summary>
+        /// Enables or disables NRS (Speex/Spectral Subtraction NR) for the Slice.
+        /// </summary>
+        public bool NRSOn
+        {
+            get { return _nrs_on; }
+            set
+            {
+                if (_nrs_on != value)
+                {
+                    _nrs_on = value;
+                    _radio.SendCommand("slice set " + _index + " nrs=" + Convert.ToByte(_nrs_on));
+                    RaisePropertyChanged("NRSOn");
+                }
+            }
+        }
+
+        private int _nrs_level;
+        /// <summary>
+        /// Gets or sets the NRS (Speex/Spectral Subtraction NR) level from 0 to 100 for the Slice.
+        /// </summary>
+        public int NRSLevel
+        {
+            get { return _nrs_level; }
+            set
+            {
+                int new_val = Math.Max(0, Math.Min(100, value));
+                if (_nrs_level != new_val)
+                {
+                    _nrs_level = new_val;
+                    _radio.SendCommand("slice set " + _index + " nrs_level=" + _nrs_level);
+                    RaisePropertyChanged("NRSLevel");
+                }
+            }
+        }
+
+        private bool _rnn_on = false;
+        /// <summary>
+        /// Enables or disables RNN (AI/RNN Noise Reduction) for the Slice.
+        /// </summary>
+        public bool RNNOn
+        {
+            get { return _rnn_on; }
+            set
+            {
+                if (_rnn_on != value)
+                {
+                    _rnn_on = value;
+                    _radio.SendCommand("slice set " + _index + " rnn=" + Convert.ToByte(_rnn_on));
+                    RaisePropertyChanged("RNNOn");
+                }
+            }
+        }
+
+        private bool _anft_on = false;
+        /// <summary>
+        /// Enables or disables ANFT (FFT-based Auto Notch) for the Slice.
+        /// </summary>
+        public bool ANFTOn
+        {
+            get { return _anft_on; }
+            set
+            {
+                if (_anft_on != value)
+                {
+                    _anft_on = value;
+                    _radio.SendCommand("slice set " + _index + " anft=" + Convert.ToByte(_anft_on));
+                    RaisePropertyChanged("ANFTOn");
+                }
+            }
+        }
+
+        private bool _nrf_on = false;
+        /// <summary>
+        /// Enables or disables NRF (Better NR with Filter) for the Slice.
+        /// </summary>
+        public bool NRFOn
+        {
+            get { return _nrf_on; }
+            set
+            {
+                if (_nrf_on != value)
+                {
+                    _nrf_on = value;
+                    _radio.SendCommand("slice set " + _index + " nrf=" + Convert.ToByte(_nrf_on));
+                    RaisePropertyChanged("NRFOn");
+                }
+            }
+        }
+
+        private int _nrf_level;
+        /// <summary>
+        /// Gets or sets the NRF (Better NR with Filter) level from 0 to 100 for the Slice.
+        /// </summary>
+        public int NRFLevel
+        {
+            get { return _nrf_level; }
+            set
+            {
+                int new_val = Math.Max(0, Math.Min(100, value));
+                if (_nrf_level != new_val)
+                {
+                    _nrf_level = new_val;
+                    _radio.SendCommand("slice set " + _index + " nrf_level=" + _nrf_level);
+                    RaisePropertyChanged("NRFLevel");
+                }
+            }
+        }
+
+        #endregion
+
         private AGCMode StringToAGCMode(string s)
         {
             AGCMode mode = AGCMode.None;
