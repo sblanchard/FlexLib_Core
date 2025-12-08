@@ -25,18 +25,17 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;     // for AutoResetEvent
-using Flex.Smoothlake.Vita;
 using Flex.Smoothlake.FlexLib.Mvvm;
-using Flex.Util;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Timers;
-using System.Reflection;
+using Flex.Smoothlake.FlexLib.Interface;
 using Flex.Smoothlake.FlexLib.Utils;
+using Util;
+using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {
@@ -272,6 +271,20 @@ namespace Flex.Smoothlake.FlexLib
         }
 
         private List<TxBandSettings> _txBandSettingsList = new List<TxBandSettings>();
+
+        /// <summary>
+        /// Gets the list of TX Band Settings for this radio
+        /// </summary>
+        public IReadOnlyList<TxBandSettings> TxBandSettingsList
+        {
+            get
+            {
+                lock (_txBandSettingsList)
+                {
+                    return _txBandSettingsList.ToList();
+                }
+            }
+        }
 
         private List<Xvtr> _xvtrs;
 
@@ -3972,7 +3985,7 @@ namespace Flex.Smoothlake.FlexLib
                 return 0;
             }
 
-            //Debug.WriteLine("SendCommand: " + seq_num + ": " + s);
+            Debug.WriteLine("SendCommand: " + seq_num + ": " + s);
 
             /*if (!connected)
             {
