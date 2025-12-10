@@ -13,12 +13,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-
 using System.Diagnostics;
+using System.Linq;
 using Flex.Smoothlake.FlexLib.Mvvm;
-using System.Globalization;
-using Flex.Util;
+using Util;
 
 
 namespace Flex.Smoothlake.FlexLib
@@ -1100,7 +1098,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_nrl_on != value)
                 {
                     _nrl_on = value;
-                    _radio.SendCommand("slice set " + _index + " nrl=" + Convert.ToByte(_nrl_on));
+                    _radio.SendCommand($"slice set {_index} lms_nr={Convert.ToByte(_nrl_on)}");
                     RaisePropertyChanged("NRLOn");
                 }
             }
@@ -1119,7 +1117,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_nrl_level != new_val)
                 {
                     _nrl_level = new_val;
-                    _radio.SendCommand("slice set " + _index + " nrl_level=" + _nrl_level);
+                    _radio.SendCommand($"slice set {_index} lms_nr_level={_nrl_level}");
                     RaisePropertyChanged("NRL_Level");
                 }
             }
@@ -1137,7 +1135,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_anfl_on != value)
                 {
                     _anfl_on = value;
-                    _radio.SendCommand("slice set " + _index + " anfl=" + Convert.ToByte(_anfl_on));
+                    _radio.SendCommand($"slice set {_index} lms_anf={Convert.ToByte(_anfl_on)}");
                     RaisePropertyChanged("ANFLOn");
                 }
             }
@@ -1156,7 +1154,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_anfl_level != new_val)
                 {
                     _anfl_level = new_val;
-                    _radio.SendCommand("slice set " + _index + " anfl_level=" + _anfl_level);
+                    _radio.SendCommand($"slice set {_index} lms_anf_level={_anfl_level}");
                     RaisePropertyChanged("ANFL_Level");
                 }
             }
@@ -1164,7 +1162,7 @@ namespace Flex.Smoothlake.FlexLib
 
         private bool _nrs_on = false;
         /// <summary>
-        /// Enables or disables NRS (Speex/Spectral Subtraction NR) for the Slice.
+        /// Enables or disables NRS (Spectral Subtraction NR) for the Slice.
         /// </summary>
         public bool NRSOn
         {
@@ -1174,7 +1172,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_nrs_on != value)
                 {
                     _nrs_on = value;
-                    _radio.SendCommand("slice set " + _index + " nrs=" + Convert.ToByte(_nrs_on));
+                    _radio.SendCommand($"slice set {_index} speex_nr={Convert.ToByte(_nrs_on)}");
                     RaisePropertyChanged("NRSOn");
                 }
             }
@@ -1182,7 +1180,7 @@ namespace Flex.Smoothlake.FlexLib
 
         private int _nrs_level;
         /// <summary>
-        /// Gets or sets the NRS (Speex/Spectral Subtraction NR) level from 0 to 100 for the Slice.
+        /// Gets or sets the NRS (Spectral Subtraction NR) level from 0 to 100 for the Slice.
         /// </summary>
         public int NRSLevel
         {
@@ -1193,7 +1191,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_nrs_level != new_val)
                 {
                     _nrs_level = new_val;
-                    _radio.SendCommand("slice set " + _index + " nrs_level=" + _nrs_level);
+                    _radio.SendCommand($"slice set {_index} speex_nr_level={_nrs_level}");
                     RaisePropertyChanged("NRSLevel");
                 }
             }
@@ -1201,7 +1199,7 @@ namespace Flex.Smoothlake.FlexLib
 
         private bool _rnn_on = false;
         /// <summary>
-        /// Enables or disables RNN (AI/RNN Noise Reduction) for the Slice.
+        /// Enables or disables RNN (NN Noise Reduction) for the Slice.
         /// </summary>
         public bool RNNOn
         {
@@ -1211,7 +1209,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_rnn_on != value)
                 {
                     _rnn_on = value;
-                    _radio.SendCommand("slice set " + _index + " rnn=" + Convert.ToByte(_rnn_on));
+                    _radio.SendCommand($"slice set {_index} rnnoise={Convert.ToByte(_rnn_on)}");
                     RaisePropertyChanged("RNNOn");
                 }
             }
@@ -2624,6 +2622,187 @@ namespace Flex.Smoothlake.FlexLib
 
                                 _nr_level = (int)temp;
                                 RaisePropertyChanged("NRLevel");
+                            }
+                            break;
+
+                        // Extended DSP properties (v4.1.3+)
+                        case "nrl":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 1)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrl_on == Convert.ToBoolean(temp))
+                                    continue;
+
+                                _nrl_on = Convert.ToBoolean(temp);
+                                RaisePropertyChanged("NRLOn");
+                            }
+                            break;
+
+                        case "nrl_level":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 100)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrl_level == (int)temp)
+                                    continue;
+
+                                _nrl_level = (int)temp;
+                                RaisePropertyChanged("NRL_Level");
+                            }
+                            break;
+
+                        case "nrs":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 1)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrs_on == Convert.ToBoolean(temp))
+                                    continue;
+
+                                _nrs_on = Convert.ToBoolean(temp);
+                                RaisePropertyChanged("NRSOn");
+                            }
+                            break;
+
+                        case "nrs_level":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 100)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrs_level == (int)temp)
+                                    continue;
+
+                                _nrs_level = (int)temp;
+                                RaisePropertyChanged("NRSLevel");
+                            }
+                            break;
+
+                        case "rnn":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 1)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_rnn_on == Convert.ToBoolean(temp))
+                                    continue;
+
+                                _rnn_on = Convert.ToBoolean(temp);
+                                RaisePropertyChanged("RNNOn");
+                            }
+                            break;
+
+                        case "nrf":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 1)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrf_on == Convert.ToBoolean(temp))
+                                    continue;
+
+                                _nrf_on = Convert.ToBoolean(temp);
+                                RaisePropertyChanged("NRFOn");
+                            }
+                            break;
+
+                        case "nrf_level":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 100)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrf_level == (int)temp)
+                                    continue;
+
+                                _nrf_level = (int)temp;
+                                RaisePropertyChanged("NRFLevel");
+                            }
+                            break;
+
+                        case "anfl":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 1)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anfl_on == Convert.ToBoolean(temp))
+                                    continue;
+
+                                _anfl_on = Convert.ToBoolean(temp);
+                                RaisePropertyChanged("ANFLOn");
+                            }
+                            break;
+
+                        case "anfl_level":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 100)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anfl_level == (int)temp)
+                                    continue;
+
+                                _anfl_level = (int)temp;
+                                RaisePropertyChanged("ANFL_Level");
+                            }
+                            break;
+
+                        case "anft":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 1)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anft_on == Convert.ToBoolean(temp))
+                                    continue;
+
+                                _anft_on = Convert.ToBoolean(temp);
+                                RaisePropertyChanged("ANFTOn");
                             }
                             break;
 
