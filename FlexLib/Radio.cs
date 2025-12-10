@@ -7638,6 +7638,22 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _maxInternalPaPowerWatts = 100; // Default to 100W, unless otherwise specified by platform.
+        /// <summary>
+        /// The maximum internal PA power capability in Watts (hardware limit, not user setting).
+        /// This is determined by the radio model (e.g., 100W for FLEX-6600, 200W for FLEX-6700).
+        /// </summary>
+        public int MaxInternalPaPowerWatts
+        {
+            get => _maxInternalPaPowerWatts;
+            set
+            {
+                if (value == _maxInternalPaPowerWatts) return;
+                _maxInternalPaPowerWatts = value;
+                RaisePropertyChanged("MaxInternalPaPowerWatts");
+            }
+        }
+
 
         private int _rfPower;
         /// <summary>
@@ -9417,6 +9433,20 @@ namespace Flex.Smoothlake.FlexLib
                             if (temp > 100) temp = 100;
                             _maxPowerLevel = temp;
                             RaisePropertyChanged("MaxPowerLevel");
+                            break;
+                        }
+                    case "max_internal_pa_power":
+                        {
+                            int temp;
+                            bool b = int.TryParse(value, out temp);
+
+                            if (!b)
+                            {
+                                Debug.WriteLine("Radio::ParseTransmitStatus - max_internal_pa_power: Invalid value (" + kv + ")");
+                                break;
+                            }
+
+                            MaxInternalPaPowerWatts = temp;
                             break;
                         }
                     case "rfpower":
