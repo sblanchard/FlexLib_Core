@@ -367,7 +367,3 @@ public class ModelInfo
             
     }.ToImmutableDictionary();
 }
-
-internal static class IsExternalInit
-{
-}

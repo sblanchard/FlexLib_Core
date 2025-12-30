@@ -258,8 +258,7 @@ namespace Flex.Smoothlake.FlexLib
             switch (_toneMode)
             {
                 case FMToneMode.CTCSS_TX:
-                    float freq;
-                    bool b = float.TryParse(s, out freq);
+                    bool b = float.TryParse(s, out var freq);
 
                     if (!b)
                     {
@@ -638,8 +637,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "freq":
                         {
-                            double temp; // in MHz
-                            bool b = StringHelper.TryParseDouble(value, out temp);
+                            bool b = StringHelper.TryParseDouble(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -667,8 +665,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "step":
                          {
-                            int temp; // in Hz
-                            bool b = int.TryParse(value, out temp);
+                             bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -684,8 +681,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "repeater":
                         {
-                            FMTXOffsetDirection dir;
-                            bool b = TryParseFMTXOffsetDirection(value, out dir);
+                            bool b = TryParseFMTXOffsetDirection(value, out var dir);
 
                             if (!b)
                             {
@@ -700,8 +696,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "repeater_offset":
                         {
-                            double temp; // in MHz
-                            bool b = StringHelper.TryParseDouble(value, out temp);
+                            bool b = StringHelper.TryParseDouble(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -715,8 +710,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "tone_mode":
                         {
-                            FMToneMode mode;
-                            bool b = TryParseFMToneMode(value, out mode);
+                            bool b = TryParseFMToneMode(value, out var mode);
 
                             if (!b)
                             {
@@ -738,8 +732,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "squelch":
                         {
-                            byte temp;
-                            bool b = byte.TryParse(value, out temp);
+                            bool b = byte.TryParse(value, out var temp);
                             if (!b || temp > 1)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -753,8 +746,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "squelch_level":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -768,8 +760,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "power":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -783,8 +774,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "rx_filter_low":
                         {
-                            int temp; // in Hz
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -798,8 +788,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "rx_filter_high":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -813,8 +802,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "rtty_mark":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -828,8 +816,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "rtty_shift":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -843,8 +830,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "digl_offset":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");
@@ -858,8 +844,7 @@ namespace Flex.Smoothlake.FlexLib
 
                     case "digu_offset":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("Memory::StatusUpdate: Invalid value (" + kv + ")");

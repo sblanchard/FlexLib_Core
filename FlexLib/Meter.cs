@@ -14,193 +14,191 @@
 using Util;
 
 
-namespace Flex.Smoothlake.FlexLib
+namespace Flex.Smoothlake.FlexLib;
+
+public enum MeterUnits
 {
-    public enum MeterUnits
+    None,
+    Volts,
+    Amps,
+    Db,
+    Dbfs,
+    Dbm,
+    RPM,        
+    DegreesF,
+    DegreesC,
+    SWR,
+    Watts,
+    Percent
+}
+
+public class Meter
+{
+    public const string SOURCE_SLICE = "SLC";
+    public const string SOURCE_AMPLIFIER = "AMP";
+
+    internal Meter(Radio radio, int index)
     {
-        None,
-        Volts,
-        Amps,
-        Db,
-        Dbfs,
-        Dbm,
-        RPM,        
-        DegreesF,
-        DegreesC,
-        SWR,
-        Watts,
-        Percent
+        _radio = radio;
+        _index = index;
+
+        //var major = (radio.Version >> 48) & 0xFF;
+        //var minor = (radio.Version >> 40) & 0xFF;
+        //if (major == 1 && minor <= 10)
+        //    volt_denom = 1024.0f;
+
+        if(radio.Version < FlexVersion.Parse("1.11.0.0"))
+            volt_denom = 1024.0f;
     }
 
-    public class Meter
+    private float volt_denom = 256.0f;
+    private Radio _radio;
+
+    private int _index;
+    public int Index
     {
-        public const string SOURCE_SLICE = "SLC";
-        public const string SOURCE_AMPLIFIER = "AMP";
+        get { return _index; }
+    }
 
-        internal Meter(Radio radio, int index)
+    private string _source = null;
+    public string Source
+    {
+        get { return _source; }
+        set
         {
-            this._radio = radio;
-            this._index = index;
-
-            //var major = (radio.Version >> 48) & 0xFF;
-            //var minor = (radio.Version >> 40) & 0xFF;
-            //if (major == 1 && minor <= 10)
-            //    volt_denom = 1024.0f;
-
-            if(radio.Version < FlexVersion.Parse("1.11.0.0"))
-                volt_denom = 1024.0f;
+            if (_source == null)
+                _source = value;
         }
+    }
 
-        private float volt_denom = 256.0f;
-        private Radio _radio;
-
-        private int _index;
-        public int Index
+    private int _source_index = -1;
+    public int SourceIndex
+    {
+        get { return _source_index; }
+        set
         {
-            get { return _index; }
+            if (_source_index == -1)
+                _source_index = value;
         }
+    }
 
-        private string _source = null;
-        public string Source
+    private string _name = null;
+    public string Name
+    {
+        get { return _name; }
+        set
         {
-            get { return _source; }
-            set
-            {
-                if (_source == null)
-                    _source = value;
-            }
+            if(_name == null)
+                _name = value; 
         }
+    }
 
-        private int _source_index = -1;
-        public int SourceIndex
+    private string _description = null;
+    public string Description
+    {
+        get { return _description; }
+        set
         {
-            get { return _source_index; }
-            set
-            {
-                if (_source_index == -1)
-                    _source_index = value;
-            }
+            if (_description == null)
+                _description = value;
         }
+    }
 
-        private string _name = null;
-        public string Name
+    private double _low = double.MaxValue;
+    public double Low
+    {
+        get { return _low; }
+        set
         {
-            get { return _name; }
-            set
-            {
-                if(_name == null)
-                    _name = value; 
-            }
+            if (_low == double.MaxValue)
+                _low = value;
         }
-
-        private string _description = null;
-        public string Description
-        {
-            get { return _description; }
-            set
-            {
-                if (_description == null)
-                    _description = value;
-            }
-        }
-
-        private double _low = double.MaxValue;
-        public double Low
-        {
-            get { return _low; }
-            set
-            {
-                if (_low == double.MaxValue)
-                    _low = value;
-            }
-        }
+    }
         
-        private double _high = double.MinValue;
-        public double High
+    private double _high = double.MinValue;
+    public double High
+    {
+        get { return _high; }
+        set
         {
-            get { return _high; }
-            set
-            {
-                if (_high == double.MinValue)
-                    _high = value;
-            }
+            if (_high == double.MinValue)
+                _high = value;
         }
+    }
 
-        private double _fps = double.MinValue;
-        public double FPS
+    public double FPS
+    {
+        get { return field; }
+        set
         {
-            get { return _fps; }
-            set
-            {
-                if (_fps == double.MinValue)
-                    _fps = value;
-            }
+            if (field == double.MinValue)
+                field = value;
         }
+    } = double.MinValue;
 
-        private bool _peak;
-        public bool Peak
+    private bool _peak;
+    public bool Peak
+    {
+        get { return _peak; }
+        set
         {
-            get { return _peak; }
-            set
-            {
-                _peak = value;
-            }
+            _peak = value;
         }
+    }
 
-        private MeterUnits _units = MeterUnits.None;
-        public MeterUnits Units
+    private MeterUnits _units = MeterUnits.None;
+    public MeterUnits Units
+    {
+        get { return _units; }
+        set
         {
-            get { return _units; }
-            set
-            {
-                if (_units == MeterUnits.None)
-                    _units = value;
-            }
+            if (_units == MeterUnits.None)
+                _units = value;
         }
+    }
 
-        public void UpdateValue(short new_raw_value)
-        {
+    public void UpdateValue(short new_raw_value)
+    {
             
-            short raw_value = new_raw_value;
-            float new_value;
+        short raw_value = new_raw_value;
+        float new_value;
 
-            switch (_units)
-            {
-                case MeterUnits.Db:
-                case MeterUnits.Dbm:
-                case MeterUnits.Dbfs:
-                case MeterUnits.SWR:
-                    new_value = raw_value / 128.0f;
-                    break;
-                case MeterUnits.Volts:
-                case MeterUnits.Amps:
-                    new_value = raw_value / volt_denom;
-                    break;
-                case MeterUnits.DegreesF:
-                case MeterUnits.DegreesC:
-                    new_value = raw_value / 64.0f;
-                    break;
-                default:
-                    new_value = raw_value;
-                    break;
-            }
-
-            OnDataReady(this, new_value);
-        }
-
-        public delegate void DataReadyEventHandler(Meter meter, float data);
-        public event DataReadyEventHandler DataReady;
-        private void OnDataReady(Meter meter, float data)
+        switch (_units)
         {
-            if (DataReady != null)
-                DataReady(meter, data);
+            case MeterUnits.Db:
+            case MeterUnits.Dbm:
+            case MeterUnits.Dbfs:
+            case MeterUnits.SWR:
+                new_value = raw_value / 128.0f;
+                break;
+            case MeterUnits.Volts:
+            case MeterUnits.Amps:
+                new_value = raw_value / volt_denom;
+                break;
+            case MeterUnits.DegreesF:
+            case MeterUnits.DegreesC:
+                new_value = raw_value / 64.0f;
+                break;
+            default:
+                new_value = raw_value;
+                break;
         }
 
-        public override string ToString()
-        {
-            if (this._name != null)
-                return _index.ToString()+": "+_source+"-"+_source_index+" "+_name;
-            else return base.ToString();
-        }
+        OnDataReady(this, new_value);
+    }
+
+    public delegate void DataReadyEventHandler(Meter meter, float data);
+    public event DataReadyEventHandler DataReady;
+    private void OnDataReady(Meter meter, float data)
+    {
+        if (DataReady != null)
+            DataReady(meter, data);
+    }
+
+    public override string ToString()
+    {
+        if (_name != null)
+            return _index.ToString()+": "+_source+"-"+_source_index+" "+_name;
+        else return base.ToString();
     }
 }
