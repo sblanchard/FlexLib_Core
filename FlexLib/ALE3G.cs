@@ -20,18 +20,11 @@ using Flex.Smoothlake.FlexLib.Mvvm;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class ALE3G : ObservableObject
+    public class ALE3G(Radio radio) : ObservableObject
     {
-        private Radio _radio;
-
-        public ALE3G(Radio radio)
-        {
-            _radio = radio;
-        }
-
         public void SendConfigCommand(string cmd)
         {
-            _radio.SendCommand(cmd);
+            radio.SendCommand(cmd);
         }
 
         private bool _enable = false;
@@ -47,7 +40,7 @@ namespace Flex.Smoothlake.FlexLib
                     string cmd;
                     if (value) cmd = "ale enable 3G";
                     else cmd = "ale disable";
-                    _radio.SendCommand(cmd);
+                    radio.SendCommand(cmd);
 
                     RaisePropertyChanged("Enable");
                 }
@@ -94,14 +87,14 @@ namespace Flex.Smoothlake.FlexLib
                 return;
             }
 
-            _radio.SendCommand("ale link station=" + station.Name + " data");
+            radio.SendCommand("ale link station=" + station.Name + " data");
         }
 
         public void Unlink()
         {
             if (_link == false) return;
 
-            _radio.SendCommand("ale unlink");
+            radio.SendCommand("ale unlink");
         }
 
         private bool _sound = false;
@@ -113,7 +106,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_sound != value)
                 {
                     _sound = value;
-                    _radio.SendCommand("ale sound=" + Convert.ToByte(_sound));
+                    radio.SendCommand("ale sound=" + Convert.ToByte(_sound));
                     RaisePropertyChanged("Sound");
                 }
             }
@@ -122,9 +115,9 @@ namespace Flex.Smoothlake.FlexLib
         public void SendAmd(ALE3GStation station, string msg, bool link)
         {
             if (link)
-                _radio.SendCommand("ale link station=" + station.Name + " data \"text=" + msg + "\"");
+                radio.SendCommand("ale link station=" + station.Name + " data \"text=" + msg + "\"");
             else
-                _radio.SendCommand("ale amd station=" + station.Name + " \"text=" + msg + "\"");
+                radio.SendCommand("ale amd station=" + station.Name + " \"text=" + msg + "\"");
         }
 
         public delegate void ALE3GAmdEventHandler(string from_station, string to_station, string msg);

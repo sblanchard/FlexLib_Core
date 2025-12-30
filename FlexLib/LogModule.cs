@@ -18,17 +18,11 @@ using System.Diagnostics;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class LogModule : ObservableObject
+    public class LogModule(Radio radio) : ObservableObject
     {
-        private Radio _radio;
         public Radio Radio
         {
-            get { return _radio; }
-        }
-
-        public LogModule(Radio radio)
-        {
-            _radio = radio;
+            get { return radio; }
         }
 
         private string _moduleName;
@@ -60,7 +54,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_logLevel != value)
                 {
                     _logLevel = value;
-                    _radio.SendCommand("log module=" + _moduleName + " level=" + _logLevel); ;
+                    radio.SendCommand("log module=" + _moduleName + " level=" + _logLevel); ;
                     RaisePropertyChanged("LogLevel");
                 }
             }
@@ -111,7 +105,7 @@ namespace Flex.Smoothlake.FlexLib
                     case "level":
                         {
                             //create list
-                            _logLevels = _radio.LogLevels;
+                            _logLevels = radio.LogLevels;
                             RaisePropertyChanged("LogLevels");
 
                             //assign level

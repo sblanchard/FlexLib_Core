@@ -111,7 +111,7 @@ namespace Flex.Smoothlake.FlexLib
 
         private Lock _tcpReadSyncObj = new Lock();
         private byte[] _tcpReadByteBuffer = new byte[TCP_READ_BUFFER_SIZE];
-        private string _tcpReadStringBuffer = "";
+        private readonly StringBuilder _tcpReadStringBuffer = new StringBuilder(4096);
         private void TCPReadCallback(IAsyncResult ar)
         {
             // keep more than one caller from entering the callback at once to
@@ -166,40 +166,40 @@ namespace Flex.Smoothlake.FlexLib
                     return;
                 }
 
-                // Convert byte array to a string
-                string new_data = Encoding.UTF8.GetString(_tcpReadByteBuffer, 0, num_bytes);
-
-                // add this string to the buffer
-                _tcpReadStringBuffer += new_data;
+                // Convert byte array to a string and append to buffer
+                _tcpReadStringBuffer.Append(Encoding.UTF8.GetString(_tcpReadByteBuffer, 0, num_bytes));
 
                 // now process the string buffer
-
-                bool processing = true;
-
-                while (processing)
+                while (true)
                 {
                     // look for end of message token
-                    int eom = _tcpReadStringBuffer.IndexOf('\n');
+                    int eom = -1;
+                    for (int i = 0; i < _tcpReadStringBuffer.Length; i++)
+                    {
+                        if (_tcpReadStringBuffer[i] == '\n')
+                        {
+                            eom = i;
+                            break;
+                        }
+                    }
 
                     // handle end of message token not found
-                    if (eom < 0) processing = false;
-                    else // process this message
+                    if (eom < 0) break;
+
+                    // extract message from buffer
+                    string s = _tcpReadStringBuffer.ToString(0, eom).Trim('\0');
+
+                    // remove the processed message from the buffer
+                    _tcpReadStringBuffer.Remove(0, eom + 1);
+
+                    // fire the event that signals new data is ready
+                    try // ensure that any exceptions are caught so we don't have silent failures that kill this socket
                     {
-                        // strip message out of larger buffer
-                        string s = _tcpReadStringBuffer.Substring(0, eom).Trim('\0');
-
-                        // remove the processed message from the buffer -- ensure modification of string is safe
-                        _tcpReadStringBuffer = _tcpReadStringBuffer.Substring(eom + 1);
-
-                        // fire the event that signals new data is ready
-                        try // ensure that any exceptions are caught so we don't have silent failures that kill this socket
-                        {
-                            OnDataReceivedReady(s);
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("Exception while processing TCP Data: " + s);
-                        }
+                        OnDataReceivedReady(s);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Exception while processing TCP Data: " + s + " - " + ex.Message);
                     }
                 }
 
@@ -219,7 +219,7 @@ namespace Flex.Smoothlake.FlexLib
 
         public void Disconnect()
         {
-            if (!_isConnected) 
+            if (!_isConnected)
                 return;
 
             if (_tcpClient != null && _tcpClient.Connected)
@@ -229,12 +229,21 @@ namespace Flex.Smoothlake.FlexLib
                 try
                 {
                     _tcpClient.GetStream()?.Write(new byte[] {0x04}, 0, 1);
-                    _tcpClient.Close();
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Exception disconnecting from radio: {ex}");
+                    Debug.WriteLine($"Exception sending disconnect byte: {ex.Message}");
                 }
+            }
+
+            // Dispose the TCP client (handles both stream and socket)
+            try
+            {
+                _tcpClient?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception disposing TcpClient: {ex.Message}");
             }
 
             _tcpClient = null;
@@ -243,7 +252,7 @@ namespace Flex.Smoothlake.FlexLib
 
             lock (_tcpReadSyncObj)
             {
-                _tcpReadStringBuffer = "";
+                _tcpReadStringBuffer.Clear();
             }
         }
 
@@ -279,8 +288,7 @@ namespace Flex.Smoothlake.FlexLib
 
         private void OnIsConnectedChanged(bool connected)
         {
-            if (IsConnectedChanged != null)
-                IsConnectedChanged(connected);
+            IsConnectedChanged?.Invoke(connected);
         }
 
         /// <summary>
@@ -294,8 +302,7 @@ namespace Flex.Smoothlake.FlexLib
 
         private void OnDataReceivedReady(string msg)
         {
-            if (DataReceivedReady != null)
-                DataReceivedReady(msg);
+            DataReceivedReady?.Invoke(msg);
         }
 
         public bool Connect(IPAddress radio_ip, int radioPort, int src_port = 0)

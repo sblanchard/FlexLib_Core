@@ -19,14 +19,8 @@ using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class TXRemoteAudioStream : ObservableObject
+    public class TXRemoteAudioStream(Radio radio) : ObservableObject
     {
-        private Radio _radio;
-        public TXRemoteAudioStream(Radio radio)
-        {
-            _radio = radio;
-        }
-
         private bool _closing = false;
         internal bool Closing
         {
@@ -90,10 +84,10 @@ namespace Flex.Smoothlake.FlexLib
             if (_radioAck) return false;
 
             // check to ensure this object is tied to a radio object
-            if (_radio == null) return false;
+            if (radio == null) return false;
 
             // check to make sure the radio is connected
-            if (!_radio.Connected) return false;
+            if (!radio.Connected) return false;
 
             // send the command to the radio to create the object...need to change this..
             //_radio.SendReplyCommand(new ReplyHandler(UpdateStreamID), "stream create opus");
@@ -104,14 +98,14 @@ namespace Flex.Smoothlake.FlexLib
         public void Close()
         {
             Debug.WriteLine("TXRemoteAudioStream::Close (0x" + _streamID.ToString("X") + ")");
-            _radio.RemoveTXRemoteAudioStream(_streamID);
+            radio.RemoveTXRemoteAudioStream(_streamID);
         }
 
         internal void Remove()
         {
             _closing = true;
             Debug.WriteLine("TXRemoteAudioStream::Remove (0x" + _streamID.ToString("X") + ")");
-            _radio.SendCommand("stream remove 0x" + _streamID.ToString("X"));
+            radio.SendCommand("stream remove 0x" + _streamID.ToString("X"));
         }
 
         private VitaOpusDataPacket _txPacket;
@@ -171,7 +165,7 @@ namespace Flex.Smoothlake.FlexLib
             try
             {
                 // send the packet to the radio
-                _radio.VitaSock.SendUDP(_txPacket.ToBytesTX());
+                radio.VitaSock.SendUDP(_txPacket.ToBytesTX());
             }
             catch (Exception e)
             {
@@ -234,7 +228,7 @@ namespace Flex.Smoothlake.FlexLib
             if (set_radio_ack)
             {
                 RadioAck = true;
-                _radio.OnTXRemoteAudioStreamAdded(this);
+                radio.OnTXRemoteAudioStreamAdded(this);
             }
         }
     }

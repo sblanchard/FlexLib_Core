@@ -20,20 +20,13 @@ using Util;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class Xvtr : ObservableObject
+    public class Xvtr(Radio radio) : ObservableObject
     {
-        private Radio _radio;
-
-        public Xvtr(Radio radio)
-        {
-            _radio = radio;
-        }
-
         public void Remove()
         {
-            if (_radio.Connected)
+            if (radio.Connected)
             {
-                _radio.SendCommand("xvtr remove " + _index);
+                radio.SendCommand("xvtr remove " + _index);
             }
         }
         
@@ -57,7 +50,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_order != value)
                 {
                     _order = value;
-                    _radio.SendCommand("xvtr set " + _index + " order=" + _order);
+                    radio.SendCommand("xvtr set " + _index + " order=" + _order);
                     RaisePropertyChanged("Order");
                 }
             }
@@ -78,7 +71,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_name != new_name)
                 {
                     _name = new_name;
-                    _radio.SendCommand("xvtr set " + _index + " name=" + _name);
+                    radio.SendCommand("xvtr set " + _index + " name=" + _name);
                     RaisePropertyChanged("Name");
                 }
                 else if (new_name != value)
@@ -97,7 +90,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_rfFreq != value)
                 {
                     _rfFreq = value;
-                    _radio.SendCommand("xvtr set " + _index + " rf_freq=" + StringHelper.DoubleToString(_rfFreq, "f6"));
+                    radio.SendCommand("xvtr set " + _index + " rf_freq=" + StringHelper.DoubleToString(_rfFreq, "f6"));
                     RaisePropertyChanged("RFFreq");
                 }
             }
@@ -112,7 +105,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_ifFreq != value)
                 {
                     _ifFreq = value;
-                    _radio.SendCommand("xvtr set " + _index + " if_freq=" + StringHelper.DoubleToString(_ifFreq, "f6"));
+                    radio.SendCommand("xvtr set " + _index + " if_freq=" + StringHelper.DoubleToString(_ifFreq, "f6"));
                     RaisePropertyChanged("IFFreq");
                 }
             }
@@ -127,7 +120,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_loError != value)
                 {
                     _loError = value;
-                    _radio.SendCommand("xvtr set " + _index + " lo_error=" + StringHelper.DoubleToString(_loError, "f6"));
+                    radio.SendCommand("xvtr set " + _index + " lo_error=" + StringHelper.DoubleToString(_loError, "f6"));
                     RaisePropertyChanged("LOError");
                 }
             }
@@ -142,7 +135,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_rxGain != value)
                 {
                     _rxGain = value;
-                    _radio.SendCommand("xvtr set " + _index + " rx_gain=" + StringHelper.DoubleToString(_rxGain, "f2"));
+                    radio.SendCommand("xvtr set " + _index + " rx_gain=" + StringHelper.DoubleToString(_rxGain, "f2"));
                     RaisePropertyChanged("RXGain");
                 }
             }
@@ -157,7 +150,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_rxOnly != value)
                 {
                     _rxOnly = value;
-                    _radio.SendCommand("xvtr set " + _index + " rx_only=" + Convert.ToByte(_rxOnly));
+                    radio.SendCommand("xvtr set " + _index + " rx_only=" + Convert.ToByte(_rxOnly));
                     RaisePropertyChanged("RXOnly");
                 }
             }
@@ -173,7 +166,7 @@ namespace Flex.Smoothlake.FlexLib
 
                 if (_ifFreq < 80.0)
                 {
-                    if (_radio.Model == "FLEX-6400M" || _radio.Model == "FLEX-6400" || _radio.Model == "FLEX-6600M" || _radio.Model == "FLEX-6600")
+                    if (radio.Model == "FLEX-6400M" || radio.Model == "FLEX-6400" || radio.Model == "FLEX-6600M" || radio.Model == "FLEX-6600")
                     {
                         if (new_power > 10.0)
                             new_power = 10.0;
@@ -195,7 +188,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_maxPower != new_power)
                 {
                     _maxPower = new_power;
-                    _radio.SendCommand("xvtr set " + _index + " max_power=" + StringHelper.DoubleToString(_maxPower, "f2"));
+                    radio.SendCommand("xvtr set " + _index + " max_power=" + StringHelper.DoubleToString(_maxPower, "f2"));
                     RaisePropertyChanged("MaxPower");
                 }
                 else if (new_power != value)

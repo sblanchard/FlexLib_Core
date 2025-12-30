@@ -17,16 +17,9 @@ using System.Diagnostics;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class TxBandSettings : ObservableObject
+    public class TxBandSettings(Radio radio, int bandId) : ObservableObject
     {
-        private Radio _radio;
-        public TxBandSettings(Radio radio, int band_id)
-        {
-            _radio = radio;
-            BandId = band_id;
-        }
-
-        public int BandId { get; private set; }
+        public int BandId { get; private set; } = bandId;
 
         private string _bandName;
         public string BandName
@@ -51,7 +44,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_isHwAlcEnabled == value) return;
 
                 _isHwAlcEnabled = value;
-                _radio.SendCommand($"transmit bandset {BandId} hwalc_enabled={Convert.ToByte(_isHwAlcEnabled)}");
+                radio.SendCommand($"transmit bandset {BandId} hwalc_enabled={Convert.ToByte(_isHwAlcEnabled)}");
                 RaisePropertyChanged(() => IsHwAlcEnabled);
             }
         }
@@ -65,7 +58,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_tuneLevel == value) return;
 
                 _tuneLevel = value;
-                _radio.SendCommand($"transmit bandset {BandId} tunepower={_tuneLevel}");
+                radio.SendCommand($"transmit bandset {BandId} tunepower={_tuneLevel}");
                 RaisePropertyChanged(() => TuneLevel);
             }
         }
@@ -79,7 +72,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_powerLevel == value) return;
 
                 _powerLevel = value;
-                _radio.SendCommand($"transmit bandset {BandId} rfpower={_powerLevel}");
+                radio.SendCommand($"transmit bandset {BandId} rfpower={_powerLevel}");
                 RaisePropertyChanged(() => PowerLevel);
             }
         }
@@ -93,7 +86,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_isPttInhibit == value) return;
 
                 _isPttInhibit = value;
-                _radio.SendCommand($"transmit bandset {BandId} inhibit={Convert.ToByte(_isPttInhibit)}");
+                radio.SendCommand($"transmit bandset {BandId} inhibit={Convert.ToByte(_isPttInhibit)}");
                 RaisePropertyChanged(() => IsPttInhibit);
             }
         }
@@ -107,7 +100,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_isAccTxReqEnabled == value) return;
 
                 _isAccTxReqEnabled = value;
-                _radio.SendCommand($"interlock bandset {BandId} acc_txreq_enable={Convert.ToByte(_isAccTxReqEnabled)}");
+                radio.SendCommand($"interlock bandset {BandId} acc_txreq_enable={Convert.ToByte(_isAccTxReqEnabled)}");
                 RaisePropertyChanged(() => IsAccTxReqEnabled);
             }
         }
@@ -121,7 +114,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_isRcaTxReqEnabled == value) return;
 
                 _isRcaTxReqEnabled = value;
-                _radio.SendCommand($"interlock bandset {BandId} rca_txreq_enable={Convert.ToByte(_isRcaTxReqEnabled)}");
+                radio.SendCommand($"interlock bandset {BandId} rca_txreq_enable={Convert.ToByte(_isRcaTxReqEnabled)}");
                 RaisePropertyChanged(() => IsRcaTxReqEnabled);
             }
         }
@@ -135,7 +128,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_isAccTxEnabled == value) return;
 
                 _isAccTxEnabled = value;
-                _radio.SendCommand($"interlock bandset {BandId} acc_tx_enabled={Convert.ToByte(_isAccTxEnabled)}");
+                radio.SendCommand($"interlock bandset {BandId} acc_tx_enabled={Convert.ToByte(_isAccTxEnabled)}");
                 RaisePropertyChanged(() => IsAccTxEnabled);
             }
         }
@@ -149,7 +142,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_isRcaTx1Enabled == value) return;
 
                 _isRcaTx1Enabled = value;
-                _radio.SendCommand($"interlock bandset {BandId} tx1_enabled={Convert.ToByte(_isRcaTx1Enabled)}");
+                radio.SendCommand($"interlock bandset {BandId} tx1_enabled={Convert.ToByte(_isRcaTx1Enabled)}");
                 RaisePropertyChanged(() => IsRcaTx1Enabled);
             }
         }
@@ -163,7 +156,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_isRcaTx2Enabled == value) return;
 
                 _isRcaTx2Enabled = value;
-                _radio.SendCommand($"interlock bandset {BandId} tx2_enabled={Convert.ToByte(_isRcaTx2Enabled)}");
+                radio.SendCommand($"interlock bandset {BandId} tx2_enabled={Convert.ToByte(_isRcaTx2Enabled)}");
                 RaisePropertyChanged(() => IsRcaTx2Enabled);
             }
         }
@@ -177,7 +170,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_isRcaTx3Enabled == value) return;
 
                 _isRcaTx3Enabled = value;
-                _radio.SendCommand($"interlock bandset {BandId} tx3_enabled={Convert.ToByte(_isRcaTx3Enabled)}");
+                radio.SendCommand($"interlock bandset {BandId} tx3_enabled={Convert.ToByte(_isRcaTx3Enabled)}");
                 RaisePropertyChanged(() => IsRcaTx3Enabled);
             }
         }

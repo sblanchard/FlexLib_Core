@@ -20,20 +20,14 @@ using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class DAXTXAudioStream : ObservableObject, IDaxTxStream
+    public class DAXTXAudioStream(Radio radio) : ObservableObject, IDaxTxStream
     {
         private const int TX_SAMPLES_PER_PACKET = 128; // Samples can be mono-int or stereo-float
-        private Radio _radio;
         private bool _closing = false;
 
         internal bool Closing
         {
             set { _closing = value; }
-        }
-
-        public DAXTXAudioStream(Radio radio)
-        {
-            _radio = radio;
         }
 
         private uint _clientHandle;
@@ -129,8 +123,8 @@ namespace Flex.Smoothlake.FlexLib
         {
             Debug.WriteLine("TXAudioStream::Close (0x" + _txStreamID.ToString("X") + ")");
             _closing = true;
-            _radio.SendCommand("stream remove 0x" + _txStreamID.ToString("X"));
-            _radio.RemoveDAXTXAudioStream(_txStreamID);
+            radio.SendCommand("stream remove 0x" + _txStreamID.ToString("X"));
+            radio.RemoveDAXTXAudioStream(_txStreamID);
         }
         
         private VitaIFDataPacket _txPacket;
@@ -226,7 +220,7 @@ namespace Flex.Smoothlake.FlexLib
             try
             {
 
-                _radio.VitaSock.SendUDP(_txPacket.ToBytes(use_int16_payload: sendReducedBW));
+                radio.VitaSock.SendUDP(_txPacket.ToBytes(use_int16_payload: sendReducedBW));
             }
             catch (Exception e)
             {
@@ -301,7 +295,7 @@ namespace Flex.Smoothlake.FlexLib
             if (set_radio_ack)
             {
                 RadioAck = true;
-                _radio.OnDAXTXAudioStreamAdded(this);                
+                radio.OnDAXTXAudioStreamAdded(this);                
             }
         }
     }

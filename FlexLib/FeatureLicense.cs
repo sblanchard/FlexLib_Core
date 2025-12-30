@@ -33,15 +33,8 @@ namespace Flex.Smoothlake.FlexLib
         Unknown
     }
 
-    public class FeatureLicense : ObservableObject
+    public class FeatureLicense(Radio radio) : ObservableObject
     {
-        private Radio _radio;
-
-        public FeatureLicense(Radio radio)
-        {
-            _radio = radio;
-        }
-
         private FeatureStatusReason FeatureStatusStrToEnum(string featureStatus)
         {
             switch (featureStatus.ToLower())
@@ -542,7 +535,7 @@ namespace Flex.Smoothlake.FlexLib
 
         public void SendFeatureLicenseCommand(string cmd)
         {
-            _radio.SendCommand(cmd);
+            radio.SendCommand(cmd);
         }
     }
 }

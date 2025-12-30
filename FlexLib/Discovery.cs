@@ -25,10 +25,11 @@ namespace Flex.Smoothlake.FlexLib
 {
     public delegate void RadioDiscoveredEventHandler(Radio radio);
 
-    class Discovery
+    public class Discovery
     {
         private const int DISCOVERY_PORT = 4992;
         private static UdpClient udp;
+        private static readonly Lock _lock = new();
 
         private static CancellationTokenSource _loopCts;
 
@@ -61,45 +62,87 @@ namespace Flex.Smoothlake.FlexLib
 
         public static void Stop()
         {
-            _loopCts.Cancel();
+            _loopCts?.Cancel();
+
+            // Dispose the UDP socket to unblock any pending ReceiveAsync
+            lock (_lock)
+            {
+                udp?.Dispose();
+                udp = null;
+            }
         }
 
         private static async void Receive()
         {
             //Stopwatch watch = new Stopwatch();
             var token = _loopCts.Token;
-            
-            while (!token.IsCancellationRequested)
+
+            try
             {
-                // TODO: Pass the cancellation token here when we move to .NET 6/8
-                var packet = await udp.ReceiveAsync();
-                //watch.Restart();
+                while (!token.IsCancellationRequested)
+                {
+                    UdpClient localUdp;
+                    lock (_lock)
+                    {
+                        localUdp = udp;
+                    }
 
-                // since the call above is blocking, we need to check active again here
-                if (token.IsCancellationRequested) 
-                    break;
+                    if (localUdp == null)
+                        break;
 
-                // ensure that the packet is at least long enough to inspect for VITA info
-                if (packet.Buffer.Length < 16)
-                    continue;
-                
-                var vita = new VitaPacketPreamble(packet.Buffer);
+                    UdpReceiveResult packet;
+                    try
+                    {
+                        // Use CancellationToken overload (.NET 6+)
+                        packet = await localUdp.ReceiveAsync(token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        break;
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // Socket was disposed during Stop()
+                        break;
+                    }
+                    catch (SocketException)
+                    {
+                        // Socket error, likely closed
+                        break;
+                    }
 
-                // Check for a valid discovery packet
-                if (vita.class_id.OUI != VitaFlex.FLEX_OUI ||vita.header.pkt_type != VitaPacketType.ExtDataWithStream ||
-                    vita.class_id.PacketClassCode != VitaFlex.SL_VITA_DISCOVERY_CLASS)
-                    continue;
+                    // since the call above is blocking, we need to check active again here
+                    if (token.IsCancellationRequested)
+                        break;
 
-                Radio radio = ProcessVitaDiscoveryDataPacket(new VitaDiscoveryPacket(packet.Buffer, packet.Buffer.Length));
-                OnRadioDiscoveredEventHandler(radio);
+                    // ensure that the packet is at least long enough to inspect for VITA info
+                    if (packet.Buffer.Length < 16)
+                        continue;
 
-                //watch.Stop();
-                //if(radio.Serial == "3424-1213-8601-4043")
-                //    Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff")+": Discovery watch stop (" + watch.ElapsedMilliseconds + " ms)");
+                    var vita = new VitaPacketPreamble(packet.Buffer);
+
+                    // Check for a valid discovery packet
+                    if (vita.class_id.OUI != VitaFlex.FLEX_OUI || vita.header.pkt_type != VitaPacketType.ExtDataWithStream ||
+                        vita.class_id.PacketClassCode != VitaFlex.SL_VITA_DISCOVERY_CLASS)
+                        continue;
+
+                    Radio radio = ProcessVitaDiscoveryDataPacket(new VitaDiscoveryPacket(packet.Buffer, packet.Buffer.Length));
+                    OnRadioDiscoveredEventHandler(radio);
+
+                    //watch.Stop();
+                    //if(radio.Serial == "3424-1213-8601-4043")
+                    //    Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss.fff")+": Discovery watch stop (" + watch.ElapsedMilliseconds + " ms)");
+                }
             }
-
-            udp.Close();
-            udp = null;
+            finally
+            {
+                // Ensure cleanup even if Stop() wasn't called
+                lock (_lock)
+                {
+                    udp?.Dispose();
+                    udp = null;
+                }
+            }
         }
 
         private static Radio ProcessVitaDiscoveryDataPacket(VitaDiscoveryPacket packet)
@@ -119,16 +162,15 @@ namespace Flex.Smoothlake.FlexLib
                     continue;
                 }
 
-                string key = tokens[0].Trim();
-                string value = tokens[1].Trim();
+                var key = tokens[0].Trim();
+                var value = tokens[1].Trim();
                 value = value.Replace("\0", "");
 
                 switch (key.ToLower())
                 {
                     case "available_clients":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 //Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Invalid key/value pair (" + kv + ")");
@@ -140,8 +182,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;
                     case "available_panadapters":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 //.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Invalid key/value pair (" + kv + ")");
@@ -153,8 +194,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;
                     case "available_slices":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 //Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Invalid key/value pair (" + kv + ")");
@@ -169,8 +209,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;
                     case "discovery_protocol_version":
                         {
-                            ulong temp;
-                            bool b = FlexVersion.TryParse(value, out temp);
+                            bool b = FlexVersion.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Error converting version string (" + value + ")");
@@ -206,8 +245,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;
                     case "ip":
                         {
-                            IPAddress temp;
-                            bool b = IPAddress.TryParse(value, out temp);
+                            bool b = IPAddress.TryParse(value, out var temp);
                             if (!b)
                             {
                                 //Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Invalid key/value pair (" + kv + ")");
@@ -219,8 +257,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;
                     case "licensed_clients":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 //Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Invalid key/value pair (" + kv + ")");
@@ -235,8 +272,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;
                     case "max_panadapters":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 //Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Invalid key/value pair (" + kv + ")");
@@ -248,8 +284,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;
                     case "max_slices":
                         {
-                            int temp;
-                            bool b = int.TryParse(value, out temp);
+                            bool b = int.TryParse(value, out var temp);
                             if (!b)
                             {
                                 //Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Invalid key/value pair (" + kv + ")");
@@ -302,8 +337,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;
                     case "version":
                         {
-                            ulong temp;
-                            bool b = FlexVersion.TryParse(value, out temp);
+                            bool b = FlexVersion.TryParse(value, out var temp);
                             if (!b)
                             {
                                 Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Error converting version string (" + value + ")");
@@ -315,8 +349,7 @@ namespace Flex.Smoothlake.FlexLib
                         break;                    
                     case "wan_connected":
                         {
-                            uint temp;
-                            bool b = uint.TryParse(value, out temp);
+                            bool b = uint.TryParse(value, out var temp);
                             if (!b || temp > 1)
                             {
                                 Debug.WriteLine("FlexLib::Discovery::ProcessVitaDiscoveryDataPacket: Invalid value (" + kv + ")");
@@ -351,7 +384,7 @@ namespace Flex.Smoothlake.FlexLib
         {
             if (string.IsNullOrEmpty(guiClientProgramsCsv) || string.IsNullOrEmpty(guiClientStationCsv) || string.IsNullOrEmpty(guiClientHandlesCsv))
             {
-                return new List<GUIClient>();
+                return [];
             }
 
             var programs = guiClientProgramsCsv.Split(',');
@@ -363,7 +396,7 @@ namespace Flex.Smoothlake.FlexLib
                 stations.Length != handles.Length)
             {
                 // The lengths of these lists must match.
-                return new List<GUIClient>();
+                return [];
             }
 
             List<GUIClient> guiClients = new List<GUIClient>();
@@ -373,7 +406,7 @@ namespace Flex.Smoothlake.FlexLib
                 StringHelper.TryParseInteger(handles[i], out handle_uint);
 
                 string station = stations[i].Replace('\u007f', ' ');
-                GUIClient newGuiClient = new GUIClient(handle: handle_uint, client_id: null, program: programs[i], station: station, is_local_ptt: false);
+                GUIClient newGuiClient = new GUIClient(handle: handle_uint, clientId: null!, program: programs[i], station: station, isLocalPtt: false);
                 guiClients.Add(newGuiClient);
             }
 
@@ -382,10 +415,9 @@ namespace Flex.Smoothlake.FlexLib
 
         public static event RadioDiscoveredEventHandler RadioDiscovered;
 
-        public static void OnRadioDiscoveredEventHandler(Radio radio)
+        private static void OnRadioDiscoveredEventHandler(Radio radio)
         {
-            if (RadioDiscovered == null) return;
-            RadioDiscovered(radio);
+            RadioDiscovered?.Invoke(radio);
         }
     }
 }

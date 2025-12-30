@@ -22,15 +22,37 @@ using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class RXAudioStream : ObservableObject
+    public class RXAudioStream : ObservableObject, IDisposable
     {
         protected Radio _radio;
         protected System.Timers.Timer _statsTimer = new System.Timers.Timer(1000);
+        private bool _disposed;
+
         public RXAudioStream(Radio radio)
         {
             _radio = radio;
             _statsTimer.AutoReset = true;
             _statsTimer.Elapsed += UpdateRXRate;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                _statsTimer.Elapsed -= UpdateRXRate;
+                _statsTimer.Stop();
+                _statsTimer.Dispose();
+            }
+
+            _disposed = true;
         }
 
         protected uint _clientHandle;
@@ -213,19 +235,19 @@ namespace Flex.Smoothlake.FlexLib
         public event DataReadyEventHandler DataReady;
         private void OnRXDataReady(RXAudioStream rxAudioStream, float[] rx_data)
         {
-            if (DataReady != null)
+            var handler = DataReady;
+            if (handler == null) return;
+
+            if (_shouldApplyRxGainScalar)
             {
-                if (_shouldApplyRxGainScalar)
+                // MICAudioStream can apply an RX Gain on the client side
+                for (int i = 0; i < rx_data.Length; i++)
                 {
-                    // MICAudioStream can apply an RX Gain on the client side
-                    for (int i = 0; i < rx_data.Length; i++)
-                    {
-                        rx_data[i] = rx_data[i] * _rxGainScalar;
-                    }
+                    rx_data[i] = rx_data[i] * _rxGainScalar;
                 }
-                
-                DataReady(rxAudioStream, rx_data);
             }
+
+            handler(rxAudioStream, rx_data);
         }
 
         public delegate void OpusPacketReceivedEventHandler();

@@ -143,8 +143,7 @@ namespace Vita
                 int num_bytes = socket.EndReceiveFrom(ar, ref remoteEndPoint);
                 byte[] buf = (byte[])ar.AsyncState;
 
-                if (callback != null)
-                    callback((IPEndPoint)remoteEndPoint, buf, num_bytes);
+                callback?.Invoke((IPEndPoint)remoteEndPoint, buf, num_bytes);
 
                 StartReceive();
             }
@@ -170,10 +169,13 @@ namespace Vita
         {
             try
             {
-                if (socket != null)
-                    socket.Close();
+                socket?.Dispose();
+                socket = null;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("VitaSocket::CloseSocket Exception: " + ex.Message);
+            }
         }
     }
 }

@@ -22,14 +22,9 @@ using Util;
 
 namespace Flex.Smoothlake.FlexLib
 {    
-    public abstract class UsbCable : ObservableObject, IUsbCable
+    public abstract class UsbCable(Radio radio, string serialNumber) : ObservableObject, IUsbCable
     {
-        protected Radio _radio;
-        public UsbCable(Radio radio, string serial_number)
-        {
-            _radio = radio;
-            _serialNumber = serial_number;
-        }
+        protected Radio _radio = radio;
 
         public event EventHandler<LogMessageEventArgs> LogTextReceived;
         private void OnLogTextReceived(LogMessageEventArgs e)
@@ -38,7 +33,7 @@ namespace Flex.Smoothlake.FlexLib
                 LogTextReceived(this, e);
         }
 
-        protected string _serialNumber;
+        protected string _serialNumber = serialNumber;
         public string SerialNumber
         {
             get { return _serialNumber; }
@@ -375,13 +370,9 @@ namespace Flex.Smoothlake.FlexLib
         Invalid,
     }
 
-    public class LogMessageEventArgs : EventArgs
+    public class LogMessageEventArgs(string s) : EventArgs
     {
-        public LogMessageEventArgs(string s)
-        {
-            message = s;
-        }
-        private string message;
+        private string message = s;
 
         public string Message
         {

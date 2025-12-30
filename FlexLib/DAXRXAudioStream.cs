@@ -18,13 +18,8 @@ using Util;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class DAXRXAudioStream : RXAudioStream, IDaxRxStream
+    public class DAXRXAudioStream(Radio radio) : RXAudioStream(radio), IDaxRxStream
     {
-        public DAXRXAudioStream(Radio radio) : base(radio)
-        {
-
-        }
-
         private int _daxChannel;
         public int DAXChannel
         {

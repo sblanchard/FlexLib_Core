@@ -4782,7 +4782,14 @@ namespace Flex.Smoothlake.FlexLib
         public Slice FindSliceByIndex(int index)
         {
             lock (_slices)
-                return _slices.FirstOrDefault(slc => slc.Index == index);
+            {
+                for (int i = 0; i < _slices.Count; i++)
+                {
+                    if (_slices[i].Index == index)
+                        return _slices[i];
+                }
+                return null;
+            }
         }
 
         public Slice FindSliceByLetter(string slice_letter, uint gui_client_handle)
@@ -4791,7 +4798,12 @@ namespace Flex.Smoothlake.FlexLib
 
             lock (_slices)
             {
-                return _slices.FirstOrDefault(s => s.Letter == slice_letter && s.ClientHandle == gui_client_handle);
+                for (int i = 0; i < _slices.Count; i++)
+                {
+                    if (_slices[i].Letter == slice_letter && _slices[i].ClientHandle == gui_client_handle)
+                        return _slices[i];
+                }
+                return null;
             }
         }
 
@@ -4803,7 +4815,14 @@ namespace Flex.Smoothlake.FlexLib
         public Slice FindSliceByDAXChannel(int dax_channel)
         {
             lock (_slices)
-                return _slices.FirstOrDefault(s => s.DAXChannel == dax_channel);
+            {
+                for (int i = 0; i < _slices.Count; i++)
+                {
+                    if (_slices[i].DAXChannel == dax_channel)
+                        return _slices[i];
+                }
+                return null;
+            }
         }
 
         internal void AddSlice(Slice slc)
@@ -5117,13 +5136,27 @@ namespace Flex.Smoothlake.FlexLib
         internal Panadapter FindPanadapterByStreamID(uint stream_id)
         {
             lock (_panadapters)
-                return _panadapters.FirstOrDefault(x => x.StreamID == stream_id);
+            {
+                for (int i = 0; i < _panadapters.Count; i++)
+                {
+                    if (_panadapters[i].StreamID == stream_id)
+                        return _panadapters[i];
+                }
+                return null;
+            }
         }
 
         internal Waterfall FindWaterfallByParentStreamID(uint stream_id)
         {
             lock (_waterfalls)
-                return _waterfalls.FirstOrDefault(x => x.ParentPanadapterStreamID == stream_id);
+            {
+                for (int i = 0; i < _waterfalls.Count; i++)
+                {
+                    if (_waterfalls[i].ParentPanadapterStreamID == stream_id)
+                        return _waterfalls[i];
+                }
+                return null;
+            }
         }
 
         /// <summary>
@@ -5135,7 +5168,14 @@ namespace Flex.Smoothlake.FlexLib
         public Panadapter FindPanByDAXIQChannel(uint client_handle, int daxIQChannel)
         {
             lock (_panadapters)
-                return _panadapters.FirstOrDefault(x => x.DAXIQChannel == daxIQChannel && x.ClientHandle == client_handle);
+            {
+                for (int i = 0; i < _panadapters.Count; i++)
+                {
+                    if (_panadapters[i].DAXIQChannel == daxIQChannel && _panadapters[i].ClientHandle == client_handle)
+                        return _panadapters[i];
+                }
+                return null;
+            }
         }
 
         private int _panadaptersRemaining;
@@ -5230,13 +5270,27 @@ namespace Flex.Smoothlake.FlexLib
         internal Waterfall FindWaterfallByStreamID(uint stream_id)
         {
             lock (_waterfalls)
-                return _waterfalls.FirstOrDefault(x => x.StreamID == stream_id);
+            {
+                for (int i = 0; i < _waterfalls.Count; i++)
+                {
+                    if (_waterfalls[i].StreamID == stream_id)
+                        return _waterfalls[i];
+                }
+                return null;
+            }
         }
 
         public Waterfall FindWaterfallByDAXIQChannel(int daxIQChannel)
         {
             lock (_waterfalls)
-                return _waterfalls.FirstOrDefault(x => x.DAXIQChannel == daxIQChannel);
+            {
+                for (int i = 0; i < _waterfalls.Count; i++)
+                {
+                    if (_waterfalls[i].DAXIQChannel == daxIQChannel)
+                        return _waterfalls[i];
+                }
+                return null;
+            }
         }
 
         private int _waterfallsRemaining;
@@ -14037,19 +14091,11 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
-        public class UDPVitaPacket
+        public class UDPVitaPacket(IPEndPoint ep, byte[] data, int bytes)
         {
-            public IPEndPoint Ep { get; set; }
-            public byte[] Data { get; set; }
-            public int Bytes { get; set; }
-
-
-            public UDPVitaPacket(IPEndPoint ep, byte[] data, int bytes)
-            {
-                Ep = ep;
-                Data = data;
-                Bytes = bytes;
-            }
+            public IPEndPoint Ep { get; set; } = ep;
+            public byte[] Data { get; set; } = data;
+            public int Bytes { get; set; } = bytes;
         }
 
         private void ProcessVitaPacket(VitaPacketPreamble vita_preamble, byte[] data, int bytes)

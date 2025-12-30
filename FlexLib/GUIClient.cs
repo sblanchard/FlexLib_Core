@@ -16,18 +16,15 @@ using Flex.Smoothlake.FlexLib.Mvvm;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class GUIClient : ObservableObject
+    public class GUIClient(
+        uint handle,
+        string clientId,
+        string program,
+        string station,
+        bool isLocalPtt,
+        bool isAvailable = true)
+        : ObservableObject
     {
-        public GUIClient(uint handle, string client_id, string program, string station, bool is_local_ptt, bool is_available=true)
-        {
-            _clientHandle = handle;
-            _clientID = client_id;
-            _program = program;
-            _station = station;
-            IsAvailable = is_available;
-            _isLocalPtt = is_local_ptt;
-        }
-
         private bool _isThisClient;
         public bool IsThisClient
         {
@@ -43,7 +40,7 @@ namespace Flex.Smoothlake.FlexLib
         }
 
 
-        private uint _clientHandle;
+        private uint _clientHandle = handle;
         public uint ClientHandle
         {
             get { return _clientHandle; }
@@ -57,7 +54,7 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
-        private string _clientID;
+        private string _clientID = clientId;
         public string ClientID
         {
             get { return _clientID; }
@@ -71,7 +68,7 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
-        private string _program;
+        private string _program = program;
         public string Program
         {
             get { return _program; }
@@ -85,7 +82,7 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
-        private string _station;
+        private string _station = station;
         public string Station
         {
             get { return _station; }
@@ -99,7 +96,7 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
-        private bool _isLocalPtt;
+        private bool _isLocalPtt = isLocalPtt;
         public bool IsLocalPtt
         {
             get { return _isLocalPtt; }
@@ -113,7 +110,7 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
-        public bool IsAvailable { get; }
+        public bool IsAvailable { get; } = isAvailable;
 
         private Slice _transmitSlice;
         public Slice TransmitSlice

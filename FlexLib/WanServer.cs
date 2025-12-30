@@ -23,14 +23,8 @@ namespace Flex.Smoothlake.FlexLib
 {
     public class WanServer : ObservableObject
     {
-        public WanServer()
-        {
-            HostName = "smartlink.flexradio.com";
-            HostPort = "443";
-        }
-
-        public string HostName { get; set; }
-        public string HostPort { get; set; }        
+        public string HostName { get; set; } = "smartlink.flexradio.com";
+        public string HostPort { get; set; } = "443";
 
         private SslClient _sslClient;
 

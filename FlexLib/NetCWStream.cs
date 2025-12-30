@@ -19,15 +19,9 @@ using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class NetCWStream : ObservableObject
+    public class NetCWStream(Radio radio) : ObservableObject
     {
-        private Radio _radio;
         private int _tx_index = 1;
-
-        public NetCWStream(Radio radio)
-        {
-            _radio = radio;
-        }
 
         private uint _txStreamID;
         public uint TXStreamID
@@ -48,13 +42,13 @@ namespace Flex.Smoothlake.FlexLib
         public bool RequestNetCWStreamFromRadio()
         {
             // check to ensure this object is tied to a radio object
-            if (_radio == null) return false;
+            if (radio == null) return false;
 
             // check to make sure the radio is connected
-            if (!_radio.Connected) return false;
+            if (!radio.Connected) return false;
 
             // send the command to the radio to create the object...need to change this..
-            _radio.SendReplyCommand(new ReplyHandler(UpdateStreamID), "stream create netcw");
+            radio.SendReplyCommand(new ReplyHandler(UpdateStreamID), "stream create netcw");
 
             return true;
         }
@@ -81,7 +75,7 @@ namespace Flex.Smoothlake.FlexLib
         internal void Remove()
         {
             Debug.WriteLine("NetCWStream::Remove (0x" + _txStreamID.ToString("X") + ")");
-            _radio.SendCommand("stream remove 0x" + _txStreamID.ToString("X"));
+            radio.SendCommand("stream remove 0x" + _txStreamID.ToString("X"));
         }
 
         public int GetNextIndex()
@@ -138,7 +132,7 @@ namespace Flex.Smoothlake.FlexLib
                 try
                 {
                     // send the packet to the radio
-                    _radio.VitaSock.SendUDP(_txPacket.ToBytesTX());
+                    radio.VitaSock.SendUDP(_txPacket.ToBytesTX());
                 }
                 catch (Exception e)
                 {

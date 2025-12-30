@@ -27,13 +27,9 @@ namespace Util
         //private int _last_get_index = 0;
         //private IList<T> _last_set_inner_list;
         //private IList<T> _last_get_inner_list;
-        private IList<IList<T>> _lists;
+        private IList<IList<T>> _lists = new List<IList<T>> { new List<T>(INNER_LIST_MAX_SIZE) };
 
-        public LargePartitionedList()
-        {
-            //_maxCountPerList = maxCountPerList;
-            _lists = new List<IList<T>> { new List<T>(INNER_LIST_MAX_SIZE) };
-        }
+        //_maxCountPerList = maxCountPerList;
 
         public IEnumerator<T> GetEnumerator()
         {

@@ -15,11 +15,10 @@ namespace Util;
 
 #if !(NET462 || NET8_0_OR_GREATER_WINDOWS)
 // Simple Point struct for non-Windows builds
-public struct Point
+public struct Point(int x, int y)
 {
-    public int X { get; set; }
-    public int Y { get; set; }
-    public Point(int x, int y) { X = x; Y = y; }
+    public int X { get; set; } = x;
+    public int Y { get; set; } = y;
 }
 #endif
 
@@ -180,16 +179,10 @@ public class DisplayMode
         DEGREES_CW_270 = 1
     }
     
-    private class DisplayModeEnumerator : IEnumerator<DisplayMode>
+    private class DisplayModeEnumerator(string displayName) : IEnumerator<DisplayMode>
     {
         private int _index = -1;
-        private readonly string _displayName;
 
-        public DisplayModeEnumerator(string displayName)
-        {
-            _displayName = displayName;
-        }
-        
         public DisplayMode Current { get; private set; }
 
         object IEnumerator.Current => Current;
@@ -198,7 +191,7 @@ public class DisplayMode
         {
             try
             {
-                Current = new DisplayMode(_displayName, ++_index);
+                Current = new DisplayMode(displayName, ++_index);
                 return true;
             }
             catch (Exception)
@@ -217,16 +210,9 @@ public class DisplayMode
         }
     }
 
-    internal class DisplayModeEnumerable : IEnumerable<DisplayMode>
+    internal class DisplayModeEnumerable(string displayName) : IEnumerable<DisplayMode>
     {
-        private readonly string _displayName;
-
-        public DisplayModeEnumerable(string displayName)
-        {
-            _displayName = displayName;
-        }
-        
-        public IEnumerator<DisplayMode> GetEnumerator() => new DisplayModeEnumerator(_displayName);
+        public IEnumerator<DisplayMode> GetEnumerator() => new DisplayModeEnumerator(displayName);
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
     

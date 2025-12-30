@@ -17,15 +17,8 @@ using Flex.Smoothlake.FlexLib.Mvvm;
 
 namespace Flex.Smoothlake.FlexLib
 {
-    public class RapidM : ObservableObject
+    public class RapidM(Radio radio) : ObservableObject
     {
-        private Radio _radio;
-
-        public RapidM(Radio radio)
-        {
-            _radio = radio;
-        }
-
         #region Properties
 
         private string _selectedPskWaveform;
@@ -486,7 +479,7 @@ namespace Flex.Smoothlake.FlexLib
         {
             //enc and isb are usually disabled.
             //might come back to adjust this command to control what gets sent to the radio
-            _radio.SendCommand("rapidm psk set wf=" + _selectedPskWaveform + " rate=" + _selectedRate + " il=" + _selectedInterleaver
+            radio.SendCommand("rapidm psk set wf=" + _selectedPskWaveform + " rate=" + _selectedRate + " il=" + _selectedInterleaver
                                 + " enc=" + _selectedPSKENC + " isb=" + _selectedPSKISB);
         }
 
@@ -494,14 +487,14 @@ namespace Flex.Smoothlake.FlexLib
         {
             //tlc and preamble may need to: have fixed value/be set to radio defaults/not be sent to radio.
             //will revisit when decision is made
-            _radio.SendCommand("rapidm ms110c set wf=" + _selectedMs110cWaveform + " bw=" + _selectedBandwidth + " il=" + _selectedMS110CInterleaver
+            radio.SendCommand("rapidm ms110c set wf=" + _selectedMs110cWaveform + " bw=" + _selectedBandwidth + " il=" + _selectedMS110CInterleaver
                                 + " tlc=" + _selectedMS110CTLC + " preamble=" + _selectedMS110CPreamble + " constraint=" + _selectedMS110CConstraint);
         }
 
         public void SendMessage(string message)
         {
             string encoded_string = message.Replace(' ', '\u007f');
-            _radio.SendCommand("rapidm tx_message " + encoded_string);
+            radio.SendCommand("rapidm tx_message " + encoded_string);
         }
 
         internal void ParseStatus(string s)
