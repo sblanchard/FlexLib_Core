@@ -12,15 +12,12 @@
 // ****************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Flex.Smoothlake.FlexLib.Mvvm;
 using System.Diagnostics;
 using System.ComponentModel;
-using Flex.Util;
+using Flex.Smoothlake.FlexLib.Interface;
 using Flex.Smoothlake.FlexLib.Utils;
+using Util;
 
 
 namespace Flex.Smoothlake.FlexLib

@@ -12,13 +12,9 @@
 // ****************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 
-
-namespace Flex.Util
+namespace Util
 {
     public class Win32
     {

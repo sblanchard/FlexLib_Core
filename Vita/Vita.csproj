@@ -9,9 +9,10 @@
     <Version>0.0.0.0</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TargetFrameworks>net462;net8.0-windows;net10.0</TargetFrameworks>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>default</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU;x86;x64;arm64</Platforms>
   </PropertyGroup>
@@ -36,10 +37,6 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Util\Util.csproj" />
   </ItemGroup>

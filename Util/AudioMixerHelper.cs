@@ -1,9 +1,7 @@
 ﻿using System;
-
 using System.Runtime.InteropServices;
 
-
-namespace Flex.Util
+namespace Util
 {
 
     public class AudioMixerHelper

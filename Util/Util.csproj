@@ -11,10 +11,18 @@
     <Version>0.0.0.0</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TargetFrameworks>net462;net8.0-windows;net10.0</TargetFrameworks>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <TargetFramework>net10.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <!-- Only enable Windows targeting when building on Windows -->
+    <EnableWindowsTargeting Condition="$([MSBuild]::IsOSPlatform('Windows'))">true</EnableWindowsTargeting>
     <Configurations>Debug;Release</Configurations>
     <Platforms>AnyCPU;x86;x64;arm64</Platforms>
+    <!-- Suppress warnings for legacy code in this submodule -->
+    <!-- NU1510: Package pruning informational warning (packages are used) -->
+    <!-- CS8632: Nullable annotations without #nullable context -->
+    <!-- SYSLIB0022/0023/0060: Obsolete crypto APIs (legacy code) -->
+    <NoWarn>$(NoWarn);NU1510;CS8632;SYSLIB0022;SYSLIB0023;SYSLIB0060</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -36,22 +44,21 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Reference Include="mscorlib" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'net8.0-windows'">
-    <ProjectReference Include="..\UiWpfFramework\UiWpfFramework.csproj" />
+  <!-- Exclude Windows-specific files on non-Windows platforms -->
+  <ItemGroup Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
+    <Compile Remove="win32.cs" />
+    <Compile Remove="hiperftimer.cs" />
+    <Compile Remove="AudioMixerHelper.cs" />
+    <Compile Remove="WindowHelper.cs" />
+    <Compile Remove="Display.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Netify" Version="1.1.1" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-    <PackageReference Include="RestSharp" Version="112.1.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="RestSharp" Version="113.0.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.6.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="obj\x86\Debug\.NETFramework,Version=v4.6.2.AssemblyAttributes.cs" />

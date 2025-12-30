@@ -12,14 +12,10 @@
 // ****************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
+using Util;
 
-using Flex.Util;
-
-namespace Flex.Smoothlake.Vita
+namespace Vita
 {
     public class VitaMeterPacket
     {

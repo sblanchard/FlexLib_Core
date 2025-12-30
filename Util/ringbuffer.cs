@@ -15,7 +15,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Flex.Util
+namespace Util
 {
     unsafe public class RingBufferFloat
     {

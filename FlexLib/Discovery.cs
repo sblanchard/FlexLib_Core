@@ -18,8 +18,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Flex.Smoothlake.Vita;
-using Flex.Util;
+using Util;
+using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {

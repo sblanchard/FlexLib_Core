@@ -12,12 +12,10 @@
 // ****************************************************************************
 
 using System;
-using System.Globalization;
 using System.Diagnostics;
-using System.Net;
 using System.Threading;
 using Flex.Smoothlake.FlexLib.Mvvm;
-using Flex.Smoothlake.Vita;
+using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {
@@ -117,9 +115,22 @@ namespace Flex.Smoothlake.FlexLib
         }
 
         private VitaOpusDataPacket _txPacket;
+
+        /// <summary>
+        /// Send TX audio data using the full byte array.
+        /// </summary>
         public void AddTXData(byte[] tx_data)
         {
-            Interlocked.Add(ref _byteSumTX, tx_data.Length);
+            AddTXData(tx_data, 0, tx_data.Length);
+        }
+
+        /// <summary>
+        /// Send TX audio data from a buffer with specified offset and length.
+        /// This overload avoids per-frame allocations when using pre-allocated buffers.
+        /// </summary>
+        public void AddTXData(byte[] buffer, int offset, int length)
+        {
+            Interlocked.Add(ref _byteSumTX, length);
 
             if (_txPacket == null)
             {
@@ -135,12 +146,27 @@ namespace Flex.Smoothlake.FlexLib
                 _txPacket.class_id.InformationClassCode = 0x534C;
                 _txPacket.class_id.PacketClassCode = 0x8005;
             }
-            
-            _txPacket.payload = tx_data;
+
+            // Use the specified portion of the buffer
+            if (offset == 0 && length == buffer.Length)
+            {
+                _txPacket.payload = buffer;
+            }
+            else
+            {
+                // Create a view of the buffer for the VITA packet
+                // Note: VitaOpusDataPacket.ToBytesTX() copies payload, so we need exact-size array here
+                // Future optimization: modify ToBytesTX() to accept offset/length
+                if (_txPacket.payload == null || _txPacket.payload.Length != length)
+                {
+                    _txPacket.payload = new byte[length];
+                }
+                Buffer.BlockCopy(buffer, offset, _txPacket.payload, 0, length);
+            }
 
             // set the length of the packet
             // packet_size is the 32 bit word length?
-            _txPacket.header.packet_size = (ushort)Math.Ceiling(_txPacket.payload.Length / 4.0 + 7.0); // 7*4=28 bytes of Vita overhead
+            _txPacket.header.packet_size = (ushort)Math.Ceiling(length / 4.0 + 7.0); // 7*4=28 bytes of Vita overhead
 
             try
             {

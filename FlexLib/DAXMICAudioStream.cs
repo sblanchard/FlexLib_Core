@@ -12,20 +12,9 @@
 // ****************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-
-using System.Globalization;
 using System.Diagnostics;
-using System.Net;
-using System.Net.Sockets;
-using Flex.Smoothlake.FlexLib.Mvvm;
-using Flex.Util;
-using Flex.Smoothlake.Vita;
-using System.Threading;
 using Flex.Smoothlake.FlexLib.Interface;
+using Util;
 
 namespace Flex.Smoothlake.FlexLib
 {

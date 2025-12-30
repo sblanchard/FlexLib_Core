@@ -15,8 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-
 using Flex.Smoothlake.FlexLib.Mvvm;
 
 namespace Flex.Smoothlake.FlexLib

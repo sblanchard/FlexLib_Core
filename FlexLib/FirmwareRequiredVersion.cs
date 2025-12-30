@@ -3,11 +3,7 @@
 // recent version of Firmware that was built by Jenkins
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Flex.Util;
+using Util;
 
 
 namespace Flex.Smoothlake.FlexLib

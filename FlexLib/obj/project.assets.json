@@ -2,15 +2,15 @@
   "version": 3,
   "targets": {
     "net10.0": {
-      "Microsoft.Win32.SystemEvents/9.0.0": {
+      "Microsoft.Win32.SystemEvents/10.0.0": {
         "type": "package",
         "compile": {
-          "lib/net9.0/Microsoft.Win32.SystemEvents.dll": {
+          "lib/net10.0/Microsoft.Win32.SystemEvents.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Win32.SystemEvents.dll": {
+          "lib/net10.0/Microsoft.Win32.SystemEvents.dll": {
             "related": ".xml"
           }
         },
@@ -18,7 +18,7 @@
           "buildTransitive/net8.0/_._": {}
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.dll": {
+          "runtimes/win/lib/net10.0/Microsoft.Win32.SystemEvents.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -180,15 +180,15 @@
           }
         }
       },
-      "System.Collections.Immutable/9.0.0": {
+      "System.Collections.Immutable/10.0.0": {
         "type": "package",
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net10.0/_._": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/_._": {
+          "lib/net10.0/_._": {
             "related": ".xml"
           }
         },
@@ -196,29 +196,44 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "System.Drawing.Common/9.0.0": {
+      "System.Drawing.Common/10.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Win32.SystemEvents": "9.0.0"
+          "Microsoft.Win32.SystemEvents": "10.0.0"
         },
         "compile": {
-          "lib/net9.0/System.Drawing.Common.dll": {
+          "lib/net10.0/System.Drawing.Common.dll": {
             "related": ".pdb;.xml"
           },
-          "lib/net9.0/System.Private.Windows.Core.dll": {
+          "lib/net10.0/System.Private.Windows.Core.dll": {
+            "related": ".xml"
+          },
+          "lib/net10.0/System.Private.Windows.GdiPlus.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/System.Drawing.Common.dll": {
+          "lib/net10.0/System.Drawing.Common.dll": {
             "related": ".pdb;.xml"
           },
-          "lib/net9.0/System.Private.Windows.Core.dll": {
+          "lib/net10.0/System.Private.Windows.Core.dll": {
+            "related": ".xml"
+          },
+          "lib/net10.0/System.Private.Windows.GdiPlus.dll": {
             "related": ".xml"
           }
         },
         "build": {
           "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "System.ValueTuple/4.6.1": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/_._": {}
         }
       },
       "Util/0.0.0": {
@@ -227,7 +242,8 @@
         "dependencies": {
           "Netify": "1.1.1",
           "Nito.AsyncEx": "5.1.2",
-          "RestSharp": "112.1.0"
+          "RestSharp": "112.1.0",
+          "System.ValueTuple": "4.6.1"
         },
         "compile": {
           "bin/placeholder/Util.dll": {}
@@ -252,21 +268,22 @@
     }
   },
   "libraries": {
-    "Microsoft.Win32.SystemEvents/9.0.0": {
-      "sha512": "z8FfGIaoeALdD+KF44A2uP8PZIQQtDGiXsOLuN8nohbKhkyKt7zGaZb+fKiCxTuBqG22Q7myIAioSWaIcOOrOw==",
+    "Microsoft.Win32.SystemEvents/10.0.0": {
+      "sha512": "bYdnhuD0XxcVTrxc8RyBjXo+AXYWJPnda3clhGz2Kakleyun1PyrzYV8RezT7ZYmR9OBSOgvpFQcvHo/K8Y90w==",
       "type": "package",
-      "path": "microsoft.win32.systemevents/9.0.0",
+      "path": "microsoft.win32.systemevents/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "LICENSE.TXT",
         "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net461/Microsoft.Win32.SystemEvents.targets",
         "buildTransitive/net462/_._",
         "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/Microsoft.Win32.SystemEvents.targets",
+        "lib/net10.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net10.0/Microsoft.Win32.SystemEvents.xml",
         "lib/net462/Microsoft.Win32.SystemEvents.dll",
         "lib/net462/Microsoft.Win32.SystemEvents.xml",
         "lib/net8.0/Microsoft.Win32.SystemEvents.dll",
@@ -275,8 +292,10 @@
         "lib/net9.0/Microsoft.Win32.SystemEvents.xml",
         "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
         "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
-        "microsoft.win32.systemevents.9.0.0.nupkg.sha512",
+        "microsoft.win32.systemevents.10.0.0.nupkg.sha512",
         "microsoft.win32.systemevents.nuspec",
+        "runtimes/win/lib/net10.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net10.0/Microsoft.Win32.SystemEvents.xml",
         "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll",
         "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.xml",
         "runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.dll",
@@ -291,11 +310,11 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Netify.nuspec",
         "Netify.png",
         "lib/net452/Netify.dll",
         "lib/netcoreapp3.1/Netify.dll",
-        "netify.1.1.1.nupkg.sha512",
-        "netify.nuspec"
+        "netify.1.1.1.nupkg.sha512"
       ]
     },
     "Nito.AsyncEx/5.1.2": {
@@ -305,9 +324,9 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.AsyncEx.nuspec",
         "icon.png",
-        "nito.asyncex.5.1.2.nupkg.sha512",
-        "nito.asyncex.nuspec"
+        "nito.asyncex.5.1.2.nupkg.sha512"
       ]
     },
     "Nito.AsyncEx.Context/5.1.2": {
@@ -317,6 +336,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.AsyncEx.Context.nuspec",
         "icon.png",
         "lib/net461/Nito.AsyncEx.Context.dll",
         "lib/net461/Nito.AsyncEx.Context.xml",
@@ -324,8 +344,7 @@
         "lib/netstandard1.3/Nito.AsyncEx.Context.xml",
         "lib/netstandard2.0/Nito.AsyncEx.Context.dll",
         "lib/netstandard2.0/Nito.AsyncEx.Context.xml",
-        "nito.asyncex.context.5.1.2.nupkg.sha512",
-        "nito.asyncex.context.nuspec"
+        "nito.asyncex.context.5.1.2.nupkg.sha512"
       ]
     },
     "Nito.AsyncEx.Coordination/5.1.2": {
@@ -335,6 +354,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.AsyncEx.Coordination.nuspec",
         "icon.png",
         "lib/net461/Nito.AsyncEx.Coordination.dll",
         "lib/net461/Nito.AsyncEx.Coordination.xml",
@@ -342,8 +362,7 @@
         "lib/netstandard1.3/Nito.AsyncEx.Coordination.xml",
         "lib/netstandard2.0/Nito.AsyncEx.Coordination.dll",
         "lib/netstandard2.0/Nito.AsyncEx.Coordination.xml",
-        "nito.asyncex.coordination.5.1.2.nupkg.sha512",
-        "nito.asyncex.coordination.nuspec"
+        "nito.asyncex.coordination.5.1.2.nupkg.sha512"
       ]
     },
     "Nito.AsyncEx.Interop.WaitHandles/5.1.2": {
@@ -353,6 +372,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.AsyncEx.Interop.WaitHandles.nuspec",
         "icon.png",
         "lib/net461/Nito.AsyncEx.Interop.WaitHandles.dll",
         "lib/net461/Nito.AsyncEx.Interop.WaitHandles.xml",
@@ -360,8 +380,7 @@
         "lib/netstandard1.3/Nito.AsyncEx.Interop.WaitHandles.xml",
         "lib/netstandard2.0/Nito.AsyncEx.Interop.WaitHandles.dll",
         "lib/netstandard2.0/Nito.AsyncEx.Interop.WaitHandles.xml",
-        "nito.asyncex.interop.waithandles.5.1.2.nupkg.sha512",
-        "nito.asyncex.interop.waithandles.nuspec"
+        "nito.asyncex.interop.waithandles.5.1.2.nupkg.sha512"
       ]
     },
     "Nito.AsyncEx.Oop/5.1.2": {
@@ -371,6 +390,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.AsyncEx.Oop.nuspec",
         "icon.png",
         "lib/net461/Nito.AsyncEx.Oop.dll",
         "lib/net461/Nito.AsyncEx.Oop.xml",
@@ -378,8 +398,7 @@
         "lib/netstandard1.3/Nito.AsyncEx.Oop.xml",
         "lib/netstandard2.0/Nito.AsyncEx.Oop.dll",
         "lib/netstandard2.0/Nito.AsyncEx.Oop.xml",
-        "nito.asyncex.oop.5.1.2.nupkg.sha512",
-        "nito.asyncex.oop.nuspec"
+        "nito.asyncex.oop.5.1.2.nupkg.sha512"
       ]
     },
     "Nito.AsyncEx.Tasks/5.1.2": {
@@ -389,6 +408,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.AsyncEx.Tasks.nuspec",
         "icon.png",
         "lib/net461/Nito.AsyncEx.Tasks.dll",
         "lib/net461/Nito.AsyncEx.Tasks.xml",
@@ -396,8 +416,7 @@
         "lib/netstandard1.3/Nito.AsyncEx.Tasks.xml",
         "lib/netstandard2.0/Nito.AsyncEx.Tasks.dll",
         "lib/netstandard2.0/Nito.AsyncEx.Tasks.xml",
-        "nito.asyncex.tasks.5.1.2.nupkg.sha512",
-        "nito.asyncex.tasks.nuspec"
+        "nito.asyncex.tasks.5.1.2.nupkg.sha512"
       ]
     },
     "Nito.Cancellation/1.1.2": {
@@ -407,6 +426,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.Cancellation.nuspec",
         "icon.png",
         "lib/net461/Nito.Cancellation.dll",
         "lib/net461/Nito.Cancellation.xml",
@@ -414,8 +434,7 @@
         "lib/netstandard1.0/Nito.Cancellation.xml",
         "lib/netstandard2.0/Nito.Cancellation.dll",
         "lib/netstandard2.0/Nito.Cancellation.xml",
-        "nito.cancellation.1.1.2.nupkg.sha512",
-        "nito.cancellation.nuspec"
+        "nito.cancellation.1.1.2.nupkg.sha512"
       ]
     },
     "Nito.Collections.Deque/1.1.1": {
@@ -425,6 +444,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.Collections.Deque.nuspec",
         "icon.png",
         "lib/net461/Nito.Collections.Deque.dll",
         "lib/net461/Nito.Collections.Deque.xml",
@@ -432,8 +452,7 @@
         "lib/netstandard1.0/Nito.Collections.Deque.xml",
         "lib/netstandard2.0/Nito.Collections.Deque.dll",
         "lib/netstandard2.0/Nito.Collections.Deque.xml",
-        "nito.collections.deque.1.1.1.nupkg.sha512",
-        "nito.collections.deque.nuspec"
+        "nito.collections.deque.1.1.1.nupkg.sha512"
       ]
     },
     "Nito.Disposables/2.2.1": {
@@ -443,6 +462,7 @@
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Nito.Disposables.nuspec",
         "icon.png",
         "lib/net461/Nito.Disposables.dll",
         "lib/net461/Nito.Disposables.xml",
@@ -452,8 +472,7 @@
         "lib/netstandard2.0/Nito.Disposables.xml",
         "lib/netstandard2.1/Nito.Disposables.dll",
         "lib/netstandard2.1/Nito.Disposables.xml",
-        "nito.disposables.2.2.1.nupkg.sha512",
-        "nito.disposables.nuspec"
+        "nito.disposables.2.2.1.nupkg.sha512"
       ]
     },
     "RestSharp/112.1.0": {
@@ -464,6 +483,7 @@
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
+        "RestSharp.nuspec",
         "lib/net471/RestSharp.dll",
         "lib/net471/RestSharp.xml",
         "lib/net48/RestSharp.dll",
@@ -477,25 +497,25 @@
         "lib/netstandard2.0/RestSharp.dll",
         "lib/netstandard2.0/RestSharp.xml",
         "restsharp.112.1.0.nupkg.sha512",
-        "restsharp.nuspec",
         "restsharp.png"
       ]
     },
-    "System.Collections.Immutable/9.0.0": {
-      "sha512": "QhkXUl2gNrQtvPmtBTQHb0YsUrDiDQ2QS09YbtTTiSjGcf7NBqtYbrG/BE06zcBPCKEwQGzIv13IVdXNOSub2w==",
+    "System.Collections.Immutable/10.0.0": {
+      "sha512": "BHo23kBFvTFQa0tuDFXcb3Q8QInjm1Xrq+If/xuV8iMlxOOsylsa6sgRK25n5dlcMk8G2f0O/t5AdjZrdVBOXA==",
       "type": "package",
-      "path": "system.collections.immutable/9.0.0",
+      "path": "system.collections.immutable/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "LICENSE.TXT",
         "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net461/System.Collections.Immutable.targets",
         "buildTransitive/net462/_._",
         "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/System.Collections.Immutable.targets",
+        "lib/net10.0/System.Collections.Immutable.dll",
+        "lib/net10.0/System.Collections.Immutable.xml",
         "lib/net462/System.Collections.Immutable.dll",
         "lib/net462/System.Collections.Immutable.xml",
         "lib/net8.0/System.Collections.Immutable.dll",
@@ -504,15 +524,15 @@
         "lib/net9.0/System.Collections.Immutable.xml",
         "lib/netstandard2.0/System.Collections.Immutable.dll",
         "lib/netstandard2.0/System.Collections.Immutable.xml",
-        "system.collections.immutable.9.0.0.nupkg.sha512",
+        "system.collections.immutable.10.0.0.nupkg.sha512",
         "system.collections.immutable.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.Drawing.Common/9.0.0": {
-      "sha512": "uoozjI3+dlgKh2onFJcz8aNLh6TRCPlLSh8Dbuljc8CdvqXrxHOVysJlrHvlsOCqceqGBR1wrMPxlnzzhynktw==",
+    "System.Drawing.Common/10.0.0": {
+      "sha512": "kohT9ZZlkB5R5ifihCBnPJLdIUQGiTj1ZI6z4LKatr+F4MmIJJu7qQpBkqt9280ivtnSvlTx9qZEY+CpJ0zMkA==",
       "type": "package",
-      "path": "system.drawing.common/9.0.0",
+      "path": "system.drawing.common/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -526,6 +546,13 @@
         "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
+        "lib/net10.0/System.Drawing.Common.dll",
+        "lib/net10.0/System.Drawing.Common.pdb",
+        "lib/net10.0/System.Drawing.Common.xml",
+        "lib/net10.0/System.Private.Windows.Core.dll",
+        "lib/net10.0/System.Private.Windows.Core.xml",
+        "lib/net10.0/System.Private.Windows.GdiPlus.dll",
+        "lib/net10.0/System.Private.Windows.GdiPlus.xml",
         "lib/net462/System.Drawing.Common.dll",
         "lib/net462/System.Drawing.Common.pdb",
         "lib/net462/System.Drawing.Common.xml",
@@ -534,11 +561,15 @@
         "lib/net8.0/System.Drawing.Common.xml",
         "lib/net8.0/System.Private.Windows.Core.dll",
         "lib/net8.0/System.Private.Windows.Core.xml",
+        "lib/net8.0/System.Private.Windows.GdiPlus.dll",
+        "lib/net8.0/System.Private.Windows.GdiPlus.xml",
         "lib/net9.0/System.Drawing.Common.dll",
         "lib/net9.0/System.Drawing.Common.pdb",
         "lib/net9.0/System.Drawing.Common.xml",
         "lib/net9.0/System.Private.Windows.Core.dll",
         "lib/net9.0/System.Private.Windows.Core.xml",
+        "lib/net9.0/System.Private.Windows.GdiPlus.dll",
+        "lib/net9.0/System.Private.Windows.GdiPlus.xml",
         "lib/netstandard2.0/System.Drawing.Common.dll",
         "lib/netstandard2.0/System.Drawing.Common.pdb",
         "lib/netstandard2.0/System.Drawing.Common.xml",
@@ -546,9 +577,33 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "system.drawing.common.9.0.0.nupkg.sha512",
+        "system.drawing.common.10.0.0.nupkg.sha512",
         "system.drawing.common.nuspec",
         "useSharedDesignerContext.txt"
+      ]
+    },
+    "System.ValueTuple/4.6.1": {
+      "sha512": "+RJT4qaekpZ7DDLhf+LTjq+E48jieKiY9ulJ+BoxKmZblIJfIJT8Ufcaa/clQqnYvWs8jugfGSMu8ylS0caG0w==",
+      "type": "package",
+      "path": "system.valuetuple/4.6.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "build/net471/System.ValueTuple.targets",
+        "buildTransitive/net461/System.ValueTuple.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net471/System.ValueTuple.targets",
+        "lib/net462/System.ValueTuple.dll",
+        "lib/net462/System.ValueTuple.xml",
+        "lib/net47/System.ValueTuple.dll",
+        "lib/net47/System.ValueTuple.xml",
+        "lib/net471/_._",
+        "lib/netcoreapp2.0/_._",
+        "lib/netstandard2.0/_._",
+        "system.valuetuple.4.6.1.nupkg.sha512",
+        "system.valuetuple.nuspec"
       ]
     },
     "Util/0.0.0": {
@@ -564,8 +619,8 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
-      "System.Collections.Immutable >= 9.0.0",
-      "System.Drawing.Common >= 9.0.0",
+      "System.Collections.Immutable >= 10.0.0",
+      "System.Drawing.Common >= 10.0.0",
       "Util >= 0.0.0",
       "Vita >= 0.0.0"
     ]
@@ -624,11 +679,14 @@
         "dependencies": {
           "System.Collections.Immutable": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[10.0.0, )",
+            "noWarn": [
+              "NU1510"
+            ]
           },
           "System.Drawing.Common": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[10.0.0, )"
           }
         },
         "imports": [
@@ -924,17 +982,5 @@
         }
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1510",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "PackageReference System.Collections.Immutable will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "libraryId": "System.Collections.Immutable",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  }
 }

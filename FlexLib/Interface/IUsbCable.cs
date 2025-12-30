@@ -13,7 +13,8 @@
 
 using System;
 using System.ComponentModel;
-namespace Flex.Smoothlake.FlexLib
+
+namespace Flex.Smoothlake.FlexLib.Interface
 {
     public interface IUsbCable
     {

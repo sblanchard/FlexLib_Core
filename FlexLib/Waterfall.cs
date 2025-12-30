@@ -14,14 +14,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 using Flex.Smoothlake.FlexLib.Mvvm;
-using Flex.Util;
-using Flex.Smoothlake.Vita;
+using Util;
 
 
 namespace Flex.Smoothlake.FlexLib

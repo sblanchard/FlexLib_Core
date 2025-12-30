@@ -25,18 +25,17 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;     // for AutoResetEvent
-using Flex.Smoothlake.Vita;
 using Flex.Smoothlake.FlexLib.Mvvm;
-using Flex.Util;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Timers;
-using System.Reflection;
+using Flex.Smoothlake.FlexLib.Interface;
 using Flex.Smoothlake.FlexLib.Utils;
+using Util;
+using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {
@@ -273,6 +272,20 @@ namespace Flex.Smoothlake.FlexLib
 
         private List<TxBandSettings> _txBandSettingsList = new List<TxBandSettings>();
 
+        /// <summary>
+        /// Gets the list of TX Band Settings for this radio
+        /// </summary>
+        public IReadOnlyList<TxBandSettings> TxBandSettingsList
+        {
+            get
+            {
+                lock (_txBandSettingsList)
+                {
+                    return _txBandSettingsList.ToList();
+                }
+            }
+        }
+
         private List<Xvtr> _xvtrs;
 
         public readonly object GuiClientsLockObj = new object();
@@ -292,6 +305,17 @@ namespace Flex.Smoothlake.FlexLib
         }
 
         private CWX _cwx;
+
+        private DVK _dvk;
+        public DVK DVK
+        {
+            get
+            {
+                if (_dvk == null)
+                    _dvk = new DVK(this);
+                return _dvk;
+            }
+        }
 
         private List<UsbCable> _usbCables;
         public List<UsbCable> UsbCables
@@ -1921,6 +1945,7 @@ namespace Flex.Smoothlake.FlexLib
             SendCommand("sub gps all");
             SendCommand("sub audio_stream all");
             SendCommand("sub cwx all");
+            SendCommand("sub dvk all");
             SendCommand("sub xvtr all");
             SendCommand("sub memories all");
             SendCommand("sub daxiq all");
@@ -2651,6 +2676,10 @@ namespace Flex.Smoothlake.FlexLib
                     _cwx.StatusUpdate(tokens[1].Substring(4)); // "cwx "
                     break;
 
+                case "dvk":
+                    DVK.ParseStatus(tokens[1].Substring(4)); // "dvk "
+                    break;
+
                 case "display":
                     {
                         if (words.Length < 4)
@@ -2980,7 +3009,13 @@ namespace Flex.Smoothlake.FlexLib
                         type = words[2].Substring("type=".Length);
 
                         // Pass along key value pairs for everything after "stream <streamid> type=<type>"
-                        string statusUpdateKeyValuePairs = tokens[1].Substring("stream ".Length + words[1].Length + " type=".Length + type.Length); // stream <stream_id> 
+                        string statusUpdateKeyValuePairs = tokens[1].Substring("stream ".Length + words[1].Length + " type=".Length + type.Length); // stream <stream_id>
+
+                        // Debug: Log ALL stream status messages - visible in terminal
+                        var streamMsg = $"[FlexLib] STREAM STATUS: type={type}, stream_id=0x{stream_id:X}, kvPairs={statusUpdateKeyValuePairs}";
+                        Debug.WriteLine(streamMsg);
+                        Console.WriteLine(streamMsg);
+                        Console.Error.WriteLine(streamMsg);
 
                         switch (type)
                         {
@@ -3264,6 +3299,15 @@ namespace Flex.Smoothlake.FlexLib
 
         private void ParseRemoteAudioTXStatus(uint stream_id, string statusUpdateKeyValuePairs)
         {
+            Console.WriteLine("[FlexLib] === ParseRemoteAudioTXStatus ENTERED ===");
+            Console.Error.WriteLine("[FlexLib] === ParseRemoteAudioTXStatus ENTERED ===");
+
+            var msg = $"[FlexLib] ParseRemoteAudioTXStatus: stream_id=0x{stream_id:X}, kvPairs={statusUpdateKeyValuePairs}";
+            Debug.WriteLine(msg);
+            Console.WriteLine(msg);
+            Console.Error.WriteLine(msg);
+            TXRemoteAudioLogCallback?.Invoke(msg);
+
             bool addNewRemoteAudioTX = false;
             TXRemoteAudioStream remoteAudioTX = FindTXRemoteAudioStreamByStreamID(stream_id);
 
@@ -3273,6 +3317,10 @@ namespace Flex.Smoothlake.FlexLib
                 addNewRemoteAudioTX = true;
                 remoteAudioTX = new TXRemoteAudioStream(this);
                 remoteAudioTX.StreamID = stream_id;
+                var newMsg = $"[FlexLib] ParseRemoteAudioTXStatus: Creating NEW TXRemoteAudioStream with StreamID=0x{stream_id:X}";
+                Debug.WriteLine(newMsg);
+                Console.Error.WriteLine(newMsg);
+                TXRemoteAudioLogCallback?.Invoke(newMsg);
             }
 
             // compression=<none|opus> client_handle=<handle>
@@ -3282,6 +3330,10 @@ namespace Flex.Smoothlake.FlexLib
                 // We have added a brand new opus stream, so add it to our collection.
                 // Today, there will only be 0 or 1 items in this collection.
                 AddTXRemoteAudioStream(remoteAudioTX);
+                var addMsg = $"[FlexLib] ParseRemoteAudioTXStatus: Added TXRemoteAudioStream to collection. Count now: {_txRemoteAudioStream.Count}";
+                Debug.WriteLine(addMsg);
+                Console.Error.WriteLine(addMsg);
+                TXRemoteAudioLogCallback?.Invoke(addMsg);
             }
         }
 
@@ -3933,7 +3985,7 @@ namespace Flex.Smoothlake.FlexLib
                 return 0;
             }
 
-            //Debug.WriteLine("SendCommand: " + seq_num + ": " + s);
+            Debug.WriteLine("SendCommand: " + seq_num + ": " + s);
 
             /*if (!connected)
             {
@@ -5542,6 +5594,26 @@ namespace Flex.Smoothlake.FlexLib
             return null;
         }
 
+        /// <summary>
+        /// Finds a TX Remote Audio Stream for this client.
+        /// Use this when the TXRemoteAudioStreamAdded callback doesn't fire (radio_ack missing).
+        /// </summary>
+        public TXRemoteAudioStream? FindTXRemoteAudioStreamForClient()
+        {
+            lock (_txRemoteAudioStream)
+            {
+                foreach (TXRemoteAudioStream remoteAudioTX in _txRemoteAudioStream)
+                {
+                    if (uint.TryParse(remoteAudioTX.ClientHandle, System.Globalization.NumberStyles.HexNumber, null, out var handle))
+                    {
+                        if (handle == ClientHandle)
+                            return remoteAudioTX;
+                    }
+                }
+            }
+            return null;
+        }
+
 
         #endregion
 
@@ -5644,7 +5716,75 @@ namespace Flex.Smoothlake.FlexLib
 
         public void RequestRemoteAudioTXStream()
         {
-            SendCommand("stream create type=remote_audio_tx");
+            // Request TX Remote Audio stream - per API docs, compression parameter is optional for TX
+            // The radio auto-selects opus compression for TX remote audio
+            // Use reply handler to see what the radio responds with
+            Console.WriteLine("[FlexLib] === RequestRemoteAudioTXStream ENTERED ===");
+            Console.Error.WriteLine("[FlexLib] === RequestRemoteAudioTXStream ENTERED ===");
+
+            var msg = "[FlexLib] RequestRemoteAudioTXStream: Sending 'stream create type=remote_audio_tx'";
+            Debug.WriteLine(msg);
+            Console.WriteLine(msg);
+            Console.Error.WriteLine(msg);
+
+            try
+            {
+                TXRemoteAudioLogCallback?.Invoke(msg);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[FlexLib] TXRemoteAudioLogCallback threw: {ex.Message}");
+            }
+
+            try
+            {
+                SendReplyCommand(new ReplyHandler(TXRemoteAudioStreamReplyHandler), "stream create type=remote_audio_tx");
+                Console.WriteLine("[FlexLib] SendReplyCommand completed successfully");
+                Console.Error.WriteLine("[FlexLib] SendReplyCommand completed successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[FlexLib] SendReplyCommand threw: {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Callback for TX Remote Audio stream creation logging
+        /// </summary>
+        public static Action<string>? TXRemoteAudioLogCallback { get; set; }
+
+        private void TXRemoteAudioStreamReplyHandler(int seq, uint resp_val, string reply)
+        {
+            Console.WriteLine("[FlexLib] === TXRemoteAudioStreamReplyHandler ENTERED ===");
+            Console.Error.WriteLine("[FlexLib] === TXRemoteAudioStreamReplyHandler ENTERED ===");
+
+            // Log the response for debugging
+            var msg = $"[FlexLib] TXRemoteAudioStream Reply: seq={seq}, resp=0x{resp_val:X}, reply={reply}";
+            Debug.WriteLine(msg);
+            Console.WriteLine(msg);
+            Console.Error.WriteLine(msg);
+            TXRemoteAudioLogCallback?.Invoke(msg);
+
+            // Common response codes:
+            // 0x00000000 = Success (stream ID returned in reply)
+            // 0xE9000017 = Error: request refused
+            // 0xE90xxxxx = Various errors
+
+            if (resp_val != 0)
+            {
+                var errMsg = $"[FlexLib] TXRemoteAudioStream ERROR: Failed to create TX Remote Audio stream. Response code: 0x{resp_val:X}";
+                Debug.WriteLine(errMsg);
+                Console.Error.WriteLine(errMsg);
+                TXRemoteAudioLogCallback?.Invoke(errMsg);
+            }
+            else
+            {
+                var successMsg = $"[FlexLib] TXRemoteAudioStream SUCCESS: Stream creation acknowledged. Reply: {reply}";
+                Debug.WriteLine(successMsg);
+                Console.Error.WriteLine(successMsg);
+                TXRemoteAudioLogCallback?.Invoke(successMsg);
+            }
         }
         #endregion
 
@@ -7498,6 +7638,22 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _maxInternalPaPowerWatts = 100; // Default to 100W, unless otherwise specified by platform.
+        /// <summary>
+        /// The maximum internal PA power capability in Watts (hardware limit, not user setting).
+        /// This is determined by the radio model (e.g., 100W for FLEX-6600, 200W for FLEX-6700).
+        /// </summary>
+        public int MaxInternalPaPowerWatts
+        {
+            get => _maxInternalPaPowerWatts;
+            set
+            {
+                if (value == _maxInternalPaPowerWatts) return;
+                _maxInternalPaPowerWatts = value;
+                RaisePropertyChanged("MaxInternalPaPowerWatts");
+            }
+        }
+
 
         private int _rfPower;
         /// <summary>
@@ -9277,6 +9433,20 @@ namespace Flex.Smoothlake.FlexLib
                             if (temp > 100) temp = 100;
                             _maxPowerLevel = temp;
                             RaisePropertyChanged("MaxPowerLevel");
+                            break;
+                        }
+                    case "max_internal_pa_power":
+                        {
+                            int temp;
+                            bool b = int.TryParse(value, out temp);
+
+                            if (!b)
+                            {
+                                Debug.WriteLine("Radio::ParseTransmitStatus - max_internal_pa_power: Invalid value (" + kv + ")");
+                                break;
+                            }
+
+                            MaxInternalPaPowerWatts = temp;
                             break;
                         }
                     case "rfpower":

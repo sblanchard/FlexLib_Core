@@ -12,12 +12,11 @@
 // ****************************************************************************
 
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Diagnostics;
-using System.Text;
 
-namespace Flex.Smoothlake.Vita
+namespace Vita
 {
     public class VitaSocket
     {
@@ -100,8 +99,7 @@ namespace Flex.Smoothlake.Vita
         /// Begin an asynchronous receive
         /// </summary>
         private void StartReceive()
-        {
-            //Console.WriteLine("VitaSocket::StartReceive()");
+        { 
             try
             {
                 byte[] buf = new byte[VitaFlex.MAX_VITA_PACKET_SIZE];
@@ -120,18 +118,39 @@ namespace Flex.Smoothlake.Vita
             //Console.WriteLine("VitaSocket::DataReceived()");
             try
             {
-                EndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                int num_bytes = socket.EndReceiveFrom(ar, ref remoteEndPoint);
-                byte[] buf = (byte[])ar.AsyncState;                
+                // If completed synchronously, defer to thread pool to prevent stack overflow
+                // When BeginReceiveFrom has data immediately available, it can complete synchronously
+                // and invoke this callback on the same stack frame, causing deep recursion
+                if (ar.CompletedSynchronously)
+                {
+                    System.Threading.ThreadPool.QueueUserWorkItem(_ => DataReceived_Internal(ar));
+                    return;
+                }
 
-                if (callback != null)
-                    callback((IPEndPoint)remoteEndPoint, buf, num_bytes);
-
-                StartReceive();                
+                DataReceived_Internal(ar);
             }
             catch (Exception ex)
             {
                 HandleException(ex, "VitaSocket::DataReceived");
+            }
+        }
+
+        private void DataReceived_Internal(IAsyncResult ar)
+        {
+            try
+            {
+                EndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                int num_bytes = socket.EndReceiveFrom(ar, ref remoteEndPoint);
+                byte[] buf = (byte[])ar.AsyncState;
+
+                if (callback != null)
+                    callback((IPEndPoint)remoteEndPoint, buf, num_bytes);
+
+                StartReceive();
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex, "VitaSocket::DataReceived_Internal");
             }
         }
 

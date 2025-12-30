@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Timers;
-using Flex.Smoothlake.Vita;
 using Flex.Smoothlake.FlexLib.Mvvm;
+using Vita;
 
 
 namespace Flex.Smoothlake.FlexLib

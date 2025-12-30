@@ -1,444 +1,6 @@
 {
   "version": 3,
   "targets": {
-    ".NETFramework,Version=v4.6.2": {
-      "Microsoft.Bcl.AsyncInterfaces/9.0.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Threading.Tasks.Extensions": "4.5.4"
-        },
-        "compile": {
-          "lib/net462/Microsoft.Bcl.AsyncInterfaces.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net462/Microsoft.Bcl.AsyncInterfaces.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net462/_._": {}
-        }
-      },
-      "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.NETFramework.ReferenceAssemblies.net462": "1.0.3"
-        }
-      },
-      "Microsoft.NETFramework.ReferenceAssemblies.net462/1.0.3": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.NETFramework.ReferenceAssemblies.net462.targets": {}
-        }
-      },
-      "Netify/1.1.1": {
-        "type": "package",
-        "compile": {
-          "lib/net452/Netify.dll": {}
-        },
-        "runtime": {
-          "lib/net452/Netify.dll": {}
-        }
-      },
-      "Nito.AsyncEx/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Context": "5.1.2",
-          "Nito.AsyncEx.Coordination": "5.1.2",
-          "Nito.AsyncEx.Interop.WaitHandles": "5.1.2",
-          "Nito.AsyncEx.Oop": "5.1.2",
-          "Nito.AsyncEx.Tasks": "5.1.2",
-          "Nito.Cancellation": "1.1.2"
-        }
-      },
-      "Nito.AsyncEx.Context/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.2"
-        },
-        "compile": {
-          "lib/net461/Nito.AsyncEx.Context.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/Nito.AsyncEx.Context.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.AsyncEx.Coordination/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.2",
-          "Nito.Collections.Deque": "1.1.1"
-        },
-        "compile": {
-          "lib/net461/Nito.AsyncEx.Coordination.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/Nito.AsyncEx.Coordination.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.AsyncEx.Interop.WaitHandles/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.2"
-        },
-        "compile": {
-          "lib/net461/Nito.AsyncEx.Interop.WaitHandles.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/Nito.AsyncEx.Interop.WaitHandles.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.AsyncEx.Oop/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Coordination": "5.1.2"
-        },
-        "compile": {
-          "lib/net461/Nito.AsyncEx.Oop.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/Nito.AsyncEx.Oop.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.AsyncEx.Tasks/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.Disposables": "2.2.1"
-        },
-        "compile": {
-          "lib/net461/Nito.AsyncEx.Tasks.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/Nito.AsyncEx.Tasks.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.Cancellation/1.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.Disposables": "2.2.1"
-        },
-        "compile": {
-          "lib/net461/Nito.Cancellation.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/Nito.Cancellation.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.Collections.Deque/1.1.1": {
-        "type": "package",
-        "compile": {
-          "lib/net461/Nito.Collections.Deque.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/Nito.Collections.Deque.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.Disposables/2.2.1": {
-        "type": "package",
-        "dependencies": {
-          "System.Collections.Immutable": "1.7.1"
-        },
-        "compile": {
-          "lib/net461/Nito.Disposables.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/Nito.Disposables.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "QRCoder/1.6.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "PresentationCore",
-          "PresentationFramework",
-          "WindowsBase"
-        ],
-        "compile": {
-          "lib/net40/QRCoder.dll": {}
-        },
-        "runtime": {
-          "lib/net40/QRCoder.dll": {}
-        }
-      },
-      "QRCoder.Xaml/1.6.0": {
-        "type": "package",
-        "dependencies": {
-          "QRCoder": "1.6.0"
-        },
-        "frameworkAssemblies": [
-          "PresentationCore",
-          "PresentationFramework",
-          "WindowsBase"
-        ],
-        "compile": {
-          "lib/net40/QRCoder.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/net40/QRCoder.Xaml.dll": {}
-        }
-      },
-      "RestSharp/112.1.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Text.Json": "8.0.4"
-        },
-        "compile": {
-          "lib/netstandard2.0/RestSharp.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/RestSharp.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "System.Buffers/4.5.1": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net45/System.Buffers.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/System.Buffers.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "System.Collections.Immutable/9.0.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Memory": "4.5.5",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        },
-        "compile": {
-          "lib/net462/System.Collections.Immutable.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net462/System.Collections.Immutable.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.IO.Pipelines/9.0.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Buffers": "4.5.1",
-          "System.Memory": "4.5.5",
-          "System.Threading.Tasks.Extensions": "4.5.4"
-        },
-        "compile": {
-          "lib/net462/System.IO.Pipelines.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net462/System.IO.Pipelines.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.Memory/4.5.5": {
-        "type": "package",
-        "dependencies": {
-          "System.Buffers": "4.5.1",
-          "System.Numerics.Vectors": "4.5.0",
-          "System.Runtime.CompilerServices.Unsafe": "4.5.3"
-        },
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "lib/net461/System.Memory.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/System.Memory.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "System.Numerics.Vectors/4.5.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System.Numerics",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net46/System.Numerics.Vectors.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net46/System.Numerics.Vectors.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "System.Runtime.CompilerServices.Unsafe/6.1.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "lib/net462/System.Runtime.CompilerServices.Unsafe.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net462/System.Runtime.CompilerServices.Unsafe.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.Text.Encodings.Web/9.0.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Buffers": "4.5.1",
-          "System.Memory": "4.5.5",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        },
-        "compile": {
-          "lib/net462/System.Text.Encodings.Web.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net462/System.Text.Encodings.Web.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net462/_._": {}
-        }
-      },
-      "System.Text.Json/9.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "9.0.0",
-          "System.Buffers": "4.5.1",
-          "System.IO.Pipelines": "9.0.0",
-          "System.Memory": "4.5.5",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "System.Text.Encodings.Web": "9.0.0",
-          "System.Threading.Tasks.Extensions": "4.5.4",
-          "System.ValueTuple": "4.5.0"
-        },
-        "compile": {
-          "lib/net462/System.Text.Json.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net462/System.Text.Json.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net462/System.Text.Json.targets": {}
-        }
-      },
-      "System.Threading.Tasks.Extensions/4.5.4": {
-        "type": "package",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "4.5.3"
-        },
-        "frameworkAssemblies": [
-          "mscorlib"
-        ],
-        "compile": {
-          "lib/net461/System.Threading.Tasks.Extensions.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/System.Threading.Tasks.Extensions.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "System.ValueTuple/4.5.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System",
-          "mscorlib"
-        ],
-        "compile": {
-          "ref/net461/System.ValueTuple.dll": {}
-        },
-        "runtime": {
-          "lib/net461/System.ValueTuple.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Flex.UiWpfFramework/0.0.0": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.6.2",
-        "dependencies": {
-          "QRCoder": "1.6.0",
-          "QRCoder.Xaml": "1.6.0",
-          "System.Collections.Immutable": "9.0.0",
-          "System.ValueTuple": "4.5.0"
-        },
-        "compile": {
-          "bin/placeholder/Flex.UiWpfFramework.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Flex.UiWpfFramework.dll": {}
-        }
-      }
-    },
     "net10.0": {
       "Netify/1.1.1": {
         "type": "package",
@@ -596,7 +158,7 @@
           }
         }
       },
-      "System.Runtime.CompilerServices.Unsafe/6.1.0": {
+      "System.Runtime.CompilerServices.Unsafe/6.1.2": {
         "type": "package",
         "compile": {
           "lib/net7.0/_._": {}
@@ -608,15 +170,15 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-      "System.Text.Json/9.0.0": {
+      "System.Text.Json/10.0.0": {
         "type": "package",
         "compile": {
-          "lib/net9.0/_._": {
+          "lib/net10.0/_._": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/_._": {
+          "lib/net10.0/_._": {
             "related": ".xml"
           }
         },
@@ -624,760 +186,18 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "System.ValueTuple/4.5.0": {
+      "System.ValueTuple/4.6.1": {
         "type": "package",
         "compile": {
-          "ref/netcoreapp2.0/_._": {}
+          "lib/netcoreapp2.0/_._": {}
         },
         "runtime": {
           "lib/netcoreapp2.0/_._": {}
         }
-      }
-    },
-    "net8.0-windows7.0": {
-      "Microsoft.Win32.SystemEvents/6.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll": {
-            "assetType": "runtime",
-            "rid": "win"
-          }
-        }
-      },
-      "Netify/1.1.1": {
-        "type": "package",
-        "compile": {
-          "lib/netcoreapp3.1/Netify.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.1/Netify.dll": {}
-        }
-      },
-      "Nito.AsyncEx/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Context": "5.1.2",
-          "Nito.AsyncEx.Coordination": "5.1.2",
-          "Nito.AsyncEx.Interop.WaitHandles": "5.1.2",
-          "Nito.AsyncEx.Oop": "5.1.2",
-          "Nito.AsyncEx.Tasks": "5.1.2",
-          "Nito.Cancellation": "1.1.2"
-        }
-      },
-      "Nito.AsyncEx.Context/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.2"
-        },
-        "compile": {
-          "lib/netstandard2.0/Nito.AsyncEx.Context.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Context.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.AsyncEx.Coordination/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.2",
-          "Nito.Collections.Deque": "1.1.1"
-        },
-        "compile": {
-          "lib/netstandard2.0/Nito.AsyncEx.Coordination.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Coordination.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.AsyncEx.Interop.WaitHandles/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Tasks": "5.1.2"
-        },
-        "compile": {
-          "lib/netstandard2.0/Nito.AsyncEx.Interop.WaitHandles.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Interop.WaitHandles.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.AsyncEx.Oop/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.AsyncEx.Coordination": "5.1.2"
-        },
-        "compile": {
-          "lib/netstandard2.0/Nito.AsyncEx.Oop.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Oop.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.AsyncEx.Tasks/5.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.Disposables": "2.2.1"
-        },
-        "compile": {
-          "lib/netstandard2.0/Nito.AsyncEx.Tasks.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.AsyncEx.Tasks.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.Cancellation/1.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Nito.Disposables": "2.2.1"
-        },
-        "compile": {
-          "lib/netstandard2.0/Nito.Cancellation.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.Cancellation.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.Collections.Deque/1.1.1": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/Nito.Collections.Deque.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/Nito.Collections.Deque.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Nito.Disposables/2.2.1": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.1/Nito.Disposables.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.1/Nito.Disposables.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "QRCoder/1.6.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Drawing.Common": "6.0.0"
-        },
-        "compile": {
-          "lib/net6.0-windows7.0/QRCoder.dll": {}
-        },
-        "runtime": {
-          "lib/net6.0-windows7.0/QRCoder.dll": {}
-        }
-      },
-      "QRCoder.Xaml/1.6.0": {
-        "type": "package",
-        "dependencies": {
-          "QRCoder": "1.6.0"
-        },
-        "compile": {
-          "lib/net6.0-windows7.0/QRCoder.Xaml.dll": {}
-        },
-        "runtime": {
-          "lib/net6.0-windows7.0/QRCoder.Xaml.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WPF"
-        ]
-      },
-      "RestSharp/112.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/RestSharp.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/RestSharp.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "System.Collections.Immutable/9.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/System.Collections.Immutable.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/System.Collections.Immutable.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net8.0/_._": {}
-        }
-      },
-      "System.Drawing.Common/6.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Win32.SystemEvents": "6.0.0"
-        },
-        "compile": {
-          "lib/net6.0/System.Drawing.Common.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net6.0/System.Drawing.Common.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
-        },
-        "runtimeTargets": {
-          "runtimes/unix/lib/net6.0/System.Drawing.Common.dll": {
-            "assetType": "runtime",
-            "rid": "unix"
-          },
-          "runtimes/win/lib/net6.0/System.Drawing.Common.dll": {
-            "assetType": "runtime",
-            "rid": "win"
-          }
-        }
-      },
-      "System.IO.Pipelines/9.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/System.IO.Pipelines.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/System.IO.Pipelines.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net8.0/_._": {}
-        }
-      },
-      "System.Runtime.CompilerServices.Unsafe/6.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/net7.0/_._": {}
-        },
-        "runtime": {
-          "lib/net7.0/_._": {}
-        },
-        "build": {
-          "buildTransitive/net6.0/_._": {}
-        }
-      },
-      "System.Text.Encodings.Web/9.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/System.Text.Encodings.Web.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/System.Text.Encodings.Web.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net8.0/_._": {}
-        },
-        "runtimeTargets": {
-          "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll": {
-            "assetType": "runtime",
-            "rid": "browser"
-          }
-        }
-      },
-      "System.Text.Json/9.0.0": {
-        "type": "package",
-        "dependencies": {
-          "System.IO.Pipelines": "9.0.0",
-          "System.Text.Encodings.Web": "9.0.0"
-        },
-        "compile": {
-          "lib/net8.0/System.Text.Json.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/System.Text.Json.dll": {
-            "related": ".xml"
-          }
-        },
-        "build": {
-          "buildTransitive/net8.0/System.Text.Json.targets": {}
-        }
-      },
-      "System.ValueTuple/4.5.0": {
-        "type": "package",
-        "compile": {
-          "ref/netcoreapp2.0/_._": {}
-        },
-        "runtime": {
-          "lib/netcoreapp2.0/_._": {}
-        }
-      },
-      "Flex.UiWpfFramework/0.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "QRCoder": "1.6.0",
-          "QRCoder.Xaml": "1.6.0",
-          "System.Collections.Immutable": "9.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Flex.UiWpfFramework.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Flex.UiWpfFramework.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.WindowsDesktop.App.WPF"
-        ]
       }
     }
   },
   "libraries": {
-    "Microsoft.Bcl.AsyncInterfaces/9.0.0": {
-      "sha512": "owmu2Cr3IQ8yQiBleBHlGk8dSQ12oaF2e7TpzwJKEl4m84kkZJjEY1n33L67Y3zM5jPOjmmbdHjbfiL0RqcMRQ==",
-      "type": "package",
-      "path": "microsoft.bcl.asyncinterfaces/9.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "PACKAGE.md",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/net461/Microsoft.Bcl.AsyncInterfaces.targets",
-        "buildTransitive/net462/_._",
-        "buildTransitive/net8.0/_._",
-        "buildTransitive/netcoreapp2.0/Microsoft.Bcl.AsyncInterfaces.targets",
-        "lib/net462/Microsoft.Bcl.AsyncInterfaces.dll",
-        "lib/net462/Microsoft.Bcl.AsyncInterfaces.xml",
-        "lib/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll",
-        "lib/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.xml",
-        "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll",
-        "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.xml",
-        "microsoft.bcl.asyncinterfaces.9.0.0.nupkg.sha512",
-        "microsoft.bcl.asyncinterfaces.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
-    "Microsoft.NETFramework.ReferenceAssemblies/1.0.3": {
-      "sha512": "vUc9Npcs14QsyOD01tnv/m8sQUnGTGOw1BCmKcv77LBJY7OxhJ+zJF7UD/sCL3lYNFuqmQEVlkfS4Quif6FyYg==",
-      "type": "package",
-      "path": "microsoft.netframework.referenceassemblies/1.0.3",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Microsoft.NETFramework.ReferenceAssemblies.nuspec",
-        "microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512"
-      ]
-    },
-    "Microsoft.NETFramework.ReferenceAssemblies.net462/1.0.3": {
-      "sha512": "IzAV30z22ESCeQfxP29oVf4qEo8fBGXLXSU6oacv/9Iqe6PzgHDKCaWfwMBak7bSJQM0F5boXWoZS+kChztRIQ==",
-      "type": "package",
-      "path": "microsoft.netframework.referenceassemblies.net462/1.0.3",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Microsoft.NETFramework.ReferenceAssemblies.net462.nuspec",
-        "build/.NETFramework/v4.6.2/Accessibility.dll",
-        "build/.NETFramework/v4.6.2/Accessibility.xml",
-        "build/.NETFramework/v4.6.2/CustomMarshalers.dll",
-        "build/.NETFramework/v4.6.2/CustomMarshalers.xml",
-        "build/.NETFramework/v4.6.2/Facades/System.Collections.Concurrent.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Collections.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ComponentModel.Annotations.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ComponentModel.EventBasedAsync.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ComponentModel.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Diagnostics.Contracts.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Diagnostics.Debug.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Diagnostics.Tools.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Diagnostics.Tracing.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Dynamic.Runtime.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Globalization.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.IO.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Linq.Expressions.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Linq.Parallel.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Linq.Queryable.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Linq.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Net.NetworkInformation.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Net.Primitives.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Net.Requests.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Net.WebHeaderCollection.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ObjectModel.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Reflection.Emit.ILGeneration.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Reflection.Emit.Lightweight.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Reflection.Emit.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Reflection.Extensions.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Reflection.Primitives.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Reflection.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Resources.ResourceManager.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.Extensions.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.Handles.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.InteropServices.WindowsRuntime.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.InteropServices.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.Numerics.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.Serialization.Json.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.Serialization.Primitives.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.Serialization.Xml.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Runtime.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Security.Principal.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ServiceModel.Duplex.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ServiceModel.Http.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ServiceModel.NetTcp.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ServiceModel.Primitives.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.ServiceModel.Security.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Text.Encoding.Extensions.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Text.Encoding.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Text.RegularExpressions.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Threading.Tasks.Parallel.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Threading.Tasks.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Threading.Timer.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Threading.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Xml.ReaderWriter.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Xml.XDocument.dll",
-        "build/.NETFramework/v4.6.2/Facades/System.Xml.XmlSerializer.dll",
-        "build/.NETFramework/v4.6.2/ISymWrapper.dll",
-        "build/.NETFramework/v4.6.2/ISymWrapper.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.Activities.Build.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.Activities.Build.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Conversion.v4.0.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Conversion.v4.0.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Engine.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Engine.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Framework.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Framework.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Tasks.v4.0.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Tasks.v4.0.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Utilities.v4.0.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.Utilities.v4.0.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.Build.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.CSharp.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.CSharp.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.JScript.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.JScript.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualBasic.Compatibility.Data.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualBasic.Compatibility.Data.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualBasic.Compatibility.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualBasic.Compatibility.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualBasic.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualBasic.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualC.STLCLR.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualC.STLCLR.xml",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualC.dll",
-        "build/.NETFramework/v4.6.2/Microsoft.VisualC.xml",
-        "build/.NETFramework/v4.6.2/PermissionSets/FullTrust.xml",
-        "build/.NETFramework/v4.6.2/PermissionSets/Internet.xml",
-        "build/.NETFramework/v4.6.2/PermissionSets/LocalIntranet.xml",
-        "build/.NETFramework/v4.6.2/PresentationBuildTasks.dll",
-        "build/.NETFramework/v4.6.2/PresentationBuildTasks.xml",
-        "build/.NETFramework/v4.6.2/PresentationCore.dll",
-        "build/.NETFramework/v4.6.2/PresentationCore.xml",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Aero.dll",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Aero.xml",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Aero2.dll",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Aero2.xml",
-        "build/.NETFramework/v4.6.2/PresentationFramework.AeroLite.dll",
-        "build/.NETFramework/v4.6.2/PresentationFramework.AeroLite.xml",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Classic.dll",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Classic.xml",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Luna.dll",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Luna.xml",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Royale.dll",
-        "build/.NETFramework/v4.6.2/PresentationFramework.Royale.xml",
-        "build/.NETFramework/v4.6.2/PresentationFramework.dll",
-        "build/.NETFramework/v4.6.2/PresentationFramework.xml",
-        "build/.NETFramework/v4.6.2/ReachFramework.dll",
-        "build/.NETFramework/v4.6.2/ReachFramework.xml",
-        "build/.NETFramework/v4.6.2/RedistList/FrameworkList.xml",
-        "build/.NETFramework/v4.6.2/System.Activities.Core.Presentation.dll",
-        "build/.NETFramework/v4.6.2/System.Activities.Core.Presentation.xml",
-        "build/.NETFramework/v4.6.2/System.Activities.DurableInstancing.dll",
-        "build/.NETFramework/v4.6.2/System.Activities.DurableInstancing.xml",
-        "build/.NETFramework/v4.6.2/System.Activities.Presentation.dll",
-        "build/.NETFramework/v4.6.2/System.Activities.Presentation.xml",
-        "build/.NETFramework/v4.6.2/System.Activities.dll",
-        "build/.NETFramework/v4.6.2/System.Activities.xml",
-        "build/.NETFramework/v4.6.2/System.AddIn.Contract.dll",
-        "build/.NETFramework/v4.6.2/System.AddIn.Contract.xml",
-        "build/.NETFramework/v4.6.2/System.AddIn.dll",
-        "build/.NETFramework/v4.6.2/System.AddIn.xml",
-        "build/.NETFramework/v4.6.2/System.ComponentModel.Composition.Registration.dll",
-        "build/.NETFramework/v4.6.2/System.ComponentModel.Composition.Registration.xml",
-        "build/.NETFramework/v4.6.2/System.ComponentModel.Composition.dll",
-        "build/.NETFramework/v4.6.2/System.ComponentModel.Composition.xml",
-        "build/.NETFramework/v4.6.2/System.ComponentModel.DataAnnotations.dll",
-        "build/.NETFramework/v4.6.2/System.ComponentModel.DataAnnotations.xml",
-        "build/.NETFramework/v4.6.2/System.Configuration.Install.dll",
-        "build/.NETFramework/v4.6.2/System.Configuration.Install.xml",
-        "build/.NETFramework/v4.6.2/System.Configuration.dll",
-        "build/.NETFramework/v4.6.2/System.Configuration.xml",
-        "build/.NETFramework/v4.6.2/System.Core.dll",
-        "build/.NETFramework/v4.6.2/System.Core.xml",
-        "build/.NETFramework/v4.6.2/System.Data.DataSetExtensions.dll",
-        "build/.NETFramework/v4.6.2/System.Data.DataSetExtensions.xml",
-        "build/.NETFramework/v4.6.2/System.Data.Entity.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Data.Entity.Design.xml",
-        "build/.NETFramework/v4.6.2/System.Data.Entity.dll",
-        "build/.NETFramework/v4.6.2/System.Data.Entity.xml",
-        "build/.NETFramework/v4.6.2/System.Data.Linq.dll",
-        "build/.NETFramework/v4.6.2/System.Data.Linq.xml",
-        "build/.NETFramework/v4.6.2/System.Data.OracleClient.dll",
-        "build/.NETFramework/v4.6.2/System.Data.OracleClient.xml",
-        "build/.NETFramework/v4.6.2/System.Data.Services.Client.dll",
-        "build/.NETFramework/v4.6.2/System.Data.Services.Client.xml",
-        "build/.NETFramework/v4.6.2/System.Data.Services.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Data.Services.Design.xml",
-        "build/.NETFramework/v4.6.2/System.Data.Services.dll",
-        "build/.NETFramework/v4.6.2/System.Data.Services.xml",
-        "build/.NETFramework/v4.6.2/System.Data.SqlXml.dll",
-        "build/.NETFramework/v4.6.2/System.Data.SqlXml.xml",
-        "build/.NETFramework/v4.6.2/System.Data.dll",
-        "build/.NETFramework/v4.6.2/System.Data.xml",
-        "build/.NETFramework/v4.6.2/System.Deployment.dll",
-        "build/.NETFramework/v4.6.2/System.Deployment.xml",
-        "build/.NETFramework/v4.6.2/System.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Design.xml",
-        "build/.NETFramework/v4.6.2/System.Device.dll",
-        "build/.NETFramework/v4.6.2/System.Device.xml",
-        "build/.NETFramework/v4.6.2/System.DirectoryServices.AccountManagement.dll",
-        "build/.NETFramework/v4.6.2/System.DirectoryServices.AccountManagement.xml",
-        "build/.NETFramework/v4.6.2/System.DirectoryServices.Protocols.dll",
-        "build/.NETFramework/v4.6.2/System.DirectoryServices.Protocols.xml",
-        "build/.NETFramework/v4.6.2/System.DirectoryServices.dll",
-        "build/.NETFramework/v4.6.2/System.DirectoryServices.xml",
-        "build/.NETFramework/v4.6.2/System.Drawing.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Drawing.Design.xml",
-        "build/.NETFramework/v4.6.2/System.Drawing.dll",
-        "build/.NETFramework/v4.6.2/System.Drawing.xml",
-        "build/.NETFramework/v4.6.2/System.Dynamic.dll",
-        "build/.NETFramework/v4.6.2/System.EnterpriseServices.Thunk.dll",
-        "build/.NETFramework/v4.6.2/System.EnterpriseServices.Wrapper.dll",
-        "build/.NETFramework/v4.6.2/System.EnterpriseServices.dll",
-        "build/.NETFramework/v4.6.2/System.EnterpriseServices.xml",
-        "build/.NETFramework/v4.6.2/System.IO.Compression.FileSystem.dll",
-        "build/.NETFramework/v4.6.2/System.IO.Compression.FileSystem.xml",
-        "build/.NETFramework/v4.6.2/System.IO.Compression.dll",
-        "build/.NETFramework/v4.6.2/System.IO.Compression.xml",
-        "build/.NETFramework/v4.6.2/System.IO.Log.dll",
-        "build/.NETFramework/v4.6.2/System.IO.Log.xml",
-        "build/.NETFramework/v4.6.2/System.IdentityModel.Selectors.dll",
-        "build/.NETFramework/v4.6.2/System.IdentityModel.Selectors.xml",
-        "build/.NETFramework/v4.6.2/System.IdentityModel.Services.dll",
-        "build/.NETFramework/v4.6.2/System.IdentityModel.Services.xml",
-        "build/.NETFramework/v4.6.2/System.IdentityModel.dll",
-        "build/.NETFramework/v4.6.2/System.IdentityModel.xml",
-        "build/.NETFramework/v4.6.2/System.Linq.xml",
-        "build/.NETFramework/v4.6.2/System.Management.Instrumentation.dll",
-        "build/.NETFramework/v4.6.2/System.Management.Instrumentation.xml",
-        "build/.NETFramework/v4.6.2/System.Management.dll",
-        "build/.NETFramework/v4.6.2/System.Management.xml",
-        "build/.NETFramework/v4.6.2/System.Messaging.dll",
-        "build/.NETFramework/v4.6.2/System.Messaging.xml",
-        "build/.NETFramework/v4.6.2/System.Net.Http.WebRequest.dll",
-        "build/.NETFramework/v4.6.2/System.Net.Http.WebRequest.xml",
-        "build/.NETFramework/v4.6.2/System.Net.Http.dll",
-        "build/.NETFramework/v4.6.2/System.Net.Http.xml",
-        "build/.NETFramework/v4.6.2/System.Net.dll",
-        "build/.NETFramework/v4.6.2/System.Net.xml",
-        "build/.NETFramework/v4.6.2/System.Numerics.dll",
-        "build/.NETFramework/v4.6.2/System.Numerics.xml",
-        "build/.NETFramework/v4.6.2/System.Printing.dll",
-        "build/.NETFramework/v4.6.2/System.Printing.xml",
-        "build/.NETFramework/v4.6.2/System.Reflection.Context.dll",
-        "build/.NETFramework/v4.6.2/System.Reflection.Context.xml",
-        "build/.NETFramework/v4.6.2/System.Runtime.Caching.dll",
-        "build/.NETFramework/v4.6.2/System.Runtime.Caching.xml",
-        "build/.NETFramework/v4.6.2/System.Runtime.DurableInstancing.dll",
-        "build/.NETFramework/v4.6.2/System.Runtime.DurableInstancing.xml",
-        "build/.NETFramework/v4.6.2/System.Runtime.Remoting.dll",
-        "build/.NETFramework/v4.6.2/System.Runtime.Remoting.xml",
-        "build/.NETFramework/v4.6.2/System.Runtime.Serialization.Formatters.Soap.dll",
-        "build/.NETFramework/v4.6.2/System.Runtime.Serialization.Formatters.Soap.xml",
-        "build/.NETFramework/v4.6.2/System.Runtime.Serialization.dll",
-        "build/.NETFramework/v4.6.2/System.Runtime.Serialization.xml",
-        "build/.NETFramework/v4.6.2/System.Security.dll",
-        "build/.NETFramework/v4.6.2/System.Security.xml",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Activation.dll",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Activation.xml",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Activities.dll",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Activities.xml",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Channels.dll",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Channels.xml",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Discovery.dll",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Discovery.xml",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Routing.dll",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Routing.xml",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Web.dll",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.Web.xml",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.dll",
-        "build/.NETFramework/v4.6.2/System.ServiceModel.xml",
-        "build/.NETFramework/v4.6.2/System.ServiceProcess.dll",
-        "build/.NETFramework/v4.6.2/System.ServiceProcess.xml",
-        "build/.NETFramework/v4.6.2/System.Speech.dll",
-        "build/.NETFramework/v4.6.2/System.Speech.xml",
-        "build/.NETFramework/v4.6.2/System.Threading.Tasks.Dataflow.xml",
-        "build/.NETFramework/v4.6.2/System.Transactions.dll",
-        "build/.NETFramework/v4.6.2/System.Transactions.xml",
-        "build/.NETFramework/v4.6.2/System.Web.Abstractions.dll",
-        "build/.NETFramework/v4.6.2/System.Web.ApplicationServices.dll",
-        "build/.NETFramework/v4.6.2/System.Web.ApplicationServices.xml",
-        "build/.NETFramework/v4.6.2/System.Web.DataVisualization.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Web.DataVisualization.dll",
-        "build/.NETFramework/v4.6.2/System.Web.DataVisualization.xml",
-        "build/.NETFramework/v4.6.2/System.Web.DynamicData.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Web.DynamicData.Design.xml",
-        "build/.NETFramework/v4.6.2/System.Web.DynamicData.dll",
-        "build/.NETFramework/v4.6.2/System.Web.DynamicData.xml",
-        "build/.NETFramework/v4.6.2/System.Web.Entity.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Web.Entity.Design.xml",
-        "build/.NETFramework/v4.6.2/System.Web.Entity.dll",
-        "build/.NETFramework/v4.6.2/System.Web.Entity.xml",
-        "build/.NETFramework/v4.6.2/System.Web.Extensions.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Web.Extensions.Design.xml",
-        "build/.NETFramework/v4.6.2/System.Web.Extensions.dll",
-        "build/.NETFramework/v4.6.2/System.Web.Extensions.xml",
-        "build/.NETFramework/v4.6.2/System.Web.Mobile.dll",
-        "build/.NETFramework/v4.6.2/System.Web.Mobile.xml",
-        "build/.NETFramework/v4.6.2/System.Web.RegularExpressions.dll",
-        "build/.NETFramework/v4.6.2/System.Web.RegularExpressions.xml",
-        "build/.NETFramework/v4.6.2/System.Web.Routing.dll",
-        "build/.NETFramework/v4.6.2/System.Web.Services.dll",
-        "build/.NETFramework/v4.6.2/System.Web.Services.xml",
-        "build/.NETFramework/v4.6.2/System.Web.dll",
-        "build/.NETFramework/v4.6.2/System.Web.xml",
-        "build/.NETFramework/v4.6.2/System.Windows.Controls.Ribbon.dll",
-        "build/.NETFramework/v4.6.2/System.Windows.Controls.Ribbon.xml",
-        "build/.NETFramework/v4.6.2/System.Windows.Forms.DataVisualization.Design.dll",
-        "build/.NETFramework/v4.6.2/System.Windows.Forms.DataVisualization.dll",
-        "build/.NETFramework/v4.6.2/System.Windows.Forms.DataVisualization.xml",
-        "build/.NETFramework/v4.6.2/System.Windows.Forms.dll",
-        "build/.NETFramework/v4.6.2/System.Windows.Forms.xml",
-        "build/.NETFramework/v4.6.2/System.Windows.Input.Manipulations.dll",
-        "build/.NETFramework/v4.6.2/System.Windows.Input.Manipulations.xml",
-        "build/.NETFramework/v4.6.2/System.Windows.Presentation.dll",
-        "build/.NETFramework/v4.6.2/System.Windows.Presentation.xml",
-        "build/.NETFramework/v4.6.2/System.Windows.dll",
-        "build/.NETFramework/v4.6.2/System.Workflow.Activities.dll",
-        "build/.NETFramework/v4.6.2/System.Workflow.Activities.xml",
-        "build/.NETFramework/v4.6.2/System.Workflow.ComponentModel.dll",
-        "build/.NETFramework/v4.6.2/System.Workflow.ComponentModel.xml",
-        "build/.NETFramework/v4.6.2/System.Workflow.Runtime.dll",
-        "build/.NETFramework/v4.6.2/System.Workflow.Runtime.xml",
-        "build/.NETFramework/v4.6.2/System.WorkflowServices.dll",
-        "build/.NETFramework/v4.6.2/System.WorkflowServices.xml",
-        "build/.NETFramework/v4.6.2/System.Xaml.dll",
-        "build/.NETFramework/v4.6.2/System.Xaml.xml",
-        "build/.NETFramework/v4.6.2/System.Xml.Linq.dll",
-        "build/.NETFramework/v4.6.2/System.Xml.Linq.xml",
-        "build/.NETFramework/v4.6.2/System.Xml.Serialization.dll",
-        "build/.NETFramework/v4.6.2/System.Xml.dll",
-        "build/.NETFramework/v4.6.2/System.Xml.xml",
-        "build/.NETFramework/v4.6.2/System.dll",
-        "build/.NETFramework/v4.6.2/System.xml",
-        "build/.NETFramework/v4.6.2/UIAutomationClient.dll",
-        "build/.NETFramework/v4.6.2/UIAutomationClient.xml",
-        "build/.NETFramework/v4.6.2/UIAutomationClientsideProviders.dll",
-        "build/.NETFramework/v4.6.2/UIAutomationClientsideProviders.xml",
-        "build/.NETFramework/v4.6.2/UIAutomationProvider.dll",
-        "build/.NETFramework/v4.6.2/UIAutomationProvider.xml",
-        "build/.NETFramework/v4.6.2/UIAutomationTypes.dll",
-        "build/.NETFramework/v4.6.2/UIAutomationTypes.xml",
-        "build/.NETFramework/v4.6.2/WindowsBase.dll",
-        "build/.NETFramework/v4.6.2/WindowsBase.xml",
-        "build/.NETFramework/v4.6.2/WindowsFormsIntegration.dll",
-        "build/.NETFramework/v4.6.2/WindowsFormsIntegration.xml",
-        "build/.NETFramework/v4.6.2/XamlBuildTask.dll",
-        "build/.NETFramework/v4.6.2/XamlBuildTask.xml",
-        "build/.NETFramework/v4.6.2/mscorlib.dll",
-        "build/.NETFramework/v4.6.2/mscorlib.xml",
-        "build/.NETFramework/v4.6.2/namespaces.xml",
-        "build/.NETFramework/v4.6.2/sysglobl.dll",
-        "build/.NETFramework/v4.6.2/sysglobl.xml",
-        "build/Microsoft.NETFramework.ReferenceAssemblies.net462.targets",
-        "microsoft.netframework.referenceassemblies.net462.1.0.3.nupkg.sha512"
-      ]
-    },
-    "Microsoft.Win32.SystemEvents/6.0.0": {
-      "sha512": "hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A==",
-      "type": "package",
-      "path": "microsoft.win32.systemevents/6.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/netcoreapp2.0/Microsoft.Win32.SystemEvents.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/net461/Microsoft.Win32.SystemEvents.dll",
-        "lib/net461/Microsoft.Win32.SystemEvents.xml",
-        "lib/net6.0/Microsoft.Win32.SystemEvents.dll",
-        "lib/net6.0/Microsoft.Win32.SystemEvents.xml",
-        "lib/netcoreapp3.1/Microsoft.Win32.SystemEvents.dll",
-        "lib/netcoreapp3.1/Microsoft.Win32.SystemEvents.xml",
-        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
-        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
-        "microsoft.win32.systemevents.6.0.0.nupkg.sha512",
-        "microsoft.win32.systemevents.nuspec",
-        "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll",
-        "runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.xml",
-        "runtimes/win/lib/netcoreapp3.1/Microsoft.Win32.SystemEvents.dll",
-        "runtimes/win/lib/netcoreapp3.1/Microsoft.Win32.SystemEvents.xml",
-        "useSharedDesignerContext.txt"
-      ]
-    },
     "Netify/1.1.1": {
       "sha512": "FwBZHVTtiBW9yJiC/nZANoECGx78l1AoMLAEd7IgJIQ3O2VoZ512Q6XbHy5HIHXoymgYzcuKw5VvFEA2sV7Nnw==",
       "type": "package",
@@ -1550,44 +370,6 @@
         "nito.disposables.nuspec"
       ]
     },
-    "QRCoder/1.6.0": {
-      "sha512": "XmPA81eo+oRxBuyVdswsSkTGTE1d3thfF11Z1PdD7oB56A6HU4G4AAOdySmGRMb/cljwlFTMWUtosGEnwpS6GA==",
-      "type": "package",
-      "path": "qrcoder/1.6.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net35/QRCoder.dll",
-        "lib/net40/QRCoder.dll",
-        "lib/net5.0-windows7.0/QRCoder.dll",
-        "lib/net5.0/QRCoder.dll",
-        "lib/net6.0-windows7.0/QRCoder.dll",
-        "lib/net6.0/QRCoder.dll",
-        "lib/netstandard1.3/QRCoder.dll",
-        "lib/netstandard2.0/QRCoder.dll",
-        "nuget-icon.png",
-        "nuget-readme.md",
-        "qrcoder.1.6.0.nupkg.sha512",
-        "qrcoder.nuspec"
-      ]
-    },
-    "QRCoder.Xaml/1.6.0": {
-      "sha512": "sUbP6HNjQsxmiviCvydT+DTdWht/51ZtBiifJPaSWH9w7le8G5VUOUojtVrVnOFb56XV/qGTm+OQQZ47tOhxjw==",
-      "type": "package",
-      "path": "qrcoder.xaml/1.6.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net35/QRCoder.Xaml.dll",
-        "lib/net40/QRCoder.Xaml.dll",
-        "lib/net5.0-windows7.0/QRCoder.Xaml.dll",
-        "lib/net6.0-windows7.0/QRCoder.Xaml.dll",
-        "nuget-icon-xaml.png",
-        "nuget-readme-xaml.md",
-        "qrcoder.xaml.1.6.0.nupkg.sha512",
-        "qrcoder.xaml.nuspec"
-      ]
-    },
     "RestSharp/112.1.0": {
       "sha512": "bOUGNZqhhv/QeCXHTKEUil846yBjwWXpzPKjO67kFvaAOoF361z7jLY5BMnuZ6WD2WQRA750sNMcK7MSPCQ5Mg==",
       "type": "package",
@@ -1613,206 +395,10 @@
         "restsharp.png"
       ]
     },
-    "System.Buffers/4.5.1": {
-      "sha512": "Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
+    "System.Runtime.CompilerServices.Unsafe/6.1.2": {
+      "sha512": "2hBr6zdbIBTDE3EhK7NSVNdX58uTK6iHW/P/Axmm9sl1xoGSLqDvMtpecn226TNwHByFokYwJmt/aQQNlO5CRw==",
       "type": "package",
-      "path": "system.buffers/4.5.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.Buffers.dll",
-        "lib/net461/System.Buffers.xml",
-        "lib/netcoreapp2.0/_._",
-        "lib/netstandard1.1/System.Buffers.dll",
-        "lib/netstandard1.1/System.Buffers.xml",
-        "lib/netstandard2.0/System.Buffers.dll",
-        "lib/netstandard2.0/System.Buffers.xml",
-        "lib/uap10.0.16299/_._",
-        "ref/net45/System.Buffers.dll",
-        "ref/net45/System.Buffers.xml",
-        "ref/netcoreapp2.0/_._",
-        "ref/netstandard1.1/System.Buffers.dll",
-        "ref/netstandard1.1/System.Buffers.xml",
-        "ref/netstandard2.0/System.Buffers.dll",
-        "ref/netstandard2.0/System.Buffers.xml",
-        "ref/uap10.0.16299/_._",
-        "system.buffers.4.5.1.nupkg.sha512",
-        "system.buffers.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Collections.Immutable/9.0.0": {
-      "sha512": "QhkXUl2gNrQtvPmtBTQHb0YsUrDiDQ2QS09YbtTTiSjGcf7NBqtYbrG/BE06zcBPCKEwQGzIv13IVdXNOSub2w==",
-      "type": "package",
-      "path": "system.collections.immutable/9.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "PACKAGE.md",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/net461/System.Collections.Immutable.targets",
-        "buildTransitive/net462/_._",
-        "buildTransitive/net8.0/_._",
-        "buildTransitive/netcoreapp2.0/System.Collections.Immutable.targets",
-        "lib/net462/System.Collections.Immutable.dll",
-        "lib/net462/System.Collections.Immutable.xml",
-        "lib/net8.0/System.Collections.Immutable.dll",
-        "lib/net8.0/System.Collections.Immutable.xml",
-        "lib/net9.0/System.Collections.Immutable.dll",
-        "lib/net9.0/System.Collections.Immutable.xml",
-        "lib/netstandard2.0/System.Collections.Immutable.dll",
-        "lib/netstandard2.0/System.Collections.Immutable.xml",
-        "system.collections.immutable.9.0.0.nupkg.sha512",
-        "system.collections.immutable.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
-    "System.Drawing.Common/6.0.0": {
-      "sha512": "NfuoKUiP2nUWwKZN6twGqXioIe1zVD0RIj2t976A+czLHr2nY454RwwXs6JU9Htc6mwqL6Dn/nEL3dpVf2jOhg==",
-      "type": "package",
-      "path": "system.drawing.common/6.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net461/System.Drawing.Common.dll",
-        "lib/net461/System.Drawing.Common.xml",
-        "lib/net6.0/System.Drawing.Common.dll",
-        "lib/net6.0/System.Drawing.Common.xml",
-        "lib/netcoreapp3.1/System.Drawing.Common.dll",
-        "lib/netcoreapp3.1/System.Drawing.Common.xml",
-        "lib/netstandard2.0/System.Drawing.Common.dll",
-        "lib/netstandard2.0/System.Drawing.Common.xml",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "runtimes/unix/lib/net6.0/System.Drawing.Common.dll",
-        "runtimes/unix/lib/net6.0/System.Drawing.Common.xml",
-        "runtimes/unix/lib/netcoreapp3.1/System.Drawing.Common.dll",
-        "runtimes/unix/lib/netcoreapp3.1/System.Drawing.Common.xml",
-        "runtimes/win/lib/net6.0/System.Drawing.Common.dll",
-        "runtimes/win/lib/net6.0/System.Drawing.Common.xml",
-        "runtimes/win/lib/netcoreapp3.1/System.Drawing.Common.dll",
-        "runtimes/win/lib/netcoreapp3.1/System.Drawing.Common.xml",
-        "system.drawing.common.6.0.0.nupkg.sha512",
-        "system.drawing.common.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
-    "System.IO.Pipelines/9.0.0": {
-      "sha512": "eA3cinogwaNB4jdjQHOP3Z3EuyiDII7MT35jgtnsA4vkn0LUrrSHsU0nzHTzFzmaFYeKV7MYyMxOocFzsBHpTw==",
-      "type": "package",
-      "path": "system.io.pipelines/9.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
-        "PACKAGE.md",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/net461/System.IO.Pipelines.targets",
-        "buildTransitive/net462/_._",
-        "buildTransitive/net8.0/_._",
-        "buildTransitive/netcoreapp2.0/System.IO.Pipelines.targets",
-        "lib/net462/System.IO.Pipelines.dll",
-        "lib/net462/System.IO.Pipelines.xml",
-        "lib/net8.0/System.IO.Pipelines.dll",
-        "lib/net8.0/System.IO.Pipelines.xml",
-        "lib/net9.0/System.IO.Pipelines.dll",
-        "lib/net9.0/System.IO.Pipelines.xml",
-        "lib/netstandard2.0/System.IO.Pipelines.dll",
-        "lib/netstandard2.0/System.IO.Pipelines.xml",
-        "system.io.pipelines.9.0.0.nupkg.sha512",
-        "system.io.pipelines.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
-    "System.Memory/4.5.5": {
-      "sha512": "XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw==",
-      "type": "package",
-      "path": "system.memory/4.5.5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.Memory.dll",
-        "lib/net461/System.Memory.xml",
-        "lib/netcoreapp2.1/_._",
-        "lib/netstandard1.1/System.Memory.dll",
-        "lib/netstandard1.1/System.Memory.xml",
-        "lib/netstandard2.0/System.Memory.dll",
-        "lib/netstandard2.0/System.Memory.xml",
-        "ref/netcoreapp2.1/_._",
-        "system.memory.4.5.5.nupkg.sha512",
-        "system.memory.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Numerics.Vectors/4.5.0": {
-      "sha512": "QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
-      "type": "package",
-      "path": "system.numerics.vectors/4.5.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net46/System.Numerics.Vectors.dll",
-        "lib/net46/System.Numerics.Vectors.xml",
-        "lib/netcoreapp2.0/_._",
-        "lib/netstandard1.0/System.Numerics.Vectors.dll",
-        "lib/netstandard1.0/System.Numerics.Vectors.xml",
-        "lib/netstandard2.0/System.Numerics.Vectors.dll",
-        "lib/netstandard2.0/System.Numerics.Vectors.xml",
-        "lib/portable-net45+win8+wp8+wpa81/System.Numerics.Vectors.dll",
-        "lib/portable-net45+win8+wp8+wpa81/System.Numerics.Vectors.xml",
-        "lib/uap10.0.16299/_._",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/net45/System.Numerics.Vectors.dll",
-        "ref/net45/System.Numerics.Vectors.xml",
-        "ref/net46/System.Numerics.Vectors.dll",
-        "ref/net46/System.Numerics.Vectors.xml",
-        "ref/netcoreapp2.0/_._",
-        "ref/netstandard1.0/System.Numerics.Vectors.dll",
-        "ref/netstandard1.0/System.Numerics.Vectors.xml",
-        "ref/netstandard2.0/System.Numerics.Vectors.dll",
-        "ref/netstandard2.0/System.Numerics.Vectors.xml",
-        "ref/uap10.0.16299/_._",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "system.numerics.vectors.4.5.0.nupkg.sha512",
-        "system.numerics.vectors.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.Runtime.CompilerServices.Unsafe/6.1.0": {
-      "sha512": "5o/HZxx6RVqYlhKSq8/zronDkALJZUT2Vz0hx43f0gwe8mwlM0y2nYlqdBwLMzr262Bwvpikeb/yEwkAa5PADg==",
-      "type": "package",
-      "path": "system.runtime.compilerservices.unsafe/6.1.0",
+      "path": "system.runtime.compilerservices.unsafe/6.1.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1824,54 +410,23 @@
         "buildTransitive/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.targets",
         "lib/net462/System.Runtime.CompilerServices.Unsafe.dll",
         "lib/net462/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/net6.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/net6.0/System.Runtime.CompilerServices.Unsafe.xml",
         "lib/net7.0/_._",
         "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
         "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
-        "system.runtime.compilerservices.unsafe.6.1.0.nupkg.sha512",
+        "system.runtime.compilerservices.unsafe.6.1.2.nupkg.sha512",
         "system.runtime.compilerservices.unsafe.nuspec"
       ]
     },
-    "System.Text.Encodings.Web/9.0.0": {
-      "sha512": "e2hMgAErLbKyUUwt18qSBf9T5Y+SFAL3ZedM8fLupkVj8Rj2PZ9oxQ37XX2LF8fTO1wNIxvKpihD7Of7D/NxZw==",
+    "System.Text.Json/10.0.0": {
+      "sha512": "1Dpjwq9peG/Wt5BNbrzIhTpclfOSqBWZsUO28vVr59yQlkvL5jLBWfpfzRmJ1OY+6DciaY0DUcltyzs4fuZHjw==",
       "type": "package",
-      "path": "system.text.encodings.web/9.0.0",
+      "path": "system.text.json/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "LICENSE.TXT",
-        "PACKAGE.md",
-        "THIRD-PARTY-NOTICES.TXT",
-        "buildTransitive/net461/System.Text.Encodings.Web.targets",
-        "buildTransitive/net462/_._",
-        "buildTransitive/net8.0/_._",
-        "buildTransitive/netcoreapp2.0/System.Text.Encodings.Web.targets",
-        "lib/net462/System.Text.Encodings.Web.dll",
-        "lib/net462/System.Text.Encodings.Web.xml",
-        "lib/net8.0/System.Text.Encodings.Web.dll",
-        "lib/net8.0/System.Text.Encodings.Web.xml",
-        "lib/net9.0/System.Text.Encodings.Web.dll",
-        "lib/net9.0/System.Text.Encodings.Web.xml",
-        "lib/netstandard2.0/System.Text.Encodings.Web.dll",
-        "lib/netstandard2.0/System.Text.Encodings.Web.xml",
-        "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll",
-        "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.xml",
-        "runtimes/browser/lib/net9.0/System.Text.Encodings.Web.dll",
-        "runtimes/browser/lib/net9.0/System.Text.Encodings.Web.xml",
-        "system.text.encodings.web.9.0.0.nupkg.sha512",
-        "system.text.encodings.web.nuspec",
-        "useSharedDesignerContext.txt"
-      ]
-    },
-    "System.Text.Json/9.0.0": {
-      "sha512": "js7+qAu/9mQvnhA4EfGMZNEzXtJCDxgkgj8ohuxq/Qxv+R56G+ljefhiJHOxTNiw54q8vmABCWUwkMulNdlZ4A==",
-      "type": "package",
-      "path": "system.text.json/9.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "LICENSE.TXT",
         "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
         "analyzers/dotnet/roslyn3.11/cs/System.Text.Json.SourceGeneration.dll",
@@ -1921,6 +476,8 @@
         "buildTransitive/net8.0/System.Text.Json.targets",
         "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
         "buildTransitive/netstandard2.0/System.Text.Json.targets",
+        "lib/net10.0/System.Text.Json.dll",
+        "lib/net10.0/System.Text.Json.xml",
         "lib/net462/System.Text.Json.dll",
         "lib/net462/System.Text.Json.xml",
         "lib/net8.0/System.Text.Json.dll",
@@ -1929,125 +486,44 @@
         "lib/net9.0/System.Text.Json.xml",
         "lib/netstandard2.0/System.Text.Json.dll",
         "lib/netstandard2.0/System.Text.Json.xml",
-        "system.text.json.9.0.0.nupkg.sha512",
+        "system.text.json.10.0.0.nupkg.sha512",
         "system.text.json.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.Threading.Tasks.Extensions/4.5.4": {
-      "sha512": "zteT+G8xuGu6mS+mzDzYXbzS7rd3K6Fjb9RiZlYlJPam2/hU7JCBZBVEcywNuR+oZ1ncTvc/cq0faRr3P01OVg==",
+    "System.ValueTuple/4.6.1": {
+      "sha512": "+RJT4qaekpZ7DDLhf+LTjq+E48jieKiY9ulJ+BoxKmZblIJfIJT8Ufcaa/clQqnYvWs8jugfGSMu8ylS0caG0w==",
       "type": "package",
-      "path": "system.threading.tasks.extensions/4.5.4",
+      "path": "system.valuetuple/4.6.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net461/System.Threading.Tasks.Extensions.dll",
-        "lib/net461/System.Threading.Tasks.Extensions.xml",
-        "lib/netcoreapp2.1/_._",
-        "lib/netstandard1.0/System.Threading.Tasks.Extensions.dll",
-        "lib/netstandard1.0/System.Threading.Tasks.Extensions.xml",
-        "lib/netstandard2.0/System.Threading.Tasks.Extensions.dll",
-        "lib/netstandard2.0/System.Threading.Tasks.Extensions.xml",
-        "lib/portable-net45+win8+wp8+wpa81/System.Threading.Tasks.Extensions.dll",
-        "lib/portable-net45+win8+wp8+wpa81/System.Threading.Tasks.Extensions.xml",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/netcoreapp2.1/_._",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-        "system.threading.tasks.extensions.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
-    "System.ValueTuple/4.5.0": {
-      "sha512": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ==",
-      "type": "package",
-      "path": "system.valuetuple/4.5.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/MonoAndroid10/_._",
-        "lib/MonoTouch10/_._",
-        "lib/net461/System.ValueTuple.dll",
-        "lib/net461/System.ValueTuple.xml",
+        "Icon.png",
+        "PACKAGE.md",
+        "build/net471/System.ValueTuple.targets",
+        "buildTransitive/net461/System.ValueTuple.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net471/System.ValueTuple.targets",
+        "lib/net462/System.ValueTuple.dll",
+        "lib/net462/System.ValueTuple.xml",
         "lib/net47/System.ValueTuple.dll",
         "lib/net47/System.ValueTuple.xml",
+        "lib/net471/_._",
         "lib/netcoreapp2.0/_._",
-        "lib/netstandard1.0/System.ValueTuple.dll",
-        "lib/netstandard1.0/System.ValueTuple.xml",
         "lib/netstandard2.0/_._",
-        "lib/portable-net40+sl4+win8+wp8/System.ValueTuple.dll",
-        "lib/portable-net40+sl4+win8+wp8/System.ValueTuple.xml",
-        "lib/uap10.0.16299/_._",
-        "lib/xamarinios10/_._",
-        "lib/xamarinmac20/_._",
-        "lib/xamarintvos10/_._",
-        "lib/xamarinwatchos10/_._",
-        "ref/MonoAndroid10/_._",
-        "ref/MonoTouch10/_._",
-        "ref/net461/System.ValueTuple.dll",
-        "ref/net47/System.ValueTuple.dll",
-        "ref/netcoreapp2.0/_._",
-        "ref/netstandard2.0/_._",
-        "ref/portable-net40+sl4+win8+wp8/System.ValueTuple.dll",
-        "ref/uap10.0.16299/_._",
-        "ref/xamarinios10/_._",
-        "ref/xamarinmac20/_._",
-        "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._",
-        "system.valuetuple.4.5.0.nupkg.sha512",
-        "system.valuetuple.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
+        "system.valuetuple.4.6.1.nupkg.sha512",
+        "system.valuetuple.nuspec"
       ]
-    },
-    "Flex.UiWpfFramework/0.0.0": {
-      "type": "project",
-      "path": "../UiWpfFramework/UiWpfFramework.csproj",
-      "msbuildProject": "../UiWpfFramework/UiWpfFramework.csproj"
     }
   },
   "projectFileDependencyGroups": {
-    ".NETFramework,Version=v4.6.2": [
-      "Flex.UiWpfFramework >= 0.0.0",
-      "Microsoft.NETFramework.ReferenceAssemblies >= 1.0.3",
-      "Netify >= 1.1.1",
-      "Nito.AsyncEx >= 5.1.2",
-      "RestSharp >= 112.1.0",
-      "System.Runtime.CompilerServices.Unsafe >= 6.1.0",
-      "System.Text.Json >= 9.0.0",
-      "System.ValueTuple >= 4.5.0"
-    ],
     "net10.0": [
       "Netify >= 1.1.1",
       "Nito.AsyncEx >= 5.1.2",
       "RestSharp >= 112.1.0",
-      "System.Runtime.CompilerServices.Unsafe >= 6.1.0",
-      "System.Text.Json >= 9.0.0",
-      "System.ValueTuple >= 4.5.0"
-    ],
-    "net8.0-windows7.0": [
-      "Flex.UiWpfFramework >= 0.0.0",
-      "Netify >= 1.1.1",
-      "Nito.AsyncEx >= 5.1.2",
-      "RestSharp >= 112.1.0",
-      "System.Runtime.CompilerServices.Unsafe >= 6.1.0",
-      "System.Text.Json >= 9.0.0",
-      "System.ValueTuple >= 4.5.0"
+      "System.Runtime.CompilerServices.Unsafe >= 6.1.2",
+      "System.Text.Json >= 10.0.0",
+      "System.ValueTuple >= 4.6.1"
     ]
   },
   "packageFolders": {
@@ -2062,39 +538,20 @@
       "packagesPath": "D:\\DEV\\FlexPilot\\~\\.nuget\\packages",
       "outputPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\obj\\",
       "projectStyle": "PackageReference",
-      "crossTargeting": true,
       "configFilePaths": [
         "D:\\DEV\\FlexPilot\\NuGet.Config",
         "C:\\Users\\serialcoder\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net10.0",
-        "net462",
-        "net8.0-windows"
+        "net10.0"
       ],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net8.0-windows7.0": {
-          "targetAlias": "net8.0-windows",
-          "projectReferences": {
-            "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\UiWpfFramework\\UiWpfFramework.csproj": {
-              "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\UiWpfFramework\\UiWpfFramework.csproj"
-            }
-          }
-        },
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {}
-        },
-        "net462": {
-          "targetAlias": "net462",
-          "projectReferences": {
-            "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\UiWpfFramework\\UiWpfFramework.csproj": {
-              "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\UiWpfFramework\\UiWpfFramework.csproj"
-            }
-          }
         }
       },
       "warningProperties": {
@@ -2110,348 +567,6 @@
       "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
-      "net8.0-windows7.0": {
-        "targetAlias": "net8.0-windows",
-        "dependencies": {
-          "Netify": {
-            "target": "Package",
-            "version": "[1.1.1, )"
-          },
-          "Nito.AsyncEx": {
-            "target": "Package",
-            "version": "[5.1.2, )"
-          },
-          "RestSharp": {
-            "target": "Package",
-            "version": "[112.1.0, )"
-          },
-          "System.Runtime.CompilerServices.Unsafe": {
-            "target": "Package",
-            "version": "[6.1.0, )"
-          },
-          "System.Text.Json": {
-            "target": "Package",
-            "version": "[9.0.0, )"
-          },
-          "System.ValueTuple": {
-            "target": "Package",
-            "version": "[4.5.0, )"
-          }
-        },
-        "imports": [
-          "net461",
-          "net462",
-          "net47",
-          "net471",
-          "net472",
-          "net48",
-          "net481"
-        ],
-        "assetTargetFallback": true,
-        "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.22, 8.0.22]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.22, 8.0.22]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.22, 8.0.22]"
-          }
-        ],
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
-          }
-        },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
-        "packagesToPrune": {
-          "Microsoft.CSharp": "(,4.7.32767]",
-          "Microsoft.VisualBasic": "(,10.3.32767]",
-          "Microsoft.Win32.Primitives": "(,4.3.32767]",
-          "Microsoft.Win32.Registry": "(,5.0.32767]",
-          "runtime.any.System.Collections": "(,4.3.32767]",
-          "runtime.any.System.Diagnostics.Tools": "(,4.3.32767]",
-          "runtime.any.System.Diagnostics.Tracing": "(,4.3.32767]",
-          "runtime.any.System.Globalization": "(,4.3.32767]",
-          "runtime.any.System.Globalization.Calendars": "(,4.3.32767]",
-          "runtime.any.System.IO": "(,4.3.32767]",
-          "runtime.any.System.Reflection": "(,4.3.32767]",
-          "runtime.any.System.Reflection.Extensions": "(,4.3.32767]",
-          "runtime.any.System.Reflection.Primitives": "(,4.3.32767]",
-          "runtime.any.System.Resources.ResourceManager": "(,4.3.32767]",
-          "runtime.any.System.Runtime": "(,4.3.32767]",
-          "runtime.any.System.Runtime.Handles": "(,4.3.32767]",
-          "runtime.any.System.Runtime.InteropServices": "(,4.3.32767]",
-          "runtime.any.System.Text.Encoding": "(,4.3.32767]",
-          "runtime.any.System.Text.Encoding.Extensions": "(,4.3.32767]",
-          "runtime.any.System.Threading.Tasks": "(,4.3.32767]",
-          "runtime.any.System.Threading.Timer": "(,4.3.32767]",
-          "runtime.aot.System.Collections": "(,4.3.32767]",
-          "runtime.aot.System.Diagnostics.Tools": "(,4.3.32767]",
-          "runtime.aot.System.Diagnostics.Tracing": "(,4.3.32767]",
-          "runtime.aot.System.Globalization": "(,4.3.32767]",
-          "runtime.aot.System.Globalization.Calendars": "(,4.3.32767]",
-          "runtime.aot.System.IO": "(,4.3.32767]",
-          "runtime.aot.System.Reflection": "(,4.3.32767]",
-          "runtime.aot.System.Reflection.Extensions": "(,4.3.32767]",
-          "runtime.aot.System.Reflection.Primitives": "(,4.3.32767]",
-          "runtime.aot.System.Resources.ResourceManager": "(,4.3.32767]",
-          "runtime.aot.System.Runtime": "(,4.3.32767]",
-          "runtime.aot.System.Runtime.Handles": "(,4.3.32767]",
-          "runtime.aot.System.Runtime.InteropServices": "(,4.3.32767]",
-          "runtime.aot.System.Text.Encoding": "(,4.3.32767]",
-          "runtime.aot.System.Text.Encoding.Extensions": "(,4.3.32767]",
-          "runtime.aot.System.Threading.Tasks": "(,4.3.32767]",
-          "runtime.aot.System.Threading.Timer": "(,4.3.32767]",
-          "runtime.debian.8-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.debian.8-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.debian.8-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.debian.8-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.debian.8-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.debian.9-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.debian.9-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.debian.9-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.debian.9-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.debian.9-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.debian.9-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.fedora.23-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.fedora.23-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.fedora.23-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.fedora.23-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.fedora.24-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.fedora.24-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.fedora.24-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.fedora.24-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.fedora.27-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.fedora.27-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.fedora.27-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.fedora.27-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.fedora.27-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.fedora.27-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.fedora.28-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.fedora.28-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.fedora.28-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.fedora.28-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.fedora.28-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.fedora.28-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.native.System.Security.Cryptography.Apple": "(,4.3.32767]",
-          "runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.opensuse.13.2-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.opensuse.13.2-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.opensuse.13.2-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.opensuse.13.2-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.opensuse.42.1-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.opensuse.42.1-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.opensuse.42.1-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.opensuse.42.1-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.opensuse.42.3-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.opensuse.42.3-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.opensuse.42.3-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.opensuse.42.3-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.opensuse.42.3-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.opensuse.42.3-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.osx.10.10-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.osx.10.10-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.osx.10.10-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.osx.10.10-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple": "(,4.3.32767]",
-          "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.rhel.7-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.rhel.7-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.rhel.7-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.rhel.7-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.rhel.7-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.ubuntu.14.04-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.ubuntu.14.04-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.ubuntu.14.04-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.ubuntu.14.04-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.ubuntu.16.04-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.ubuntu.16.04-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.ubuntu.16.04-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.ubuntu.16.04-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.ubuntu.16.10-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.ubuntu.16.10-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.ubuntu.16.10-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.ubuntu.16.10-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.ubuntu.18.04-x64.runtime.native.System": "(,4.3.32767]",
-          "runtime.ubuntu.18.04-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.ubuntu.18.04-x64.runtime.native.System.Net.Http": "(,4.3.32767]",
-          "runtime.ubuntu.18.04-x64.runtime.native.System.Net.Security": "(,4.3.32767]",
-          "runtime.ubuntu.18.04-x64.runtime.native.System.Security.Cryptography": "(,4.3.32767]",
-          "runtime.ubuntu.18.04-x64.runtime.native.System.Security.Cryptography.OpenSsl": "(,4.3.32767]",
-          "runtime.unix.Microsoft.Win32.Primitives": "(,4.3.32767]",
-          "runtime.unix.System.Console": "(,4.3.32767]",
-          "runtime.unix.System.Diagnostics.Debug": "(,4.3.32767]",
-          "runtime.unix.System.IO.FileSystem": "(,4.3.32767]",
-          "runtime.unix.System.Net.Primitives": "(,4.3.32767]",
-          "runtime.unix.System.Net.Sockets": "(,4.3.32767]",
-          "runtime.unix.System.Private.Uri": "(,4.3.32767]",
-          "runtime.unix.System.Runtime.Extensions": "(,4.3.32767]",
-          "runtime.win.Microsoft.Win32.Primitives": "(,4.3.32767]",
-          "runtime.win.System.Console": "(,4.3.32767]",
-          "runtime.win.System.Diagnostics.Debug": "(,4.3.32767]",
-          "runtime.win.System.IO.FileSystem": "(,4.3.32767]",
-          "runtime.win.System.Net.Primitives": "(,4.3.32767]",
-          "runtime.win.System.Net.Sockets": "(,4.3.32767]",
-          "runtime.win.System.Runtime.Extensions": "(,4.3.32767]",
-          "runtime.win10-arm-aot.runtime.native.System.IO.Compression": "(,4.0.32767]",
-          "runtime.win10-arm64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.win10-x64-aot.runtime.native.System.IO.Compression": "(,4.0.32767]",
-          "runtime.win10-x86-aot.runtime.native.System.IO.Compression": "(,4.0.32767]",
-          "runtime.win7-x64.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.win7-x86.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "runtime.win7.System.Private.Uri": "(,4.3.32767]",
-          "runtime.win8-arm.runtime.native.System.IO.Compression": "(,4.3.32767]",
-          "System.AppContext": "(,4.3.32767]",
-          "System.Buffers": "(,4.6.32767]",
-          "System.Collections": "(,4.3.32767]",
-          "System.Collections.Concurrent": "(,4.3.32767]",
-          "System.Collections.Immutable": "(,8.0.32767]",
-          "System.Collections.NonGeneric": "(,4.3.32767]",
-          "System.Collections.Specialized": "(,4.3.32767]",
-          "System.ComponentModel": "(,4.3.32767]",
-          "System.ComponentModel.Annotations": "(,5.0.32767]",
-          "System.ComponentModel.EventBasedAsync": "(,4.3.32767]",
-          "System.ComponentModel.Primitives": "(,4.3.32767]",
-          "System.ComponentModel.TypeConverter": "(,4.3.32767]",
-          "System.Console": "(,4.3.32767]",
-          "System.Data.Common": "(,4.3.32767]",
-          "System.Data.DataSetExtensions": "(,4.5.32767]",
-          "System.Diagnostics.Contracts": "(,4.3.32767]",
-          "System.Diagnostics.Debug": "(,4.3.32767]",
-          "System.Diagnostics.DiagnosticSource": "(,8.0.32767]",
-          "System.Diagnostics.FileVersionInfo": "(,4.3.32767]",
-          "System.Diagnostics.Process": "(,4.3.32767]",
-          "System.Diagnostics.StackTrace": "(,4.3.32767]",
-          "System.Diagnostics.TextWriterTraceListener": "(,4.3.32767]",
-          "System.Diagnostics.Tools": "(,4.3.32767]",
-          "System.Diagnostics.TraceSource": "(,4.3.32767]",
-          "System.Diagnostics.Tracing": "(,4.3.32767]",
-          "System.Drawing.Primitives": "(,4.3.32767]",
-          "System.Dynamic.Runtime": "(,4.3.32767]",
-          "System.Formats.Asn1": "(,8.0.32767]",
-          "System.Globalization": "(,4.3.32767]",
-          "System.Globalization.Calendars": "(,4.3.32767]",
-          "System.Globalization.Extensions": "(,4.3.32767]",
-          "System.IO": "(,4.3.32767]",
-          "System.IO.Compression": "(,4.3.32767]",
-          "System.IO.Compression.ZipFile": "(,4.3.32767]",
-          "System.IO.FileSystem": "(,4.3.32767]",
-          "System.IO.FileSystem.AccessControl": "(,5.0.32767]",
-          "System.IO.FileSystem.DriveInfo": "(,4.3.32767]",
-          "System.IO.FileSystem.Primitives": "(,4.3.32767]",
-          "System.IO.FileSystem.Watcher": "(,4.3.32767]",
-          "System.IO.IsolatedStorage": "(,4.3.32767]",
-          "System.IO.MemoryMappedFiles": "(,4.3.32767]",
-          "System.IO.Pipes": "(,4.3.32767]",
-          "System.IO.Pipes.AccessControl": "(,4.6.32767]",
-          "System.IO.UnmanagedMemoryStream": "(,4.3.32767]",
-          "System.Linq": "(,4.3.32767]",
-          "System.Linq.Expressions": "(,4.3.32767]",
-          "System.Linq.Parallel": "(,4.3.32767]",
-          "System.Linq.Queryable": "(,4.3.32767]",
-          "System.Memory": "(,4.6.32767]",
-          "System.Net.Http": "(,4.3.32767]",
-          "System.Net.Http.Json": "(,8.0.32767]",
-          "System.Net.NameResolution": "(,4.3.32767]",
-          "System.Net.NetworkInformation": "(,4.3.32767]",
-          "System.Net.Ping": "(,4.3.32767]",
-          "System.Net.Primitives": "(,4.3.32767]",
-          "System.Net.Requests": "(,4.3.32767]",
-          "System.Net.Security": "(,4.3.32767]",
-          "System.Net.Sockets": "(,4.3.32767]",
-          "System.Net.WebHeaderCollection": "(,4.3.32767]",
-          "System.Net.WebSockets": "(,4.3.32767]",
-          "System.Net.WebSockets.Client": "(,4.3.32767]",
-          "System.Numerics.Vectors": "(,4.6.32767]",
-          "System.ObjectModel": "(,4.3.32767]",
-          "System.Private.DataContractSerialization": "(,4.3.32767]",
-          "System.Private.Uri": "(,4.3.32767]",
-          "System.Reflection": "(,4.3.32767]",
-          "System.Reflection.DispatchProxy": "(,4.8.32767]",
-          "System.Reflection.Emit": "(,4.7.32767]",
-          "System.Reflection.Emit.ILGeneration": "(,4.7.32767]",
-          "System.Reflection.Emit.Lightweight": "(,4.7.32767]",
-          "System.Reflection.Extensions": "(,4.3.32767]",
-          "System.Reflection.Metadata": "(,8.0.32767]",
-          "System.Reflection.Primitives": "(,4.3.32767]",
-          "System.Reflection.TypeExtensions": "(,4.7.32767]",
-          "System.Resources.Reader": "(,4.3.32767]",
-          "System.Resources.ResourceManager": "(,4.3.32767]",
-          "System.Resources.Writer": "(,4.3.32767]",
-          "System.Runtime": "(,4.3.32767]",
-          "System.Runtime.CompilerServices.Unsafe": "(,6.1.32767]",
-          "System.Runtime.CompilerServices.VisualC": "(,4.3.32767]",
-          "System.Runtime.Extensions": "(,4.3.32767]",
-          "System.Runtime.Handles": "(,4.3.32767]",
-          "System.Runtime.InteropServices": "(,4.3.32767]",
-          "System.Runtime.InteropServices.RuntimeInformation": "(,4.3.32767]",
-          "System.Runtime.Loader": "(,4.3.32767]",
-          "System.Runtime.Numerics": "(,4.3.32767]",
-          "System.Runtime.Serialization.Formatters": "(,4.3.32767]",
-          "System.Runtime.Serialization.Json": "(,4.3.32767]",
-          "System.Runtime.Serialization.Primitives": "(,4.3.32767]",
-          "System.Runtime.Serialization.Xml": "(,4.3.32767]",
-          "System.Security.AccessControl": "(,6.0.32767]",
-          "System.Security.Claims": "(,4.3.32767]",
-          "System.Security.Cryptography.Algorithms": "(,4.3.32767]",
-          "System.Security.Cryptography.Cng": "(,4.6.32767]",
-          "System.Security.Cryptography.Csp": "(,4.3.32767]",
-          "System.Security.Cryptography.Encoding": "(,4.3.32767]",
-          "System.Security.Cryptography.OpenSsl": "(,5.0.32767]",
-          "System.Security.Cryptography.Primitives": "(,4.3.32767]",
-          "System.Security.Cryptography.X509Certificates": "(,4.3.32767]",
-          "System.Security.Principal": "(,4.3.32767]",
-          "System.Security.Principal.Windows": "(,5.0.32767]",
-          "System.Security.SecureString": "(,4.3.32767]",
-          "System.Text.Encoding": "(,4.3.32767]",
-          "System.Text.Encoding.CodePages": "(,8.0.32767]",
-          "System.Text.Encoding.Extensions": "(,4.3.32767]",
-          "System.Text.Encodings.Web": "(,8.0.32767]",
-          "System.Text.Json": "(,8.0.32767]",
-          "System.Text.RegularExpressions": "(,4.3.32767]",
-          "System.Threading": "(,4.3.32767]",
-          "System.Threading.Channels": "(,8.0.32767]",
-          "System.Threading.Overlapped": "(,4.3.32767]",
-          "System.Threading.Tasks": "(,4.3.32767]",
-          "System.Threading.Tasks.Dataflow": "(,8.0.32767]",
-          "System.Threading.Tasks.Extensions": "(,4.6.32767]",
-          "System.Threading.Tasks.Parallel": "(,4.3.32767]",
-          "System.Threading.Thread": "(,4.3.32767]",
-          "System.Threading.ThreadPool": "(,4.3.32767]",
-          "System.Threading.Timer": "(,4.3.32767]",
-          "System.ValueTuple": "(,4.6.32767]",
-          "System.Xml.ReaderWriter": "(,4.3.32767]",
-          "System.Xml.XDocument": "(,4.3.32767]",
-          "System.Xml.XmlDocument": "(,4.3.32767]",
-          "System.Xml.XmlSerializer": "(,4.3.32767]",
-          "System.Xml.XPath": "(,4.3.32767]",
-          "System.Xml.XPath.XDocument": "(,4.3.32767]"
-        }
-      },
       "net10.0": {
         "targetAlias": "net10.0",
         "dependencies": {
@@ -2469,15 +584,15 @@
           },
           "System.Runtime.CompilerServices.Unsafe": {
             "target": "Package",
-            "version": "[6.1.0, )"
+            "version": "[6.1.2, )"
           },
           "System.Text.Json": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[10.0.0, )"
           },
           "System.ValueTuple": {
             "target": "Package",
-            "version": "[4.5.0, )"
+            "version": "[4.6.1, )"
           }
         },
         "imports": [
@@ -2771,43 +886,29 @@
           "System.Xml.XPath": "(,4.3.32767]",
           "System.Xml.XPath.XDocument": "(,5.0.32767]"
         }
-      },
-      "net462": {
-        "targetAlias": "net462",
-        "dependencies": {
-          "Microsoft.NETFramework.ReferenceAssemblies": {
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "[1.0.3, )",
-            "autoReferenced": true
-          },
-          "Netify": {
-            "target": "Package",
-            "version": "[1.1.1, )"
-          },
-          "Nito.AsyncEx": {
-            "target": "Package",
-            "version": "[5.1.2, )"
-          },
-          "RestSharp": {
-            "target": "Package",
-            "version": "[112.1.0, )"
-          },
-          "System.Runtime.CompilerServices.Unsafe": {
-            "target": "Package",
-            "version": "[6.1.0, )"
-          },
-          "System.Text.Json": {
-            "target": "Package",
-            "version": "[9.0.0, )"
-          },
-          "System.ValueTuple": {
-            "target": "Package",
-            "version": "[4.5.0, )"
-          }
-        },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "PackageReference System.Runtime.CompilerServices.Unsafe will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
+      "libraryId": "System.Runtime.CompilerServices.Unsafe",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "PackageReference System.Text.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
+      "libraryId": "System.Text.Json",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }
