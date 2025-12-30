@@ -12,13 +12,11 @@
 // ****************************************************************************
 
 using System;
-using System.Globalization;
 using System.Diagnostics;
-using System.Net;
 using Flex.Smoothlake.FlexLib.Interface;
 using Flex.Smoothlake.FlexLib.Mvvm;
-using Flex.Smoothlake.Vita;
-using Flex.Util;
+using Util;
+using Vita;
 
 namespace Flex.Smoothlake.FlexLib
 {

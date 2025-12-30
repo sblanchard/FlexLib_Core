@@ -10,7 +10,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace Flex.Util
+namespace Util
 {
     public class HiPerfTimer
     {

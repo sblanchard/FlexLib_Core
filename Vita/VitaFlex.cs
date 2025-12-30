@@ -11,12 +11,7 @@
 // */
 // ****************************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Flex.Smoothlake.Vita
+namespace Vita
 {
     public static class VitaFlex
     {

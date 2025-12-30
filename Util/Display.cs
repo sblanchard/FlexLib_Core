@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 #endif
 
-namespace Flex.Util;
+namespace Util;
 
 #if !(NET462 || NET8_0_OR_GREATER_WINDOWS)
 // Simple Point struct for non-Windows builds

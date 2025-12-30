@@ -12,15 +12,9 @@
 // ****************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
+using Util;
 
-using Flex.Util;
-using System.Diagnostics;
-
-namespace Flex.Smoothlake.Vita
+namespace Vita
 {
     /// <summary>
     /// Represents a single Vita IF Data Packet as defined in the Vita 49 Standard Section 6.1.

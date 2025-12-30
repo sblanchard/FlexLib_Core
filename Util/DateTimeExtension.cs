@@ -13,11 +13,8 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Flex.Util
+namespace Util
 {
     public static class DateTimeExtension
     {

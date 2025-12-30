@@ -12,13 +12,11 @@
 // ****************************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;
-using System.Diagnostics;
 
-namespace Flex.Util
+namespace Util
 {
     public class LargePartitionedList<T> : IList<T>
     {

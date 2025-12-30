@@ -11,9 +11,7 @@
 // */
 // ****************************************************************************
 
-using System;
-
-namespace Flex.Smoothlake.FlexLib
+namespace Flex.Smoothlake.FlexLib.Interface
 {
     public interface IUsbCatCable : IUsbCable
     {

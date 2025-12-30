@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Flex.Smoothlake.FlexLib
+﻿namespace Flex.Smoothlake.FlexLib.Interface
 {
     public interface IUsbBcdCable : IUsbCable
     {

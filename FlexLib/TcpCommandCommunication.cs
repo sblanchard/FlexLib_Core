@@ -12,15 +12,12 @@
 // ****************************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-
-using Flex.Smoothlake.FlexLib.Mvvm;
+using Flex.Smoothlake.FlexLib.Interface;
 
 
 namespace Flex.Smoothlake.FlexLib
@@ -112,7 +109,7 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
-        private object _tcpReadSyncObj = new object();
+        private Lock _tcpReadSyncObj = new Lock();
         private byte[] _tcpReadByteBuffer = new byte[TCP_READ_BUFFER_SIZE];
         private string _tcpReadStringBuffer = "";
         private void TCPReadCallback(IAsyncResult ar)

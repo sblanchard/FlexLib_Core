@@ -14,7 +14,7 @@
 using System;
 using System.Diagnostics;
 using Flex.Smoothlake.FlexLib.Interface;
-using Flex.Util;
+using Util;
 
 namespace Flex.Smoothlake.FlexLib
 {

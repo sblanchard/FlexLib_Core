@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +16,7 @@ namespace Flex.Smoothlake.FlexLib
         StreamWriter _writer = null;
         private string _hostname;
         private int _port;
-        private object _writerLockObj = new object();        
+        private Lock _writerLockObj = new Lock();        
 
         private SslStream _sslStream;
         private TcpClient _tcpClient;
@@ -176,7 +173,7 @@ namespace Flex.Smoothlake.FlexLib
             return sslStream;
         }
 
-        Object _disconnectLockObj = new Object();
+        Lock _disconnectLockObj = new Lock();
         public void Disconnect()
         {
             lock (_disconnectLockObj)

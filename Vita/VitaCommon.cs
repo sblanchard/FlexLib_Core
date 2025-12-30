@@ -11,15 +11,9 @@
 // */
 // ****************************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using System.Net;
 
-
-namespace Flex.Smoothlake.Vita
+namespace Vita
 {
     public delegate void VitaDataReceivedCallback(IPEndPoint ep, byte[] data, int num_bytes);
 

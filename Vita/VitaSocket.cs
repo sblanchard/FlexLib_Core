@@ -12,12 +12,11 @@
 // ****************************************************************************
 
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Diagnostics;
-using System.Text;
 
-namespace Flex.Smoothlake.Vita
+namespace Vita
 {
     public class VitaSocket
     {
