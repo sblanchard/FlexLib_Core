@@ -65,6 +65,11 @@ namespace Flex.Smoothlake.FlexLib
 
         private int _byteSumTX = 0;
         private double _bytesPerSecToRadio;
+
+        // Running sample count for VITA-49 timestamp (tsf=SampleCount)
+        // Opus at 24kHz stereo, 10ms frames = 240 samples per channel per frame
+        private const int SamplesPerOpusFrame = 240;
+        private ulong _sampleCount = 0;
         public double BytesPerSecToRadio
         {
             get { return _bytesPerSecToRadio; }
@@ -162,6 +167,11 @@ namespace Flex.Smoothlake.FlexLib
             // packet_size is the 32 bit word length?
             _txPacket.header.packet_size = (ushort)Math.Ceiling(length / 4.0 + 7.0); // 7*4=28 bytes of Vita overhead
 
+            // Set timestamps for VITA-49 (tsf=SampleCount means running sample count)
+            // timestamp_int is unused when tsi=Other, but set it to 0 for clarity
+            _txPacket.timestamp_int = 0;
+            _txPacket.timestamp_frac = _sampleCount;
+
             try
             {
                 // send the packet to the radio
@@ -171,6 +181,10 @@ namespace Flex.Smoothlake.FlexLib
             {
                 Debug.WriteLine($"TXRemoteAudioStream: AddTXData sendTo() exception = {e}");
             }
+
+            // Increment sample count for next packet (240 samples per 10ms Opus frame)
+            _sampleCount += SamplesPerOpusFrame;
+
             // bump the packet count
             _txPacket.header.packet_count = (byte)((_txPacket.header.packet_count + 1) % 16);
         }
