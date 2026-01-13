@@ -73,6 +73,15 @@ namespace Vita
 
         private IPEndPoint RadioEndpoint;
 
+        /// <summary>
+        /// Gets the destination endpoint where TX UDP packets will be sent.
+        /// Useful for diagnostics and verification of proper UDP routing.
+        /// </summary>
+        public IPEndPoint TxDestination
+        {
+            get { return RadioEndpoint; }
+        }
+
         public void SendUDP(byte [] data)
         {
             try
