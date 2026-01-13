@@ -14221,7 +14221,21 @@ namespace Flex.Smoothlake.FlexLib
             }
             else
             {
-                VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, IP, 4991);
+                // CRITICAL FIX: For LOCAL connections, bind UDP socket to TCP source IP
+                // This ensures TX audio UDP packets come from the same IP as the TCP control connection
+                // Required for cross-subnet operation (e.g. server at 192.168.59.21 -> radio at 192.168.20.100)
+                IPAddress localBindIp = _commandCommunication.LocalIP;
+                if (localBindIp != null)
+                {
+                    Debug.WriteLine($"StartUDP: LOCAL connection, binding VitaSocket to TCP source IP {localBindIp}");
+                    VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, localBindIp, IP, 4991);
+                }
+                else
+                {
+                    // Fallback to old behavior if LocalIP is not available
+                    Debug.WriteLine("StartUDP: LOCAL connection, but LocalIP not available, using default binding");
+                    VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, IP, 4991);
+                }
             }
 
             Thread t = new Thread(new ThreadStart(ProcessUDPPackets_ThreadFunction));

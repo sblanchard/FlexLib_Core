@@ -87,12 +87,51 @@ namespace Vita
 
         public VitaSocket(int _port, VitaDataReceivedCallback _callback, IPAddress radioIp, int radioPort) : this (_port, _callback)
         {
-            // In addition to creating the VitaSocket, for WAN we must also send the 
+            // In addition to creating the VitaSocket, for WAN we must also send the
             // 'client udp_register' command to the radio over the created UDP socket
 
             //ensure port is within range before assigning endpoint
             if (radioPort >= MIN_UDP_PORT && radioPort <= MAX_UDP_PORT)
                 RadioEndpoint = new IPEndPoint(radioIp, radioPort);
+        }
+
+        /// <summary>
+        /// Constructor for binding VitaSocket to a specific local IP address.
+        /// Required for cross-subnet TX audio to ensure UDP source IP matches TCP connection.
+        /// </summary>
+        public VitaSocket(int _port, VitaDataReceivedCallback _callback, IPAddress localBindIp, IPAddress radioIp, int radioPort)
+        {
+            bool done = false;
+            port = _port;
+            callback = _callback;
+
+            while (!done)
+            {
+                try
+                {
+                    socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                    socket.ExclusiveAddressUse = true;
+                    socket.ReceiveBufferSize = 150000 * 5;
+                    // Bind to specific local IP instead of IPAddress.Any for cross-subnet TX audio
+                    socket.Bind(new IPEndPoint(localBindIp, port));
+                    done = true;
+                }
+                catch (Exception ex) // if we get here, it is likely because the port is already open
+                {
+                    port++; // lets increment the port and try again
+                    if (port > 6010)
+                        throw new Exception(ex.Message);
+                }
+            }
+
+            Debug.WriteLine($"VitaSocket: Newly created on port {_port}, bound to local IP {localBindIp}");
+
+            //ensure port is within range before assigning endpoint
+            if (radioPort >= MIN_UDP_PORT && radioPort <= MAX_UDP_PORT)
+                RadioEndpoint = new IPEndPoint(radioIp, radioPort);
+
+            // begin looking for UDP packets immediately
+            StartReceive();
         }
 
         /// <summary>
