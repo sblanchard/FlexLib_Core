@@ -16,10 +16,28 @@ namespace Flex.Smoothlake.FlexLib
         StreamWriter _writer = null;
         private string _hostname;
         private int _port;
-        private Lock _writerLockObj = new Lock();        
+        private Lock _writerLockObj = new Lock();
 
         private SslStream _sslStream;
         private TcpClient _tcpClient;
+
+        /// <summary>
+        /// Gets the actual local endpoint (IP:port) of the TCP connection.
+        /// </summary>
+        public IPEndPoint LocalEndPoint
+        {
+            get
+            {
+                try
+                {
+                    return _tcpClient?.Client?.LocalEndPoint as IPEndPoint;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
 
         public SslClient(string hostname, string port, int src_port = 0, bool start_ping_thread = false, bool validate_cert = true)
         {

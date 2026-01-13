@@ -35,6 +35,17 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        /// <summary>
+        /// Gets the actual local endpoint (IP:port) of the TLS connection.
+        /// </summary>
+        public IPEndPoint LocalEndPoint
+        {
+            get
+            {
+                return _tlsToRadio?.LocalEndPoint;
+            }
+        }
+
         public bool Connect(IPAddress radio_ip, bool setup_reply)
         {
             throw new NotImplementedException();

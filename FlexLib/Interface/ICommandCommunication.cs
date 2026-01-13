@@ -6,6 +6,7 @@ namespace Flex.Smoothlake.FlexLib.Interface
     {
         bool IsConnected { get; }
         IPAddress LocalIP { set;  get; }
+        IPEndPoint LocalEndPoint { get; }
 
         event TcpCommandCommunication.TCPDataReceivedReadyEventHandler DataReceivedReady;
         event TcpCommandCommunication.IsConnectedChangedEventHandler IsConnectedChanged;

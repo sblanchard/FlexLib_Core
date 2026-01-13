@@ -55,6 +55,26 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        /// <summary>
+        /// Gets the actual local endpoint (IP:port) of the TCP connection.
+        /// This is the IP address that the radio sees us connecting from,
+        /// which is critical for UDP source IP matching on WAN connections.
+        /// </summary>
+        public IPEndPoint LocalEndPoint
+        {
+            get
+            {
+                try
+                {
+                    return _tcpClient?.Client?.LocalEndPoint as IPEndPoint;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+
         private const int COMMAND_PORT = 4992;
         private const int TCP_READ_BUFFER_SIZE = 1024;
 

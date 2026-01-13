@@ -41,11 +41,14 @@ namespace Vita
             }
         }
 
-        public VitaSocket(int _port, VitaDataReceivedCallback _callback)
+        public VitaSocket(int _port, VitaDataReceivedCallback _callback, IPAddress sourceIP = null)
         {
             bool done = false;
             port = _port;
             callback = _callback;
+
+            // If no source IP specified, default to IPAddress.Any for backward compatibility
+            var bindAddress = sourceIP ?? IPAddress.Any;
 
             while (!done)
             {
@@ -54,8 +57,11 @@ namespace Vita
                     socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                     socket.ExclusiveAddressUse = true;
                     socket.ReceiveBufferSize = 150000 * 5;
-                    socket.Bind(new IPEndPoint(IPAddress.Any, port));
+                    socket.Bind(new IPEndPoint(bindAddress, port));
                     done = true;
+
+                    // Log the actual bound IP for diagnostics
+                    Debug.WriteLine($"VitaSocket: Bound to {bindAddress}:{port} (requested source IP: {sourceIP?.ToString() ?? "Any"})");
                 }
                 catch (Exception ex) // if we get here, it is likely because the port is already open
                 {
@@ -66,12 +72,18 @@ namespace Vita
             }
 
             Debug.WriteLine("VitaSocket: Newly created on port " + _port);
-            
+
             // beging looking for UDP packets immediately
             StartReceive();
         }
 
         private IPEndPoint RadioEndpoint;
+
+        /// <summary>
+        /// Gets the radio endpoint where TX packets are sent.
+        /// Returns null for receive-only sockets.
+        /// </summary>
+        public IPEndPoint? TxDestination => RadioEndpoint;
 
         public void SendUDP(byte [] data)
         {
@@ -85,9 +97,10 @@ namespace Vita
             }
         }
 
-        public VitaSocket(int _port, VitaDataReceivedCallback _callback, IPAddress radioIp, int radioPort) : this (_port, _callback)
+        public VitaSocket(int _port, VitaDataReceivedCallback _callback, IPAddress radioIp, int radioPort, IPAddress sourceIP = null)
+            : this (_port, _callback, sourceIP)
         {
-            // In addition to creating the VitaSocket, for WAN we must also send the 
+            // In addition to creating the VitaSocket, for WAN we must also send the
             // 'client udp_register' command to the radio over the created UDP socket
 
             //ensure port is within range before assigning endpoint

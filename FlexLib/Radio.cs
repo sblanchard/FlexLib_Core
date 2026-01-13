@@ -14251,15 +14251,20 @@ namespace Flex.Smoothlake.FlexLib
 
         private void StartUDP( )
         {
+            // CRITICAL: For WAN connections, bind UDP socket to the same source IP as the TCP connection.
+            // FlexRadio firmware validates that UDP packets come from the same IP as the TCP connection
+            // for security. Without this, TX audio packets will be silently dropped by the radio.
+            IPAddress sourceIP = _commandCommunication?.LocalEndPoint?.Address;
+
             if (IsWan)
             {
                 if (RequiresHolePunch)
                 {
-                    VitaSock = new VitaSocket(NegotiatedHolePunchPort, UDPDataReceivedCallback, _ip, NegotiatedHolePunchPort);
+                    VitaSock = new VitaSocket(NegotiatedHolePunchPort, UDPDataReceivedCallback, _ip, NegotiatedHolePunchPort, sourceIP);
                 }
                 else
                 {
-                    VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, IP, PublicUdpPort);
+                    VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, IP, PublicUdpPort, sourceIP);
                 }
 
                 Task.Factory.StartNew(() => RegisterUDP(), TaskCreationOptions.LongRunning);
@@ -14267,6 +14272,7 @@ namespace Flex.Smoothlake.FlexLib
             }
             else
             {
+                // LAN connections don't need source IP binding (use default Any)
                 VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, IP, 4991);
             }
 
