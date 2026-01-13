@@ -8079,6 +8079,20 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        /// <summary>
+        /// Force send the mic input command regardless of cached state.
+        /// Use this when the radio's mic_selection may be out of sync with FlexLib's cached value.
+        /// </summary>
+        public void ForceMicInput(string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                _micInput = input;
+                SendCommand("mic input " + input.ToUpper());
+                RaisePropertyChanged("MicInput");
+            }
+        }
+
         System.Timers.Timer _networkQualityTimer = new System.Timers.Timer(1000);
         int packetErrorCount = 0;
         int lastPacketErrorCount = 0;

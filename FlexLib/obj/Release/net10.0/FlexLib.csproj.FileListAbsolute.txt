@@ -1,0 +1,16 @@
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/bin/Release/net10.0/FlexLib.deps.json
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/bin/Release/net10.0/FlexLib.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/bin/Release/net10.0/FlexLib.pdb
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/bin/Release/net10.0/Util.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/bin/Release/net10.0/Vita.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/bin/Release/net10.0/Util.pdb
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/bin/Release/net10.0/Vita.pdb
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/FlexLib.csproj.AssemblyReference.cache
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/FlexLib.GeneratedMSBuildEditorConfig.editorconfig
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/FlexLib.csproj.CoreCompileInputs.cache
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/FlexLib.sourcelink.json
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/FlexLib.csproj.Up2Date
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/FlexLib.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/refint/FlexLib.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/FlexLib.pdb
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/Release/net10.0/ref/FlexLib.dll

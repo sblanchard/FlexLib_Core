@@ -1,38 +1,38 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\FlexLib\\FlexLib.csproj": {}
+    "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/FlexLib.csproj": {}
   },
   "projects": {
-    "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\FlexLib\\FlexLib.csproj": {
+    "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/FlexLib.csproj": {
       "version": "0.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\FlexLib\\FlexLib.csproj",
+        "projectUniqueName": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/FlexLib.csproj",
         "projectName": "FlexLib",
-        "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\FlexLib\\FlexLib.csproj",
-        "packagesPath": "D:\\DEV\\FlexPilot\\~\\.nuget\\packages",
-        "outputPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\FlexLib\\obj\\",
+        "projectPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/FlexLib.csproj",
+        "packagesPath": "/home/serialcoder/.nuget/packages/",
+        "outputPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\FlexLib\\NuGet.Config",
-          "D:\\DEV\\FlexPilot\\NuGet.Config",
-          "C:\\Users\\serialcoder\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/FlexLib/NuGet.Config",
+          "/home/serialcoder/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/lib/dotnet/library-packs": {},
           "https://www.nuget.org/api/v2/": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj": {
-                "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj"
+              "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj": {
+                "projectPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj"
               },
-              "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Vita\\Vita.csproj": {
-                "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Vita\\Vita.csproj"
+              "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/Vita.csproj": {
+                "projectPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/Vita.csproj"
               }
             }
           }
@@ -59,10 +59,6 @@
               "noWarn": [
                 "NU1510"
               ]
-            },
-            "System.Drawing.Common": {
-              "target": "Package",
-              "version": "[10.0.0, )"
             }
           },
           "imports": [
@@ -81,7 +77,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -359,23 +355,23 @@
         }
       }
     },
-    "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj": {
+    "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj": {
       "version": "0.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
+        "projectUniqueName": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj",
         "projectName": "Util",
-        "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
-        "packagesPath": "D:\\DEV\\FlexPilot\\~\\.nuget\\packages",
-        "outputPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\obj\\",
+        "projectPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj",
+        "packagesPath": "/home/serialcoder/.nuget/packages/",
+        "outputPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "D:\\DEV\\FlexPilot\\NuGet.Config",
-          "C:\\Users\\serialcoder\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/serialcoder/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -385,6 +381,9 @@
           }
         },
         "warningProperties": {
+          "noWarn": [
+            "NU1510"
+          ],
           "warnAsError": [
             "NU1605"
           ]
@@ -410,7 +409,7 @@
             },
             "RestSharp": {
               "target": "Package",
-              "version": "[112.1.0, )"
+              "version": "[113.0.0, )"
             },
             "System.Runtime.CompilerServices.Unsafe": {
               "target": "Package",
@@ -441,7 +440,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -719,31 +718,31 @@
         }
       }
     },
-    "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Vita\\Vita.csproj": {
+    "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/Vita.csproj": {
       "version": "0.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Vita\\Vita.csproj",
+        "projectUniqueName": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/Vita.csproj",
         "projectName": "Vita",
-        "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Vita\\Vita.csproj",
-        "packagesPath": "D:\\DEV\\FlexPilot\\~\\.nuget\\packages",
-        "outputPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Vita\\obj\\",
+        "projectPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/Vita.csproj",
+        "packagesPath": "/home/serialcoder/.nuget/packages/",
+        "outputPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "D:\\DEV\\FlexPilot\\NuGet.Config",
-          "C:\\Users\\serialcoder\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/serialcoder/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
+          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj": {
-                "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj"
+              "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj": {
+                "projectPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj"
               }
             }
           }
@@ -779,7 +778,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

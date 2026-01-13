@@ -145,15 +145,15 @@
           }
         }
       },
-      "RestSharp/112.1.0": {
+      "RestSharp/113.0.0": {
         "type": "package",
         "compile": {
-          "lib/net8.0/RestSharp.dll": {
+          "lib/net10.0/RestSharp.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/RestSharp.dll": {
+          "lib/net10.0/RestSharp.dll": {
             "related": ".xml"
           }
         }
@@ -370,27 +370,27 @@
         "nito.disposables.nuspec"
       ]
     },
-    "RestSharp/112.1.0": {
-      "sha512": "bOUGNZqhhv/QeCXHTKEUil846yBjwWXpzPKjO67kFvaAOoF361z7jLY5BMnuZ6WD2WQRA750sNMcK7MSPCQ5Mg==",
+    "RestSharp/113.0.0": {
+      "sha512": "ijR2XOerzv8+rzHbC1pSkf5pEWw3JiqgtvJkJqL5XBwuNfokTNCt0SGV0xfbQe1Ty1Oc/WyshGP+L7x+j6m/mw==",
       "type": "package",
-      "path": "restsharp/112.1.0",
+      "path": "restsharp/113.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
+        "lib/net10.0/RestSharp.dll",
+        "lib/net10.0/RestSharp.xml",
         "lib/net471/RestSharp.dll",
         "lib/net471/RestSharp.xml",
         "lib/net48/RestSharp.dll",
         "lib/net48/RestSharp.xml",
-        "lib/net6.0/RestSharp.dll",
-        "lib/net6.0/RestSharp.xml",
-        "lib/net7.0/RestSharp.dll",
-        "lib/net7.0/RestSharp.xml",
         "lib/net8.0/RestSharp.dll",
         "lib/net8.0/RestSharp.xml",
+        "lib/net9.0/RestSharp.dll",
+        "lib/net9.0/RestSharp.xml",
         "lib/netstandard2.0/RestSharp.dll",
         "lib/netstandard2.0/RestSharp.xml",
-        "restsharp.112.1.0.nupkg.sha512",
+        "restsharp.113.0.0.nupkg.sha512",
         "restsharp.nuspec",
         "restsharp.png"
       ]
@@ -520,32 +520,32 @@
     "net10.0": [
       "Netify >= 1.1.1",
       "Nito.AsyncEx >= 5.1.2",
-      "RestSharp >= 112.1.0",
+      "RestSharp >= 113.0.0",
       "System.Runtime.CompilerServices.Unsafe >= 6.1.2",
       "System.Text.Json >= 10.0.0",
       "System.ValueTuple >= 4.6.1"
     ]
   },
   "packageFolders": {
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages": {}
+    "/home/serialcoder/.nuget/packages/": {}
   },
   "project": {
     "version": "0.0.0",
     "restore": {
-      "projectUniqueName": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
+      "projectUniqueName": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj",
       "projectName": "Util",
-      "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
-      "packagesPath": "D:\\DEV\\FlexPilot\\~\\.nuget\\packages",
-      "outputPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\obj\\",
+      "projectPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj",
+      "packagesPath": "/home/serialcoder/.nuget/packages/",
+      "outputPath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "D:\\DEV\\FlexPilot\\NuGet.Config",
-        "C:\\Users\\serialcoder\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/serialcoder/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
+        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -555,6 +555,9 @@
         }
       },
       "warningProperties": {
+        "noWarn": [
+          "NU1510"
+        ],
         "warnAsError": [
           "NU1605"
         ]
@@ -580,7 +583,7 @@
           },
           "RestSharp": {
             "target": "Package",
-            "version": "[112.1.0, )"
+            "version": "[113.0.0, )"
           },
           "System.Runtime.CompilerServices.Unsafe": {
             "target": "Package",
@@ -611,7 +614,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -888,27 +891,5 @@
         }
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1510",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "PackageReference System.Runtime.CompilerServices.Unsafe will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "libraryId": "System.Runtime.CompilerServices.Unsafe",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    },
-    {
-      "code": "NU1510",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "PackageReference System.Text.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "libraryId": "System.Text.Json",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  }
 }

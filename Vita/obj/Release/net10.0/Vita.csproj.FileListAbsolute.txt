@@ -1,0 +1,14 @@
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/bin/Release/net10.0/Vita.deps.json
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/bin/Release/net10.0/Vita.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/bin/Release/net10.0/Vita.pdb
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/bin/Release/net10.0/Util.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/bin/Release/net10.0/Util.pdb
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/Vita.csproj.AssemblyReference.cache
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/Vita.GeneratedMSBuildEditorConfig.editorconfig
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/Vita.csproj.CoreCompileInputs.cache
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/Vita.sourcelink.json
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/Vita.csproj.Up2Date
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/Vita.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/refint/Vita.dll
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/Vita.pdb
+/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Vita/obj/Release/net10.0/ref/Vita.dll

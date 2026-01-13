@@ -1,48 +1,23 @@
 {
   "version": 2,
-  "dgSpecHash": "nmmTT1sYQJ4=",
+  "dgSpecHash": "WBNRzIBXbBU=",
   "success": true,
-  "projectFilePath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
+  "projectFilePath": "/home/serialcoder/Projects/RemoteFlex/lib/FlexLib_Core/Util/Util.csproj",
   "expectedPackageFiles": [
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\netify\\1.1.1\\netify.1.1.1.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex\\5.1.2\\nito.asyncex.5.1.2.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.context\\5.1.2\\nito.asyncex.context.5.1.2.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.coordination\\5.1.2\\nito.asyncex.coordination.5.1.2.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.interop.waithandles\\5.1.2\\nito.asyncex.interop.waithandles.5.1.2.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.oop\\5.1.2\\nito.asyncex.oop.5.1.2.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.asyncex.tasks\\5.1.2\\nito.asyncex.tasks.5.1.2.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.cancellation\\1.1.2\\nito.cancellation.1.1.2.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.collections.deque\\1.1.1\\nito.collections.deque.1.1.1.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\nito.disposables\\2.2.1\\nito.disposables.2.2.1.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\restsharp\\112.1.0\\restsharp.112.1.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.1.2\\system.runtime.compilerservices.unsafe.6.1.2.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.text.json\\10.0.0\\system.text.json.10.0.0.nupkg.sha512",
-    "D:\\DEV\\FlexPilot\\~\\.nuget\\packages\\system.valuetuple\\4.6.1\\system.valuetuple.4.6.1.nupkg.sha512"
+    "/home/serialcoder/.nuget/packages/netify/1.1.1/netify.1.1.1.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.asyncex/5.1.2/nito.asyncex.5.1.2.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.asyncex.context/5.1.2/nito.asyncex.context.5.1.2.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.asyncex.coordination/5.1.2/nito.asyncex.coordination.5.1.2.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.asyncex.interop.waithandles/5.1.2/nito.asyncex.interop.waithandles.5.1.2.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.asyncex.oop/5.1.2/nito.asyncex.oop.5.1.2.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.asyncex.tasks/5.1.2/nito.asyncex.tasks.5.1.2.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.cancellation/1.1.2/nito.cancellation.1.1.2.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.collections.deque/1.1.1/nito.collections.deque.1.1.1.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/nito.disposables/2.2.1/nito.disposables.2.2.1.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/restsharp/113.0.0/restsharp.113.0.0.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/system.runtime.compilerservices.unsafe/6.1.2/system.runtime.compilerservices.unsafe.6.1.2.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/system.text.json/10.0.0/system.text.json.10.0.0.nupkg.sha512",
+    "/home/serialcoder/.nuget/packages/system.valuetuple/4.6.1/system.valuetuple.4.6.1.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1510",
-      "level": "Warning",
-      "message": "PackageReference System.Runtime.CompilerServices.Unsafe will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
-      "warningLevel": 1,
-      "filePath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
-      "libraryId": "System.Runtime.CompilerServices.Unsafe",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    },
-    {
-      "code": "NU1510",
-      "level": "Warning",
-      "message": "PackageReference System.Text.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "projectPath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
-      "warningLevel": 1,
-      "filePath": "D:\\DEV\\FlexPilot\\lib\\FlexLib_Core\\Util\\Util.csproj",
-      "libraryId": "System.Text.Json",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }
