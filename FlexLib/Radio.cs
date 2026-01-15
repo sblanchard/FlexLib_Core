@@ -6276,6 +6276,11 @@ namespace Flex.Smoothlake.FlexLib
                 if (!_meters.Contains(m))
                 {
                     _meters.Add(m);
+                    // Diagnostic: Log when important meters are added
+                    if (m.Name == "MIC" || m.Name == "MICPEAK" || m.Name == "FWDPWR" || m.Name == "SWR")
+                    {
+                        Console.WriteLine($"[FlexLib] AddMeter: {m.Name} (Source={m.Source}, Index={m.SourceIndex})");
+                    }
                 }
             }
 
