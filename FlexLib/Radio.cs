@@ -5120,7 +5120,12 @@ namespace Flex.Smoothlake.FlexLib
                 return _panadapters.FirstOrDefault(x => x.StreamID == stream_id);
         }
 
-        internal Waterfall FindWaterfallByParentStreamID(uint stream_id)
+        /// <summary>
+        /// Finds a Waterfall given its parent Panadapter's StreamID
+        /// </summary>
+        /// <param name="stream_id">The parent Panadapter StreamID</param>
+        /// <returns>The Waterfall object or null if not found</returns>
+        public Waterfall FindWaterfallByParentStreamID(uint stream_id)
         {
             lock (_waterfalls)
                 return _waterfalls.FirstOrDefault(x => x.ParentPanadapterStreamID == stream_id);
