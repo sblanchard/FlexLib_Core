@@ -518,15 +518,17 @@ namespace Flex.Smoothlake.FlexLib
                 }
                 else
                 {
-                    // no, does the firmware version match exactly what we are looking for?
-                    if (_version != _req_version)
+                    // Check if firmware is older than required version.
+                    // If firmware >= required, no update needed (newer is OK).
+                    // Only require update if firmware is OLDER than minimum required.
+                    if (_version < _req_version)
                     {
-                        // no -- prompt to run the update process
+                        // Firmware is older than minimum required -- prompt to update
                         _updateRequired = true;
                     }
                     else
                     {
-                        // yes -- we're good to connect
+                        // Firmware meets or exceeds minimum required -- we're good to connect
                         _updateRequired = false;
                     }
                 }
