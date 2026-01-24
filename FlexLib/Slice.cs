@@ -3328,6 +3328,9 @@ namespace Flex.Smoothlake.FlexLib
         /// <param name="enable">null for one-shot, true for continuous enable, false for continuous disable</param>
         public void SendCWAutotuneCommand(bool? enable)
         {
+            if (!_demodMode.Contains("CW", StringComparison.OrdinalIgnoreCase))
+                return;
+
             if (enable == null)
             {
                 // One-shot autotune
