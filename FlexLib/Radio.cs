@@ -491,9 +491,18 @@ namespace Flex.Smoothlake.FlexLib
                 // the whole application
                 try
                 {
-                    string dev_file = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
-                                      "\\FlexRadio Systems\\smoothlake_dev";
+                    // Use Path.Combine for cross-platform compatibility (Linux uses forward slashes)
+                    string dev_file = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "FlexRadio Systems",
+                        "smoothlake_dev");
                     dev_file_exists = File.Exists(dev_file);
+
+                    // On Linux/non-Windows, always bypass version check since we control the deployment
+                    if (!OperatingSystem.IsWindows())
+                    {
+                        dev_file_exists = true;
+                    }
                 }
                 catch (Exception)
                 {
