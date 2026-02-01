@@ -3322,6 +3322,24 @@ namespace Flex.Smoothlake.FlexLib
             _radio.SendCommand("slice waveform_cmd " + _index + " " + s);
         }
 
+        /// <summary>
+        /// Sends a CW autotune command to zero-beat the current CW signal.
+        /// </summary>
+        /// <param name="enable">null for one-shot, true for continuous enable, false for continuous disable</param>
+        public void SendCWAutotuneCommand(bool? enable)
+        {
+            if (enable == null)
+            {
+                // One-shot autotune
+                _radio.SendCommand("slice cw_autotune " + _index);
+            }
+            else
+            {
+                // Continuous autotune mode
+                _radio.SendCommand("slice cw_autotune " + _index + " " + (enable.Value ? "1" : "0"));
+            }
+        }
+
         public override string ToString()
         {
             return _index + ": " + StringHelper.DoubleToString(_freq, "f6") + " " + _demodMode + " [" + _filterLow + "," + _filterHigh + "]";
