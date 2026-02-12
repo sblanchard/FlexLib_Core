@@ -117,8 +117,8 @@ public class APD(Radio radio) : ObservableObject
     {
         while (_statusQueue.Count != 0)
         {
-            EqualizerStatus temp = (EqualizerStatus)_statusQueue.Dequeue();
-            Debug.WriteLine($"Parsing queued eq status - enable={temp.enable}, ant={temp.ant}, freq={temp.freq}.");
+            if (_statusQueue.Dequeue() is not EqualizerStatus temp)
+                continue;
             ApplyEqualizerActiveStatus(temp.enable, temp.ant, temp.freq);
         }
     }
@@ -136,7 +136,6 @@ public class APD(Radio radio) : ObservableObject
 
         if (temp is null)
         {
-            Debug.WriteLine($"APD::ApplyEqualizerActiveStatus: No slices to apply to.");
             return;
         }
 
@@ -145,12 +144,7 @@ public class APD(Radio radio) : ObservableObject
         double roundedFreq = Math.Round(temp.Freq, 6);
         if (ant.Equals(temp.TXAnt, StringComparison.OrdinalIgnoreCase) && freq == roundedFreq)
         {
-            Debug.WriteLine($"APD::ApplyEqualizerActiveStatus: Updating APD status for slice {temp.Index}, freq={freq}, ant={ant}.");
             EqualizerActive = enable;
-        }
-        else
-        {
-            Debug.WriteLine($"APD::ApplyEqualizerActiveStatus: No matching slice with freq={freq}, ant={ant}. Current freq={temp.Freq}.");
         }
     }
 
