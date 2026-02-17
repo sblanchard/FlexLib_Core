@@ -125,15 +125,24 @@ namespace Vita
                     socket.Bind(new IPEndPoint(localBindIp, port));
                     done = true;
                 }
+                catch (SocketException sex) when (sex.SocketErrorCode == SocketError.AddressNotAvailable
+                                                   && !Equals(localBindIp, IPAddress.Any))
+                {
+                    // Requested IP not assigned to any local interface — fall back to any interface
+                    Debug.WriteLine($"VitaSocket: {localBindIp} not available, falling back to IPAddress.Any");
+                    socket?.Close();
+                    localBindIp = IPAddress.Any;
+                }
                 catch (Exception ex) // if we get here, it is likely because the port is already open
                 {
+                    socket?.Close();
                     port++; // lets increment the port and try again
                     if (port > 6010)
                         throw new Exception(ex.Message);
                 }
             }
 
-            Debug.WriteLine($"VitaSocket: Newly created on port {_port}, bound to local IP {localBindIp}");
+            Debug.WriteLine($"VitaSocket: Newly created on port {port}, bound to local IP {localBindIp}");
 
             //ensure port is within range before assigning endpoint
             if (radioPort >= MIN_UDP_PORT && radioPort <= MAX_UDP_PORT)
