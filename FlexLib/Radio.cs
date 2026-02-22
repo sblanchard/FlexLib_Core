@@ -2358,9 +2358,30 @@ namespace Flex.Smoothlake.FlexLib
 
         private int _waterfallDropCount;
         private uint _waterfallRemappedStreamId;
+        private int _waterfallPacketDiagCount;
         private void ProcessWaterfallDataPacket(VitaWaterfallPacket packet)
         {
+            var diagCount = ++_waterfallPacketDiagCount;
+
             Waterfall fall = FindWaterfallByStreamID(packet.stream_id);
+
+            // Log first 10 waterfall packets for diagnostics
+            if (diagCount <= 10)
+            {
+                int wfCount;
+                string wfIds;
+                lock (_waterfalls)
+                {
+                    wfCount = _waterfalls.Count;
+                    wfIds = string.Join(", ", _waterfalls.Select(w => $"0x{w.StreamID:X}"));
+                }
+                Console.WriteLine($"[FlexLib] WF-PKT #{diagCount}: stream_id=0x{packet.stream_id:X}, " +
+                    $"found={fall != null}, waterfalls=[{wfIds}] (count={wfCount}), " +
+                    $"tile: W={packet.tile.Width}, H={packet.tile.Height}, " +
+                    $"TotalBins={packet.tile.TotalBinsInFrame}, FirstBin={packet.tile.FirstBinIndex}, " +
+                    $"DataLen={packet.tile.Data.Length}");
+            }
+
             if (fall == null)
             {
                 // FLEX-6700 firmware v4.1.5 sends waterfall VITA-49 data with a different
@@ -2368,31 +2389,23 @@ namespace Flex.Smoothlake.FlexLib
                 // one waterfall, auto-remap to accept the actual data stream_id.
                 lock (_waterfalls)
                 {
-                    if (_waterfalls.Count == 1)
+                    if (_waterfalls.Count >= 1)
                     {
+                        // Always remap to first waterfall when stream_id doesn't match.
+                        // For single-session server usage, there's only one active waterfall.
                         fall = _waterfalls[0];
                         if (_waterfallRemappedStreamId != packet.stream_id)
                         {
                             _waterfallRemappedStreamId = packet.stream_id;
                             Console.WriteLine($"[FlexLib] WATERFALL STREAM_ID REMAP: " +
                                 $"packet uses 0x{packet.stream_id:X}, waterfall object is 0x{fall.StreamID:X}. " +
-                                $"Auto-remapping to accept data.");
+                                $"Auto-remapping to accept data. (waterfalls count={_waterfalls.Count})");
                         }
-                    }
-                    else if (_waterfalls.Count > 1)
-                    {
-                        // Multiple waterfalls - can't auto-remap, log the mismatch
-                        _waterfallDropCount++;
-                        if (_waterfallDropCount <= 5 || _waterfallDropCount % 1000 == 0)
-                        {
-                            var knownIds = string.Join(", ", _waterfalls.Select(w => $"0x{w.StreamID:X}"));
-                            Console.WriteLine($"[FlexLib] WATERFALL VITA-49 DROPPED #{_waterfallDropCount}: " +
-                                $"packet stream_id=0x{packet.stream_id:X}, known waterfalls=[{knownIds}]");
-                        }
-                        return;
                     }
                     else
                     {
+                        if (_waterfallDropCount++ <= 5 || _waterfallDropCount % 1000 == 0)
+                            Console.WriteLine($"[FlexLib] WATERFALL DROP #{_waterfallDropCount}: no waterfalls in list, stream_id=0x{packet.stream_id:X}");
                         return; // No waterfalls at all
                     }
                 }

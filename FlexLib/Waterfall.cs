@@ -635,25 +635,42 @@ namespace Flex.Smoothlake.FlexLib
             _radio = null;
         }
 
+        private int _addDataDiagCount;
         // Adds a tile from the radio
         internal void AddData(WaterfallTile tile, int packet_count)
         {
-            //Debug.WriteLine("WaterfallTile auto_black: " + tile.AutoBlackLevel + "  min("+min_bin.ToString().PadLeft(4, ' ')+"): "+min + "  delta: " + (min - tile.AutoBlackLevel) + "  max("+max_bin.ToString().PadLeft(4, ' ')+"): " + max);
-            // is this packet a complete tile?
-            if (tile.Data.Length == tile.TotalBinsInFrame)
+            var diagCount = ++_addDataDiagCount;
+            bool isComplete = tile.Data.Length == tile.TotalBinsInFrame;
+
+            // Log first 10 tiles for diagnostics
+            if (diagCount <= 10)
+            {
+                Console.WriteLine($"[FlexLib] WF-TILE #{diagCount}: DataLen={tile.Data.Length}, " +
+                    $"TotalBins={tile.TotalBinsInFrame}, W={tile.Width}, H={tile.Height}, " +
+                    $"FirstBin={tile.FirstBinIndex}, Complete={isComplete}, " +
+                    $"HasHandler={DataReady != null}, " +
+                    $"FragDictSize={_fragmentedWaterfallTileDict.Count}");
+            }
+
+            if (isComplete)
             {
                 // yes -- mark it and signal that it is ready
                 tile.IsFrameComplete = true;
                 OnDataReady(this, tile);
                 FallPacketTotalCount++;
 
+                if (diagCount <= 10)
+                    Console.WriteLine($"[FlexLib] WF-TILE #{diagCount}: FIRED DataReady (complete tile)");
             }
             else
             {
                 // no - add it to the list to be processed
                 tile.IsFrameComplete = false;
                 AddFragmentedTile(tile);
-            }   
+
+                if (diagCount <= 10)
+                    Console.WriteLine($"[FlexLib] WF-TILE #{diagCount}: FRAGMENTED (need {tile.TotalBinsInFrame - tile.Data.Length} more bins)");
+            }
         }
 
         public delegate void DataReadyEventHandler(Waterfall fall, WaterfallTile tile);
