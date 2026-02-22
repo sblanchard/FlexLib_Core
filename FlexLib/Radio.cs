@@ -2356,10 +2356,23 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _waterfallDropCount;
         private void ProcessWaterfallDataPacket(VitaWaterfallPacket packet)
         {
             Waterfall fall = FindWaterfallByStreamID(packet.stream_id);
-            if (fall == null) return;
+            if (fall == null)
+            {
+                _waterfallDropCount++;
+                if (_waterfallDropCount <= 5 || _waterfallDropCount % 1000 == 0)
+                {
+                    string knownIds;
+                    lock (_waterfalls)
+                        knownIds = string.Join(", ", _waterfalls.Select(w => $"0x{w.StreamID:X}"));
+                    Debug.WriteLine($"[FlexLib] WATERFALL VITA-49 DROPPED #{_waterfallDropCount}: " +
+                        $"packet stream_id=0x{packet.stream_id:X}, known waterfalls=[{knownIds}]");
+                }
+                return;
+            }
 
             fall.AddData(packet.tile, packet.header.packet_count);
         }
@@ -14087,33 +14100,54 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private long _vitaPacketTotal;
+        private long _vitaFFTPackets;
+        private long _vitaWaterfallPackets;
+        private long _vitaDAXPackets;
+        private long _vitaMeterPackets;
+        private long _vitaOpusPackets;
         private void ProcessVitaPacket(VitaPacketPreamble vita_preamble, byte[] data, int bytes)
         {
             try
             {
+                _vitaPacketTotal++;
+                // Log VITA-49 packet type summary periodically for diagnostics
+                if (_vitaPacketTotal == 100 || _vitaPacketTotal == 500 || _vitaPacketTotal % 5000 == 0)
+                {
+                    Debug.WriteLine($"[FlexLib] VITA-49 SUMMARY after {_vitaPacketTotal} packets: " +
+                        $"FFT={_vitaFFTPackets}, Waterfall={_vitaWaterfallPackets}, " +
+                        $"DAX={_vitaDAXPackets}, Meter={_vitaMeterPackets}, Opus={_vitaOpusPackets}, " +
+                        $"FFT_KB={_countFFT/1024}, WF_KB={_countWaterfall/1024}, DAX_KB={_countDAX/1024}");
+                }
+
                 switch (vita_preamble.header.pkt_type)
                 {
                     case VitaPacketType.ExtDataWithStream:
                         switch (vita_preamble.class_id.PacketClassCode)
                         {
                             case VitaFlex.SL_VITA_FFT_CLASS:
+                                _vitaFFTPackets++;
                                 _countFFT += bytes + UDP_HEADER_SIZE;
                                 ProcessFFTDataPacket(new VitaFFTPacket(data));
                                 break;
                             case VitaFlex.SL_VITA_OPUS_CLASS:   // Opus Encoded Audio
+                                _vitaOpusPackets++;
                                 _countRXOpus += bytes + UDP_HEADER_SIZE;
                                 ProcessOpusDataPacket(new VitaOpusDataPacket(data, bytes));
                                 break;
                             case VitaFlex.SL_VITA_IF_NARROW_CLASS: // DAX Audio and uncompressed Remote RX Audio
                             case VitaFlex.SL_VITA_IF_NARROW_REDUCED_BW_CLASS: // DAX Audio Reduced BW
+                                _vitaDAXPackets++;
                                 _countDAX += bytes + UDP_HEADER_SIZE;
                                 ProcessIFDataPacket(new VitaIFDataPacket(data, bytes));
                                 break;
                             case VitaFlex.SL_VITA_METER_CLASS:
+                                _vitaMeterPackets++;
                                 _countMeter += bytes + UDP_HEADER_SIZE;
                                 ProcessMeterDataPacket(new VitaMeterPacket(data));
                                 break;
                             case VitaFlex.SL_VITA_WATERFALL_CLASS:
+                                _vitaWaterfallPackets++;
                                 _countWaterfall += bytes + UDP_HEADER_SIZE;
                                 ProcessWaterfallDataPacket(new VitaWaterfallPacket(data));
                                 break;
