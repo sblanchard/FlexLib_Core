@@ -161,6 +161,8 @@ namespace Flex.Smoothlake.FlexLib
         external,
         [Description("GPSDO")]
         gpsdo,
+        [Description("OCXO-GPSDO")]
+        ocxo_gpsdo,
         [Description("TCXO")]
         tcxo
     }    
@@ -1975,9 +1977,6 @@ namespace Flex.Smoothlake.FlexLib
             // ensure that packets are manually fragmented to avoid network issues
             SendRadioMTUCommand(_mtu);
 
-            // Send reduced bandwidth DAX packets
-            SendCommand("client set send_reduced_bw_dax=1");
-
             Connected = true;
 
             StartUDP();
@@ -2338,6 +2337,9 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _fftThreadPacketCount;
+        private int _fftThreadNullPanCount;
+
         private void ProcessFFTDataPacket_ThreadFunction()
         {
             VitaFFTPacket packet = null;
@@ -2348,10 +2350,16 @@ namespace Flex.Smoothlake.FlexLib
                 if (!_connected) break;
                 while (try_dequeue_result = FFTPacketQueue.TryDequeue(out packet))
                 {
+                    _fftThreadPacketCount++;
                     Panadapter pan = FindPanadapterByStreamID(packet.stream_id);
-                    if (pan == null) continue;
+                    if (pan == null)
+                    {
+                        if (++_fftThreadNullPanCount % 100 == 1)
+                            Debug.WriteLine($"FFT DIAG: pan==null for stream_id=0x{packet.stream_id:X} (null count={_fftThreadNullPanCount}, total={_fftThreadPacketCount})");
+                        continue;
+                    }
 
-                    pan.AddData(packet.payload, packet.start_bin_index, packet.frame_index, packet.header.packet_count);
+                    pan.AddData(packet.payload, packet.start_bin_index, packet.frame_index, packet.header.packet_count, packet.total_bins_in_frame);
                 }
             }
         }
@@ -2502,6 +2510,7 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _opusStreamMissCount;
         private void ProcessOpusDataPacket(VitaOpusDataPacket packet)
         {
             RXRemoteAudioStream remoteAudioRX = FindRXRemoteAudioStreamByStreamID(packet.stream_id);
@@ -2509,6 +2518,28 @@ namespace Flex.Smoothlake.FlexLib
             {
                 remoteAudioRX.AddRXData(packet);
                 return;
+            }
+
+            // Opus packet arrived but no matching stream_id — route to any available
+            // RXRemoteAudioStream WITHOUT changing its StreamID. Changing StreamID is dangerous
+            // because a subsequent "stream <old_id> removed" from the radio would delete our stream.
+            lock (_rxRemoteAudioStreams)
+            {
+                if (_rxRemoteAudioStreams.Count > 0)
+                {
+                    remoteAudioRX = _rxRemoteAudioStreams[0];
+                    Debug.WriteLine($"[FlexLib] OPUS ROUTE: Forwarding packet stream_id=0x{packet.stream_id:X} to RXRemoteAudioStream 0x{remoteAudioRX.StreamID:X}");
+                    Console.Error.WriteLine($"[FlexLib] OPUS ROUTE: Forwarding packet stream_id=0x{packet.stream_id:X} to RXRemoteAudioStream 0x{remoteAudioRX.StreamID:X}");
+                    remoteAudioRX.AddRXData(packet);
+                    return;
+                }
+            }
+
+            // No RXRemoteAudioStream registered yet — log for diagnostics
+            if (_opusStreamMissCount++ < 5)
+            {
+                Debug.WriteLine($"[FlexLib] OPUS MISS: packet stream_id=0x{packet.stream_id:X}, no RXRemoteAudioStream registered yet");
+                Console.Error.WriteLine($"[FlexLib] OPUS MISS: packet stream_id=0x{packet.stream_id:X}, no RXRemoteAudioStream registered yet");
             }
         }
 
@@ -5554,7 +5585,7 @@ namespace Flex.Smoothlake.FlexLib
             return null;
         }
 
-        internal DAXRXAudioStream FindDAXRXAudioStreamByDAXChannel(int daxChannel)
+        public DAXRXAudioStream FindDAXRXAudioStreamByDAXChannel(int daxChannel)
         {
             lock (_daxRXAudioStream)
             {
@@ -5748,6 +5779,33 @@ namespace Flex.Smoothlake.FlexLib
                 _rxRemoteAudioStreams.Add(newRemoteAudioRX);
         }
 
+        public RXRemoteAudioStream FindRXRemoteAudioStreamForClient()
+        {
+            lock (_rxRemoteAudioStreams)
+            {
+                foreach (RXRemoteAudioStream remoteAudioRX in _rxRemoteAudioStreams)
+                {
+                    if (remoteAudioRX.ClientHandle == this.ClientHandle)
+                        return remoteAudioRX;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Returns the first registered RXRemoteAudioStream regardless of client handle.
+        ///     Used as fallback when client_handle hasn't been assigned yet (e.g., Aurora firmware delay).
+        /// </summary>
+        public RXRemoteAudioStream FindAnyRXRemoteAudioStream()
+        {
+            lock (_rxRemoteAudioStreams)
+            {
+                if (_rxRemoteAudioStreams.Count > 0)
+                    return _rxRemoteAudioStreams[0];
+            }
+            return null;
+        }
+
         internal RXRemoteAudioStream FindRXRemoteAudioStreamByStreamID(uint stream_id)
         {
             lock (_rxRemoteAudioStreams)
@@ -5778,6 +5836,15 @@ namespace Flex.Smoothlake.FlexLib
             {
                 SendCommand("stream create type=remote_audio_rx compression=none");
             }
+        }
+
+        /// <summary>
+        /// Set DAX reduced bandwidth mode. When enabled (true), DAX sends ~12.8kHz (half rate).
+        /// When disabled (false), DAX sends full 24kHz matching Remote Audio RX format.
+        /// </summary>
+        public void SetReducedDaxBandwidth(bool reduced)
+        {
+            SendCommand("client set send_reduced_bw_dax=" + (reduced ? "1" : "0"));
         }
 
         public void RequestRemoteAudioTXStream()

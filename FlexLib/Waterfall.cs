@@ -245,6 +245,20 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        /// <summary>
+        ///     Force-send waterfall dimensions to the radio.
+        ///     The Width/Height property setters have their SendCommand commented out,
+        ///     so the radio never receives dimension changes. This method explicitly
+        ///     sends the xpixels command to ensure the radio's waterfall tile width
+        ///     matches what we expect, preventing fragmented tiles that never complete.
+        /// </summary>
+        public void ForceSendDimensions(int width)
+        {
+            _width = width;
+            _radio.SendCommand("display panafall set 0x" + _stream_id.ToString("X") + " xpixels=" + _width);
+            Debug.WriteLine("Waterfall::ForceSendDimensions xpixels=" + width + " (StreamID: 0x" + _stream_id.ToString("X") + ")");
+        }
+
         private int _height;
         public int Height
         {
@@ -635,41 +649,105 @@ namespace Flex.Smoothlake.FlexLib
             _radio = null;
         }
 
-        private int _addDataDiagCount;
+        private int _addDataCallCount;
+
+        // Diagnostic counters (read by PanadapterManager for Serilog logging)
+        public int DiagCompleteTiles { get; private set; }
+        public int DiagFragmentedTiles { get; private set; }
+        public int DiagFragmentMatches { get; private set; }
+        public int DiagLastDataLen { get; private set; }
+        public int DiagLastTotalBins { get; private set; }
+        public int DiagLastTileWidth { get; private set; }
+        public int DiagLastFirstBin { get; private set; }
+        public int DiagFragmentErrors { get; private set; }
+        public bool DiagForceCompleteActive { get; private set; }
+        // Fragment distribution: count how many fragments arrive per bin-range bucket
+        public int DiagFragBody { get; private set; }  // FirstBin < TotalBins*0.8
+        public int DiagFragTail { get; private set; }   // FirstBin >= TotalBins*0.8
+
+        // Auto-complete mode: when the radio sends one VITA packet per waterfall row but
+        // TotalBinsInFrame doesn't match the packet data length, fragment assembly never
+        // succeeds (each row has a unique Timecode, so no two fragments ever match).
+        // After detecting this pattern, force-complete each tile with available data.
+        private const int FORCE_COMPLETE_THRESHOLD = 50;
+        private bool _forceCompleteMode;
+
         // Adds a tile from the radio
         internal void AddData(WaterfallTile tile, int packet_count)
         {
-            var diagCount = ++_addDataDiagCount;
-            bool isComplete = tile.Data.Length == tile.TotalBinsInFrame;
+            _addDataCallCount++;
 
-            // Log first 10 tiles for diagnostics
-            if (diagCount <= 10)
+            // Log first 5 tiles for diagnostics (helps debug fragmentation/stretching)
+            if (_addDataCallCount <= 5)
             {
-                Console.WriteLine($"[FlexLib] WF-TILE #{diagCount}: DataLen={tile.Data.Length}, " +
-                    $"TotalBins={tile.TotalBinsInFrame}, W={tile.Width}, H={tile.Height}, " +
-                    $"FirstBin={tile.FirstBinIndex}, Complete={isComplete}, " +
-                    $"HasHandler={DataReady != null}, " +
-                    $"FragDictSize={_fragmentedWaterfallTileDict.Count}");
+                Debug.WriteLine($"Waterfall::AddData #{_addDataCallCount}: DataLen={tile.Data.Length}, TotalBins={tile.TotalBinsInFrame}, Width={tile.Width}, FirstBin={tile.FirstBinIndex}, Timecode={tile.Timecode}, InternalWidth={_width}");
+                Console.Error.WriteLine($"Waterfall::AddData #{_addDataCallCount}: DataLen={tile.Data.Length}, TotalBins={tile.TotalBinsInFrame}, Width={tile.Width}, FirstBin={tile.FirstBinIndex}, Timecode={tile.Timecode}, InternalWidth={_width}");
             }
 
-            if (isComplete)
+            // Track last tile values for external diagnostics
+            DiagLastDataLen = tile.Data.Length;
+            DiagLastTotalBins = unchecked((int)tile.TotalBinsInFrame);
+            DiagLastTileWidth = (int)tile.Width;
+            DiagLastFirstBin = (int)tile.FirstBinIndex;
+
+            // Track fragment distribution (body vs tail)
+            if (tile.TotalBinsInFrame > 0 && tile.FirstBinIndex >= tile.TotalBinsInFrame * 0.8)
+                DiagFragTail++;
+            else
+                DiagFragBody++;
+
+            // Safety: if TotalBinsInFrame is 0 (old firmware), treat tile as complete.
+            // Without this, the fragmentation path creates a zero-length array and crashes.
+            if (tile.TotalBinsInFrame == 0 && tile.Data.Length > 0)
+            {
+                tile.TotalBinsInFrame = (uint)tile.Data.Length;
+            }
+
+            // Auto-detect: if we've seen many fragments but zero matches, the radio sends
+            // one packet per row with TotalBinsInFrame set to a different (larger) value.
+            // Switch to force-complete mode to use each packet as a complete tile.
+            if (!_forceCompleteMode && DiagFragmentedTiles >= FORCE_COMPLETE_THRESHOLD && DiagFragmentMatches == 0 && DiagCompleteTiles == 0)
+            {
+                _forceCompleteMode = true;
+                DiagForceCompleteActive = true;
+                Debug.WriteLine($"Waterfall: Enabling force-complete mode (fragmented={DiagFragmentedTiles}, matches=0). Each VITA packet will be treated as complete tile.");
+
+                // Clear stale fragment dict entries
+                lock (_fragmentedWaterfallTileDict)
+                {
+                    _fragmentedWaterfallTileDict.Clear();
+                }
+            }
+
+            // In force-complete mode, override TotalBinsInFrame to match actual data
+            if (_forceCompleteMode && tile.Data.Length != tile.TotalBinsInFrame && tile.Data.Length > 0)
+            {
+                tile.TotalBinsInFrame = (uint)tile.Data.Length;
+            }
+
+            // is this packet a complete tile?
+            if (tile.Data.Length == tile.TotalBinsInFrame)
             {
                 // yes -- mark it and signal that it is ready
                 tile.IsFrameComplete = true;
                 OnDataReady(this, tile);
                 FallPacketTotalCount++;
-
-                if (diagCount <= 10)
-                    Console.WriteLine($"[FlexLib] WF-TILE #{diagCount}: FIRED DataReady (complete tile)");
+                DiagCompleteTiles++;
             }
             else
             {
                 // no - add it to the list to be processed
                 tile.IsFrameComplete = false;
-                AddFragmentedTile(tile);
-
-                if (diagCount <= 10)
-                    Console.WriteLine($"[FlexLib] WF-TILE #{diagCount}: FRAGMENTED (need {tile.TotalBinsInFrame - tile.Data.Length} more bins)");
+                DiagFragmentedTiles++;
+                try
+                {
+                    AddFragmentedTile(tile);
+                }
+                catch (Exception ex)
+                {
+                    DiagFragmentErrors++;
+                    Debug.WriteLine($"Waterfall::AddFragmentedTile exception: {ex.Message}");
+                }
             }
         }
 
@@ -681,6 +759,14 @@ namespace Flex.Smoothlake.FlexLib
                 DataReady(fall, tile);
         }
 
+        // Near-complete threshold: emit partial tiles when they have ≥80% of bins.
+        // FLEX-6600/6700 radios split waterfall rows into 4 VITA packets where the
+        // tail fragment (FirstBin=2052, Width=408 of TotalBins=2460) arrives with a
+        // different timecode than the other 3 fragments. Assembly by timecode never
+        // reaches TotalBinsInFrame, but the 3 matching fragments (2052/2460 = 83.4%)
+        // cover the display frequency range. Emit them as near-complete.
+        private const double NEAR_COMPLETE_THRESHOLD = 0.80;
+
         private void AddFragmentedTile(WaterfallTile new_tile)
         {
             // is there an existing incomplete tile with a matching Timecode?
@@ -689,6 +775,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_fragmentedWaterfallTileDict.ContainsKey(new_tile.Timecode))
                 {
                     // yes -- lets combine the info
+                    DiagFragmentMatches++;
                     WaterfallTile tile = _fragmentedWaterfallTileDict[new_tile.Timecode];
 
                     // make sure this is already resized (it should be)
@@ -702,6 +789,8 @@ namespace Flex.Smoothlake.FlexLib
                     if (tile.Width == tile.TotalBinsInFrame)
                     {
                         // yes -- mark it complete and send it along!
+                        // Reset FirstBinIndex to 0 since assembled Data starts at bin 0
+                        tile.FirstBinIndex = 0;
                         tile.IsFrameComplete = true;
                         OnDataReady(this, tile);
 
@@ -711,6 +800,12 @@ namespace Flex.Smoothlake.FlexLib
                 }
                 else // no -- lets just add this tile to the incomplete list
                 {
+                    // Before adding, flush any near-complete tiles from OLDER timecodes.
+                    // On FLEX-6600/6700, 3 of 4 fragments share timecode T while the 4th
+                    // (tail) gets timecode T±1. When a new timecode arrives, the previous
+                    // timecode's tile will never get its missing fragment — emit it now.
+                    FlushNearCompleteTiles(new_tile.Timecode);
+
                     // make a data array with room for the other pieces
                     ushort[] resized_data = new ushort[new_tile.TotalBinsInFrame];
 
@@ -732,6 +827,53 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        /// <summary>
+        /// Flush near-complete tiles from the fragment dict when a new timecode arrives.
+        /// On FLEX-6600/6700, the tail fragment (FirstBin=2052, 408 of 2460 bins) arrives
+        /// with a different timecode, so assembly never reaches 100%. When we see a new
+        /// timecode, emit any older tiles that have accumulated ≥80% of their bins.
+        /// </summary>
+        private void FlushNearCompleteTiles(uint currentTimecode)
+        {
+            // note: called within _fragmentedWaterfallTileDict lock
+            if (_fragmentedWaterfallTileDict.Count == 0)
+                return;
+
+            var keysToFlush = new List<uint>();
+
+            foreach (var kvp in _fragmentedWaterfallTileDict)
+            {
+                // Only flush tiles from older timecodes (the current timecode's fragments
+                // may still be arriving)
+                if (kvp.Key >= currentTimecode)
+                    continue;
+
+                var tile = kvp.Value;
+                if (tile.TotalBinsInFrame == 0)
+                    continue;
+
+                double completeness = (double)tile.Width / tile.TotalBinsInFrame;
+                if (completeness >= NEAR_COMPLETE_THRESHOLD)
+                    keysToFlush.Add(kvp.Key);
+            }
+
+            foreach (var key in keysToFlush)
+            {
+                if (_fragmentedWaterfallTileDict.TryGetValue(key, out var tile))
+                {
+                    // Assembled tile Data array covers bins 0..TotalBinsInFrame-1.
+                    // Set Width to full array size (unfilled bins are zeros = noise floor).
+                    // Set FirstBinIndex to 0 since Data starts at bin 0.
+                    tile.Width = (ushort)tile.TotalBinsInFrame;
+                    tile.FirstBinIndex = 0;
+                    tile.IsFrameComplete = true;
+                    OnDataReady(this, tile);
+                    _fragmentedWaterfallTileDict.Remove(key);
+                    DiagCompleteTiles++;
+                }
+            }
+        }
+
         private int _cleanupCounter = 0;
         private const int CLEANUP_COUNT_TRIGGER = 1000;
         private const int CLEANUP_TIMECODE_DELTA_THRESHOLD = 10;
@@ -744,8 +886,23 @@ namespace Flex.Smoothlake.FlexLib
                 if (timecode_key < last_timecode - CLEANUP_TIMECODE_DELTA_THRESHOLD &&
                     last_timecode > CLEANUP_TIMECODE_DELTA_THRESHOLD) // make sure we don't have uint wrapping issues
                 {
+                    // Before discarding, emit near-complete tiles (same logic as FlushNearCompleteTiles)
+                    if (_fragmentedWaterfallTileDict.TryGetValue(timecode_key, out var tile) &&
+                        tile.TotalBinsInFrame > 0 &&
+                        (double)tile.Width / tile.TotalBinsInFrame >= NEAR_COMPLETE_THRESHOLD)
+                    {
+                        tile.Width = (ushort)tile.TotalBinsInFrame;
+                        tile.FirstBinIndex = 0;
+                        tile.IsFrameComplete = true;
+                        OnDataReady(this, tile);
+                        DiagCompleteTiles++;
+                    }
+                    else
+                    {
+                        FallPacketErrorCount++;
+                    }
+
                     _fragmentedWaterfallTileDict.Remove(timecode_key);
-                    FallPacketErrorCount++;
                 }
             }
         }
@@ -779,13 +936,11 @@ namespace Flex.Smoothlake.FlexLib
                                 continue;
                             }
 
-                            if ((int)temp != _width)
+                            if ((int)temp != _width && temp > 0)
                             {
-                                //Size = new Size((int)temp, _size.Height);
-                                //if (buf.Length < _size.Width)
-                                  //  buf = new ushort[(int)_size.Width];
-
-                                //RaisePropertyChanged("Size");
+                                Debug.WriteLine("Waterfall: Radio reports x_pixels=" + temp + ", adjusting internal width from " + _width);
+                                _width = (int)temp;
+                                RaisePropertyChanged("Width");
                             }
                         }
                         break;
@@ -800,12 +955,11 @@ namespace Flex.Smoothlake.FlexLib
                                 continue;
                             }
 
-                            if ((int)temp != _height)
+                            if ((int)temp != _height && temp > 0)
                             {
-                                //Size = new Size(_size.Width, (int)temp);
-                                //if (buf.Length < _size.Width)
-                                  //  buf = new ushort[(int)_size.Width];
-                               // RaisePropertyChanged("Size");
+                                Debug.WriteLine("Waterfall: Radio reports y_pixels=" + temp + ", adjusting internal height from " + _height);
+                                _height = (int)temp;
+                                RaisePropertyChanged("Height");
                             }
                         }
                         break;

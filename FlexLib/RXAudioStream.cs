@@ -153,42 +153,40 @@ namespace Flex.Smoothlake.FlexLib
         public double LastOpusTimestampConsumed = 0;
         public SortedList<double, VitaOpusDataPacket> _opusRXList = new SortedList<double, VitaOpusDataPacket>();
 
+        // Monotonically increasing sequence counter for SortedList keys.
+        // Using timestamps as keys is broken: the original divisor (2^16) created non-monotonic
+        // keys at second boundaries; the corrected divisor (2^64) made fractional parts too small
+        // for double precision to distinguish individual packets (~5e-8 added to ~10^9).
+        // A simple counter guarantees unique, ordered keys with no precision issues.
+        private long _opusSequence = 0;
+
         internal void AddRXData(VitaOpusDataPacket packet)
         {
             TotalCount++;
 #if DEBUG_STATS
             if (TotalCount % 1000 == 0) PrintStats();
 #endif
-            //Debug.WriteLine("OpusTimestamp: " + packet.timestamp_int + "." + packet.timestamp_frac);
 
-            double timestamp_key = packet.timestamp_int + (packet.timestamp_frac / Math.Pow(2, 16));
-
-            //Debug.WriteLine("OpusTimestampKey: " + timestamp_key);
-            
             Interlocked.Add(ref _byteSum, packet.Length);
 
             int packet_count = packet.header.packet_count;
 
-            // Only queue if the packet is more recent than the last one the 
-            // Audio callback consumed
-
-            if (LastOpusTimestampConsumed < timestamp_key)
+            // Queue every arriving packet unconditionally. The old timestamp-based guard
+            // (LastOpusTimestampConsumed < timestamp_key) was fundamentally broken:
+            // 1) Original divisor 2^16: keys non-monotonic at second boundaries → mass rejection
+            // 2) Corrected divisor 2^64: double can't resolve individual packets → key collisions
+            // The overflow protection (>30 → clear) prevents unbounded queue growth,
+            // and the polling thread drains every 10ms keeping the queue at 1-2 entries.
+            long seq = Interlocked.Increment(ref _opusSequence);
+            lock (OpusRXListLockObj)
             {
-                lock (OpusRXListLockObj)
+                if (_opusRXList.Count > 30)
                 {
-                    if (_opusRXList.Count > 30)
-                    {
-                        Debug.Write("X");
-                        _opusRXList.Clear(); /* Overflow event */
-                    }
-
-                    _opusRXList.Add(timestamp_key, packet);
+                    Debug.Write("X");
+                    _opusRXList.Clear(); /* Overflow event */
                 }
-            }
-            else
-            {
-                // Old data we no longer care about
-                Debug.Write("o");
+
+                _opusRXList[(double)seq] = packet;
             }
             //normal case -- this is the next packet we are looking for, or it is the first one
             if (packet_count == (last_packet_count + 1) % 16 || last_packet_count == NOT_INITIALIZED)
