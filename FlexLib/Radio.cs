@@ -2397,10 +2397,11 @@ namespace Flex.Smoothlake.FlexLib
                 // one waterfall, auto-remap to accept the actual data stream_id.
                 lock (_waterfalls)
                 {
-                    if (_waterfalls.Count >= 1)
+                    if (_waterfalls.Count == 1)
                     {
-                        // Always remap to first waterfall when stream_id doesn't match.
-                        // For single-session server usage, there's only one active waterfall.
+                        // Only remap when exactly one waterfall exists (single panadapter).
+                        // With 2+ waterfalls, remapping to _waterfalls[0] would route the
+                        // second panadapter's data to the wrong waterfall object.
                         fall = _waterfalls[0];
                         if (_waterfallRemappedStreamId != packet.stream_id)
                         {

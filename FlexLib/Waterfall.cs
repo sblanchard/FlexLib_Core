@@ -793,6 +793,7 @@ namespace Flex.Smoothlake.FlexLib
                         tile.FirstBinIndex = 0;
                         tile.IsFrameComplete = true;
                         OnDataReady(this, tile);
+                        DiagCompleteTiles++;
 
                         // remove this tile from the fragmented list
                         _fragmentedWaterfallTileDict.Remove(tile.Timecode);
