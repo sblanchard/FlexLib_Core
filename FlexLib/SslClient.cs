@@ -20,6 +20,7 @@ namespace Flex.Smoothlake.FlexLib
 
         private SslStream _sslStream;
         private TcpClient _tcpClient;
+        private volatile bool _detached = false;
 
         public SslClient(string hostname, string port, int src_port = 0, bool start_ping_thread = false, bool validate_cert = true)
         {
@@ -97,15 +98,24 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        public SslStream? DetachStream()
+        {
+            if (_sslStream == null || !IsConnected) return null;
+            _detached = true;
+            MessageReceivedReady = null;
+            return _sslStream;
+        }
+
         private void StartListener()
         {
             try
             {
                 using (StreamReader reader = new StreamReader(_sslStream))
                 {
-                    while (_tcpClient != null && _tcpClient.Connected)
+                    while (_tcpClient != null && _tcpClient.Connected && !_detached)
                     {
                         string messageFromclient = reader.ReadLine();
+                        if (_detached) break;
                         OnMessageReceivedReady(messageFromclient);
                     }
                 }
