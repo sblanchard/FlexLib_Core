@@ -1857,6 +1857,18 @@ namespace Flex.Smoothlake.FlexLib
         private object _connectSyncObj = new Object();
 
         /// <summary>
+        /// Detaches the underlying TCP/TLS stream from the command communication layer,
+        /// allowing it to be handed off to an external proxy (e.g. a SmartLink WAN gateway bridge).
+        /// After detaching, no further FlexLib command parsing occurs on this stream.
+        /// </summary>
+        /// <returns>The raw stream, or null if not connected.</returns>
+        public System.IO.Stream? DetachTcpStream()
+        {
+            if (!Connected || _commandCommunication == null) return null;
+            return _commandCommunication.DetachStream();
+        }
+
+        /// <summary>
         /// Creates a TCP client and connects to the radio
         /// </summary>
         /// <returns>Connection status of the radio</returns>
