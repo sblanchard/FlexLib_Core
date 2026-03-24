@@ -13,6 +13,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -301,6 +302,13 @@ namespace Flex.Smoothlake.FlexLib
         public bool Connect(IPAddress radio_ip, int radioPort, int src_port = 0)
         {
             throw new NotImplementedException();
+        }
+
+        public Stream? DetachStream()
+        {
+            if (_tcpClient == null || !_tcpClient.Connected) return null;
+            DataReceivedReady = null;
+            return _tcpClient.GetStream();
         }
     }
 }

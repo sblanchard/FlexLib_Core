@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using Flex.Smoothlake.FlexLib.Interface;
 
@@ -84,6 +85,19 @@ namespace Flex.Smoothlake.FlexLib
         public void Write(string msg)
         {
             _tlsToRadio.Write(msg);
+        }
+
+        public Stream? DetachStream()
+        {
+            if (_tlsToRadio == null || !_isConnected) return null;
+            var stream = _tlsToRadio.DetachStream();
+            if (_tlsToRadio != null)
+            {
+                _tlsToRadio.Disconnected -= _tlsToRadio_Disconnected;
+                _tlsToRadio.MessageReceivedReady -= _tlsToRadio_MessageReceivedReady;
+            }
+            DataReceivedReady = null;
+            return stream;
         }
 
         public delegate void TCPDataReceivedReadyEventHandler(string msg);

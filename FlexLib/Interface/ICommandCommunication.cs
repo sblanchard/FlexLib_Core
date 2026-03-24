@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 
 namespace Flex.Smoothlake.FlexLib.Interface
 {
@@ -14,5 +15,6 @@ namespace Flex.Smoothlake.FlexLib.Interface
         bool Connect(IPAddress radio_ip, int radioPort, int src_port = 0);
         void Disconnect();
         void Write(string msg);
+        Stream? DetachStream();
     }
 }
