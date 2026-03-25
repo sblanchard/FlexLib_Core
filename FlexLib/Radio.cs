@@ -1875,6 +1875,15 @@ namespace Flex.Smoothlake.FlexLib
                 System.Threading.Thread.Sleep(200); // Give radio time to process disconnect
             }
 
+            // Stop the VitaSocket BEFORE detaching — its UDP keepalive pings with our
+            // (now-disconnected) client handle confuse the radio and cause it to drop
+            // the TLS connection after ~5 minutes.
+            if (VitaSock != null)
+            {
+                try { VitaSock.CloseSocket(); } catch { }
+                VitaSock = null;
+            }
+
             return _commandCommunication.DetachStream();
         }
 
