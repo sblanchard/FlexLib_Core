@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -98,11 +99,23 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private ManualResetEventSlim _listenerExited = new ManualResetEventSlim(false);
+
         public SslStream? DetachStream()
         {
             if (_sslStream == null || !IsConnected) return null;
             _detached = true;
             MessageReceivedReady = null;
+
+            // Set a short read timeout to unblock the listener's ReadLine()
+            try { _sslStream.ReadTimeout = 100; } catch { }
+
+            // Wait for the listener thread to actually exit (max 2s)
+            _listenerExited.Wait(TimeSpan.FromSeconds(2));
+
+            // Reset timeout for the bridge's use
+            try { _sslStream.ReadTimeout = Timeout.Infinite; } catch { }
+
             return _sslStream;
         }
 
@@ -110,14 +123,42 @@ namespace Flex.Smoothlake.FlexLib
         {
             try
             {
-                using (StreamReader reader = new StreamReader(_sslStream))
+                // Don't wrap in StreamReader — it buffers data and consumes bytes
+                // that the bridge needs after detach. Use raw byte reads instead.
+                byte[] buffer = new byte[4096];
+                StringBuilder sb = new StringBuilder();
+                while (_tcpClient != null && _tcpClient.Connected && !_detached)
                 {
-                    while (_tcpClient != null && _tcpClient.Connected && !_detached)
+                    int bytesRead;
+                    try
                     {
-                        string messageFromclient = reader.ReadLine();
-                        if (_detached) break;
-                        OnMessageReceivedReady(messageFromclient);
+                        bytesRead = _sslStream.Read(buffer, 0, buffer.Length);
                     }
+                    catch (IOException) when (_detached)
+                    {
+                        break;
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        break;
+                    }
+
+                    if (bytesRead == 0 || _detached) break;
+
+                    sb.Append(Encoding.UTF8.GetString(buffer, 0, bytesRead));
+
+                    // Split on newlines (SmartSDR protocol is newline-delimited)
+                    string accumulated = sb.ToString();
+                    int newlineIdx;
+                    while ((newlineIdx = accumulated.IndexOf('\n')) >= 0)
+                    {
+                        string line = accumulated.Substring(0, newlineIdx).TrimEnd('\r');
+                        accumulated = accumulated.Substring(newlineIdx + 1);
+                        if (!_detached)
+                            OnMessageReceivedReady(line);
+                    }
+                    sb.Clear();
+                    sb.Append(accumulated);
                 }
             }
             catch (Exception ex)
@@ -126,7 +167,9 @@ namespace Flex.Smoothlake.FlexLib
             }
             finally
             {
-                Disconnect();
+                _listenerExited.Set();
+                if (!_detached)
+                    Disconnect();
             }
         }
 

@@ -374,10 +374,13 @@ namespace Flex.Smoothlake.FlexLib
         
         private void ParseRadioConnectReadyMessage(string msg)
         {
+            Debug.WriteLine("WanServer::ParseRadioConnectReadyMessage: " + msg);
+
             var words = msg.Split(' ');
 
             Dictionary<string, string> keyValuePairs = words.Skip(2)
                                                             .Select(value => value.Split('='))
+                                                            .Where(pair => pair.Length == 2)
                                                             .ToDictionary(pair => pair[0], pair => pair[1]);
 
             string handle;
@@ -386,7 +389,14 @@ namespace Flex.Smoothlake.FlexLib
             keyValuePairs.TryGetValue("handle", out handle);
             keyValuePairs.TryGetValue("serial", out serial);
 
-            OnWanRadioConnectReady(handle, serial);
+            // Extract negotiated hole punch port if present
+            int port = -1;
+            if (keyValuePairs.TryGetValue("port", out var portStr))
+            {
+                int.TryParse(portStr, out port);
+            }
+
+            OnWanRadioConnectReady(handle, serial, port);
         }
 
         private void ParseApplicationInfo(string msg)
@@ -535,13 +545,13 @@ namespace Flex.Smoothlake.FlexLib
             if (_sslClient != null) _sslClient.Write(command);
         }
 
-        public delegate void WanRadioConnectReadyEventHandler(string wan_connectionhandle, string serial);
+        public delegate void WanRadioConnectReadyEventHandler(string wan_connectionhandle, string serial, int negotiatedPort);
         public event WanRadioConnectReadyEventHandler WanRadioConnectReady;
 
-        private void OnWanRadioConnectReady(string wan_connectionhandle, string serial)
+        private void OnWanRadioConnectReady(string wan_connectionhandle, string serial, int negotiatedPort)
         {
             if (WanRadioConnectReady == null) return;
-            WanRadioConnectReady(wan_connectionhandle, serial);
+            WanRadioConnectReady(wan_connectionhandle, serial, negotiatedPort);
         }
 
         public delegate void WanApplicationRegistrationInvalidEventHandler();
