@@ -1865,6 +1865,16 @@ namespace Flex.Smoothlake.FlexLib
         public System.IO.Stream? DetachTcpStream()
         {
             if (!Connected || _commandCommunication == null) return null;
+
+            // Disconnect our FlexLib client from the radio BEFORE detaching the stream.
+            // This frees the client slot so the desktop SmartSDR client can register
+            // as a new client on the same TLS connection.
+            if (_clientHandle != 0)
+            {
+                _commandCommunication.Write("client disconnect handle=0x" + _clientHandle.ToString("X"));
+                System.Threading.Thread.Sleep(200); // Give radio time to process disconnect
+            }
+
             return _commandCommunication.DetachStream();
         }
 
