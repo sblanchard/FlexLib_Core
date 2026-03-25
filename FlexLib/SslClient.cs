@@ -23,6 +23,8 @@ namespace Flex.Smoothlake.FlexLib
         private TcpClient _tcpClient;
         private volatile bool _detached = false;
 
+        public Action<string>? RawLineReceived { get; set; }
+
         public SslClient(string hostname, string port, int src_port = 0, bool start_ping_thread = false, bool validate_cert = true)
         {
             _hostname = hostname;
@@ -155,7 +157,10 @@ namespace Flex.Smoothlake.FlexLib
                         string line = accumulated.Substring(0, newlineIdx).TrimEnd('\r');
                         accumulated = accumulated.Substring(newlineIdx + 1);
                         if (!_detached)
+                        {
+                            RawLineReceived?.Invoke(line);
                             OnMessageReceivedReady(line);
+                        }
                     }
                     sb.Clear();
                     sb.Append(accumulated);
