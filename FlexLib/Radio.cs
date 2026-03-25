@@ -14287,6 +14287,40 @@ namespace Flex.Smoothlake.FlexLib
         /// </summary>
         public Action<byte[], int>? RawVitaPacketReceived;
 
+        /// <summary>
+        /// Taps every raw TCP line received from the radio (TLS sessions only).
+        /// Used by WAN proxy mode to forward FlexLib responses to the desktop SmartSDR client.
+        /// </summary>
+        public Action<string>? OnRawTcpLineReceived
+        {
+            get => (_commandCommunication as TlsCommandCommunication)?.OnRawLineReceived;
+            set
+            {
+                if (_commandCommunication is TlsCommandCommunication tls)
+                    tls.OnRawLineReceived = value;
+            }
+        }
+
+        /// <summary>
+        /// Writes a raw command string directly to the TCP/TLS stream without FlexLib
+        /// sequence-number management. Used by WAN proxy mode to forward desktop SmartSDR
+        /// commands verbatim to the radio.
+        /// </summary>
+        public void WriteRawTcpCommand(string command)
+        {
+            _commandCommunication?.Write(command);
+        }
+
+        /// <summary>
+        /// Overrides the internal command sequence counter. Used by WAN proxy mode to
+        /// offset FlexLib's sequence numbers so they do not collide with the sequence
+        /// numbers already in use by the proxied desktop SmartSDR session.
+        /// </summary>
+        public void SetCommandSequenceOffset(int offset)
+        {
+            Interlocked.Exchange(ref _cmdSequenceNumber, offset);
+        }
+
         private void UDPDataReceivedCallback(IPEndPoint ep, byte[] data, int bytes)
         {
             // if we aren't connected, we shouldn't build up a queue of unprocessed UDP data
