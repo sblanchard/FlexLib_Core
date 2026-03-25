@@ -14280,10 +14280,21 @@ namespace Flex.Smoothlake.FlexLib
             VitaSock.CloseSocket();
         }
 
+        /// <summary>
+        /// Optional callback invoked for every raw VITA-49 UDP packet received.
+        /// Used by WAN sessions to tap SmartLink relay packets and forward them
+        /// to the gateway tunnel without going through FlexLib's internal processing.
+        /// </summary>
+        public Action<byte[], int>? RawVitaPacketReceived;
+
         private void UDPDataReceivedCallback(IPEndPoint ep, byte[] data, int bytes)
         {
             // if we aren't connected, we shouldn't build up a queue of unprocessed UDP data
             if (!_connected) return;
+
+            // Fire raw packet callback before internal processing — lets WAN proxy
+            // forward packets to the tunnel with minimal latency.
+            RawVitaPacketReceived?.Invoke(data, bytes);
 
             // Keep this callback short so we that we don't hold the network thread and so that
             // we can ensure that we are keeping packets the order that they arrive over the network
