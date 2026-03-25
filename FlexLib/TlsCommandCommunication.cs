@@ -82,6 +82,16 @@ namespace Flex.Smoothlake.FlexLib
             OnIsConnectedChanged(_isConnected);
         }
 
+        public Action<string>? OnRawLineReceived
+        {
+            get => _tlsToRadio?.RawLineReceived;
+            set
+            {
+                if (_tlsToRadio != null)
+                    _tlsToRadio.RawLineReceived = value;
+            }
+        }
+
         public void Write(string msg)
         {
             _tlsToRadio.Write(msg);
