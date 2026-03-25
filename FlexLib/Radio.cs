@@ -1875,14 +1875,9 @@ namespace Flex.Smoothlake.FlexLib
                 System.Threading.Thread.Sleep(200); // Give radio time to process disconnect
             }
 
-            // Stop the VitaSocket BEFORE detaching — its UDP keepalive pings with our
-            // (now-disconnected) client handle confuse the radio and cause it to drop
-            // the TLS connection after ~5 minutes.
-            if (VitaSock != null)
-            {
-                try { VitaSock.CloseSocket(); } catch { }
-                VitaSock = null;
-            }
+            // NOTE: Do NOT close VitaSocket here. The UDP processing thread checks VitaSock
+            // in a tight loop — nulling it causes a NullReferenceException crash.
+            // VitaSocket stays alive to receive VITA-49 data from the SmartLink relay.
 
             return _commandCommunication.DetachStream();
         }
