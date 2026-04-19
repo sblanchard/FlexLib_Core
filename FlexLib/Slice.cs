@@ -1272,6 +1272,244 @@ namespace Flex.Smoothlake.FlexLib
 
         #endregion
 
+        #region Extended DSP Detail Parameters
+
+        private int _nrWlen;
+        /// <summary>
+        /// Gets the NR window length parameter.
+        /// </summary>
+        public int NRWlen
+        {
+            get { return _nrWlen; }
+        }
+
+        private int _nrDelay;
+        /// <summary>
+        /// Gets the NR delay parameter.
+        /// </summary>
+        public int NRDelay
+        {
+            get { return _nrDelay; }
+        }
+
+        private int _nrAdaptMode;
+        /// <summary>
+        /// Gets the NR adapt mode parameter.
+        /// </summary>
+        public int NRAdaptMode
+        {
+            get { return _nrAdaptMode; }
+        }
+
+        private int _nrIsdftMode;
+        /// <summary>
+        /// Gets the NR ISDFT mode parameter.
+        /// </summary>
+        public int NRIsdftMode
+        {
+            get { return _nrIsdftMode; }
+        }
+
+        private int _nrlFilterSize;
+        /// <summary>
+        /// Gets the NRL filter size parameter.
+        /// </summary>
+        public int NRLFilterSize
+        {
+            get { return _nrlFilterSize; }
+        }
+
+        private int _nrlDelay;
+        /// <summary>
+        /// Gets the NRL delay parameter.
+        /// </summary>
+        public int NRLDelay
+        {
+            get { return _nrlDelay; }
+        }
+
+        private int _nrlLeakageLevel;
+        /// <summary>
+        /// Gets the NRL leakage level parameter.
+        /// </summary>
+        public int NRLLeakageLevel
+        {
+            get { return _nrlLeakageLevel; }
+        }
+
+        private int _nrfWinc;
+        /// <summary>
+        /// Gets the NRF window increment parameter.
+        /// </summary>
+        public int NRFWinc
+        {
+            get { return _nrfWinc; }
+        }
+
+        private int _nrfWlen;
+        /// <summary>
+        /// Gets the NRF window length parameter.
+        /// </summary>
+        public int NRFWlen
+        {
+            get { return _nrfWlen; }
+        }
+
+        private int _anfWlen;
+        /// <summary>
+        /// Gets the ANF window length parameter.
+        /// </summary>
+        public int ANFWlen
+        {
+            get { return _anfWlen; }
+        }
+
+        private int _anfDelay;
+        /// <summary>
+        /// Gets the ANF delay parameter.
+        /// </summary>
+        public int ANFDelay
+        {
+            get { return _anfDelay; }
+        }
+
+        private int _anfAdaptMode;
+        /// <summary>
+        /// Gets the ANF adapt mode parameter.
+        /// </summary>
+        public int ANFAdaptMode
+        {
+            get { return _anfAdaptMode; }
+        }
+
+        private int _anfIsdftMode;
+        /// <summary>
+        /// Gets the ANF ISDFT mode parameter.
+        /// </summary>
+        public int ANFIsdftMode
+        {
+            get { return _anfIsdftMode; }
+        }
+
+        private int _anflFilterSize;
+        /// <summary>
+        /// Gets the ANFL filter size parameter.
+        /// </summary>
+        public int ANFLFilterSize
+        {
+            get { return _anflFilterSize; }
+        }
+
+        private int _anflDelay;
+        /// <summary>
+        /// Gets the ANFL delay parameter.
+        /// </summary>
+        public int ANFLDelay
+        {
+            get { return _anflDelay; }
+        }
+
+        private int _anflLeakageLevel;
+        /// <summary>
+        /// Gets the ANFL leakage level parameter.
+        /// </summary>
+        public int ANFLLeakageLevel
+        {
+            get { return _anflLeakageLevel; }
+        }
+
+        private int _postDemodLow;
+        /// <summary>
+        /// Gets the post-demod filter low cut frequency.
+        /// </summary>
+        public int PostDemodLow
+        {
+            get { return _postDemodLow; }
+        }
+
+        private int _postDemodHigh;
+        /// <summary>
+        /// Gets the post-demod filter high cut frequency.
+        /// </summary>
+        public int PostDemodHigh
+        {
+            get { return _postDemodHigh; }
+        }
+
+        private bool _postDemodBypass;
+        /// <summary>
+        /// Gets the post-demod filter bypass state.
+        /// </summary>
+        public bool PostDemodBypass
+        {
+            get { return _postDemodBypass; }
+        }
+
+        private double _sampleRate;
+        /// <summary>
+        /// Gets the slice sample rate.
+        /// </summary>
+        public double SampleRate
+        {
+            get { return _sampleRate; }
+        }
+
+        private int _daxIqChannel;
+        /// <summary>
+        /// Gets the DAX IQ channel assignment for this slice.
+        /// </summary>
+        public int DAXIQChannel
+        {
+            get { return _daxIqChannel; }
+        }
+
+        private double _rxErrorMHz;
+        /// <summary>
+        /// Gets the RX frequency error in millihertz.
+        /// </summary>
+        public double RXErrorMHz
+        {
+            get { return _rxErrorMHz; }
+        }
+
+        private bool _esc;
+        /// <summary>
+        /// Gets the Enhanced Signal Clarity (ESC) enabled state.
+        /// </summary>
+        public bool ESC
+        {
+            get { return _esc; }
+        }
+
+        private double _escGain;
+        /// <summary>
+        /// Gets the ESC gain parameter.
+        /// </summary>
+        public double ESCGain
+        {
+            get { return _escGain; }
+        }
+
+        private double _escPhaseShift;
+        /// <summary>
+        /// Gets the ESC phase shift parameter.
+        /// </summary>
+        public double ESCPhaseShift
+        {
+            get { return _escPhaseShift; }
+        }
+
+        private int _maxInternalPaPower;
+        /// <summary>
+        /// Gets the maximum internal PA power in watts.
+        /// </summary>
+        public int MaxInternalPaPower
+        {
+            get { return _maxInternalPaPower; }
+        }
+
+        #endregion
+
         private AGCMode StringToAGCMode(string s)
         {
             AGCMode mode = AGCMode.None;
@@ -3263,6 +3501,485 @@ namespace Flex.Smoothlake.FlexLib
 
                                 _xitFreq = temp;
                                 RaisePropertyChanged("XITFreq");
+                            }
+                            break;
+
+                        // NR detail parameters
+                        case "nr_wlen":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrWlen == temp)
+                                    continue;
+
+                                _nrWlen = temp;
+                                RaisePropertyChanged("NRWlen");
+                            }
+                            break;
+
+                        case "nr_delay":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrDelay == temp)
+                                    continue;
+
+                                _nrDelay = temp;
+                                RaisePropertyChanged("NRDelay");
+                            }
+                            break;
+
+                        case "nr_adapt_mode":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrAdaptMode == temp)
+                                    continue;
+
+                                _nrAdaptMode = temp;
+                                RaisePropertyChanged("NRAdaptMode");
+                            }
+                            break;
+
+                        case "nr_isdft_mode":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrIsdftMode == temp)
+                                    continue;
+
+                                _nrIsdftMode = temp;
+                                RaisePropertyChanged("NRIsdftMode");
+                            }
+                            break;
+
+                        // NRL detail parameters
+                        case "nrl_filter_size":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrlFilterSize == temp)
+                                    continue;
+
+                                _nrlFilterSize = temp;
+                                RaisePropertyChanged("NRLFilterSize");
+                            }
+                            break;
+
+                        case "nrl_delay":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrlDelay == temp)
+                                    continue;
+
+                                _nrlDelay = temp;
+                                RaisePropertyChanged("NRLDelay");
+                            }
+                            break;
+
+                        case "nrl_leakage_level":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrlLeakageLevel == temp)
+                                    continue;
+
+                                _nrlLeakageLevel = temp;
+                                RaisePropertyChanged("NRLLeakageLevel");
+                            }
+                            break;
+
+                        // NRF window parameters
+                        case "nrf_winc":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrfWinc == temp)
+                                    continue;
+
+                                _nrfWinc = temp;
+                                RaisePropertyChanged("NRFWinc");
+                            }
+                            break;
+
+                        case "nrf_wlen":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_nrfWlen == temp)
+                                    continue;
+
+                                _nrfWlen = temp;
+                                RaisePropertyChanged("NRFWlen");
+                            }
+                            break;
+
+                        // ANF detail parameters
+                        case "anf_wlen":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anfWlen == temp)
+                                    continue;
+
+                                _anfWlen = temp;
+                                RaisePropertyChanged("ANFWlen");
+                            }
+                            break;
+
+                        case "anf_delay":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anfDelay == temp)
+                                    continue;
+
+                                _anfDelay = temp;
+                                RaisePropertyChanged("ANFDelay");
+                            }
+                            break;
+
+                        case "anf_adapt_mode":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anfAdaptMode == temp)
+                                    continue;
+
+                                _anfAdaptMode = temp;
+                                RaisePropertyChanged("ANFAdaptMode");
+                            }
+                            break;
+
+                        case "anf_isdft_mode":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anfIsdftMode == temp)
+                                    continue;
+
+                                _anfIsdftMode = temp;
+                                RaisePropertyChanged("ANFIsdftMode");
+                            }
+                            break;
+
+                        // ANFL detail parameters
+                        case "anfl_filter_size":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anflFilterSize == temp)
+                                    continue;
+
+                                _anflFilterSize = temp;
+                                RaisePropertyChanged("ANFLFilterSize");
+                            }
+                            break;
+
+                        case "anfl_delay":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anflDelay == temp)
+                                    continue;
+
+                                _anflDelay = temp;
+                                RaisePropertyChanged("ANFLDelay");
+                            }
+                            break;
+
+                        case "anfl_leakage_level":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_anflLeakageLevel == temp)
+                                    continue;
+
+                                _anflLeakageLevel = temp;
+                                RaisePropertyChanged("ANFLLeakageLevel");
+                            }
+                            break;
+
+                        // Post-demod filter parameters
+                        case "post_demod_low":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_postDemodLow == temp)
+                                    continue;
+
+                                _postDemodLow = temp;
+                                RaisePropertyChanged("PostDemodLow");
+                            }
+                            break;
+
+                        case "post_demod_high":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_postDemodHigh == temp)
+                                    continue;
+
+                                _postDemodHigh = temp;
+                                RaisePropertyChanged("PostDemodHigh");
+                            }
+                            break;
+
+                        case "post_demod_bypass":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 1)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_postDemodBypass == Convert.ToBoolean(temp))
+                                    continue;
+
+                                _postDemodBypass = Convert.ToBoolean(temp);
+                                RaisePropertyChanged("PostDemodBypass");
+                            }
+                            break;
+
+                        // Slice sample rate
+                        case "sample_rate":
+                            {
+                                double temp;
+                                bool b = StringHelper.TryParseDouble(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_sampleRate == temp)
+                                    continue;
+
+                                _sampleRate = temp;
+                                RaisePropertyChanged("SampleRate");
+                            }
+                            break;
+
+                        // DAX IQ channel
+                        case "dax_iq_channel":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_daxIqChannel == temp)
+                                    continue;
+
+                                _daxIqChannel = temp;
+                                RaisePropertyChanged("DAXIQChannel");
+                            }
+                            break;
+
+                        // RX frequency error
+                        case "rx_error_mhz":
+                            {
+                                double temp;
+                                bool b = StringHelper.TryParseDouble(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_rxErrorMHz == temp)
+                                    continue;
+
+                                _rxErrorMHz = temp;
+                                RaisePropertyChanged("RXErrorMHz");
+                            }
+                            break;
+
+                        // Enhanced Signal Clarity parameters
+                        case "esc":
+                            {
+                                uint temp;
+                                bool b = uint.TryParse(value, out temp);
+                                if (!b || temp > 1)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_esc == Convert.ToBoolean(temp))
+                                    continue;
+
+                                _esc = Convert.ToBoolean(temp);
+                                RaisePropertyChanged("ESC");
+                            }
+                            break;
+
+                        case "esc_gain":
+                            {
+                                double temp;
+                                bool b = double.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_escGain == temp)
+                                    continue;
+
+                                _escGain = temp;
+                                RaisePropertyChanged("ESCGain");
+                            }
+                            break;
+
+                        case "esc_phase_shift":
+                            {
+                                double temp;
+                                bool b = double.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_escPhaseShift == temp)
+                                    continue;
+
+                                _escPhaseShift = temp;
+                                RaisePropertyChanged("ESCPhaseShift");
+                            }
+                            break;
+
+                        // Max internal PA power
+                        case "max_internal_pa_power":
+                            {
+                                int temp;
+                                bool b = int.TryParse(value, out temp);
+                                if (!b)
+                                {
+                                    Debug.WriteLine("Slice::StatusUpdate: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+
+                                if (_maxInternalPaPower == temp)
+                                    continue;
+
+                                _maxInternalPaPower = temp;
+                                RaisePropertyChanged("MaxInternalPaPower");
                             }
                             break;
 

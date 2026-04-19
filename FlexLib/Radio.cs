@@ -101,6 +101,7 @@ namespace Flex.Smoothlake.FlexLib
         XVTR_RX_ONLY,
         NO_TX_ASSIGNED,
         TGXL,
+        AMP,
     }
 
     /// <summary>
@@ -6980,7 +6981,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_txreqRCAEnabled != value)
                 {
                     _txreqRCAEnabled = value;
-                    SendCommand("interlock rca_txreq_enable=" + Convert.ToByte(_txreqRCAEnabled));
+                    SendCommand("interlock rca_txreq_enable=" + (_txreqRCAEnabled ? "T" : "F"));
                     RaisePropertyChanged("TXReqRCAEnabled");
                 }
             }
@@ -6999,7 +7000,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_txreqACCEnabled != value)
                 {
                     _txreqACCEnabled = value;
-                    SendCommand("interlock acc_txreq_enable=" + Convert.ToByte(_txreqACCEnabled));
+                    SendCommand("interlock acc_txreq_enable=" + (_txreqACCEnabled ? "T" : "F"));
                     RaisePropertyChanged("TXReqACCEnabled");
                 }
             }
@@ -7020,7 +7021,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_txreqRCAPolarity != value)
                 {
                     _txreqRCAPolarity = value;
-                    SendCommand("interlock rca_txreq_polarity=" + Convert.ToByte(_txreqRCAPolarity));
+                    SendCommand("interlock rca_txreq_polarity=" + (_txreqRCAPolarity ? "T" : "F"));
                     RaisePropertyChanged("TXReqRCAPolarity");
                 }
             }
@@ -7041,7 +7042,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_txreqACCPolarity != value)
                 {
                     _txreqACCPolarity = value;
-                    SendCommand("interlock acc_txreq_polarity=" + Convert.ToByte(_txreqACCPolarity));
+                    SendCommand("interlock acc_txreq_polarity=" + (_txreqACCPolarity ? "T" : "F"));
                     RaisePropertyChanged("TXReqACCPolarity");
                 }
             }
@@ -7363,6 +7364,7 @@ namespace Flex.Smoothlake.FlexLib
                 case "XVTR_RX_ONLY": reason = InterlockReason.XVTR_RX_ONLY; break;
                 case "NO_TX_ASSIGNED": reason = InterlockReason.NO_TX_ASSIGNED; break;
                 case "AMP:TG": reason = InterlockReason.TGXL; break;
+                case "AMP:AG": reason = InterlockReason.AMP; break;
             }
 
             return reason;
@@ -7529,11 +7531,14 @@ namespace Flex.Smoothlake.FlexLib
                     case "reason":
                         {
                             InterlockReason reason = ParseInterlockReason(value);
-                            if (!string.IsNullOrEmpty(value) && reason == InterlockReason.None && !value.Contains("PG-XL"))
+                            if (!string.IsNullOrEmpty(value) && reason == InterlockReason.None && !value.Contains("PG-XL") && !value.StartsWith("AMP:"))
                             {
                                 Debug.WriteLine("ParseInterlockStatus: Error - Invalid reason (" + value + ")");
                                 continue;
                             }
+                            // Map any unknown AMP:* reasons to AMP
+                            if (reason == InterlockReason.None && value.StartsWith("AMP:"))
+                                reason = InterlockReason.AMP;
 
                             InterlockReason = reason;
                         }
@@ -14329,10 +14334,26 @@ namespace Flex.Smoothlake.FlexLib
             VitaSock.CloseSocket();
         }
 
+        private long _udpCallbackCount;
         private void UDPDataReceivedCallback(IPEndPoint ep, byte[] data, int bytes)
         {
+            var count = System.Threading.Interlocked.Increment(ref _udpCallbackCount);
+
             // if we aren't connected, we shouldn't build up a queue of unprocessed UDP data
-            if (!_connected) return;
+            if (!_connected)
+            {
+                if (count <= 5)
+                    Debug.WriteLine($"[FlexPilot-VITA] UDP callback #{count}: DROPPED (_connected=false), {bytes} bytes from {ep}");
+                return;
+            }
+
+            if (count <= 10 || count % 1000 == 0)
+            {
+                uint streamId = 0;
+                if (bytes >= 8)
+                    streamId = (uint)((data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7]);
+                Debug.WriteLine($"[FlexPilot-VITA] UDP callback #{count}: {bytes} bytes from {ep}, stream_id=0x{streamId:X8}, queueSize={UDPCallbackQueue.Count}");
+            }
 
             // Keep this callback short so we that we don't hold the network thread and so that
             // we can ensure that we are keeping packets the order that they arrive over the network
@@ -14408,16 +14429,20 @@ namespace Flex.Smoothlake.FlexLib
                 IPAddress localBindIp = _commandCommunication.LocalIP;
                 if (localBindIp != null)
                 {
-                    Debug.WriteLine($"StartUDP: LOCAL connection, binding VitaSocket to TCP source IP {localBindIp}");
+                    Debug.WriteLine($"[FlexPilot-VITA] StartUDP: LOCAL connection, binding VitaSocket to TCP source IP {localBindIp}, radio IP={IP}");
                     VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, localBindIp, IP, 4991);
+                    Debug.WriteLine($"[FlexPilot-VITA] StartUDP: VitaSocket bound on port {VitaSock?.Port ?? -1}, localBindIp={localBindIp}");
                 }
                 else
                 {
                     // Fallback to old behavior if LocalIP is not available
-                    Debug.WriteLine("StartUDP: LOCAL connection, but LocalIP not available, using default binding");
+                    Debug.WriteLine("[FlexPilot-VITA] StartUDP: LOCAL connection, but LocalIP not available, using default binding");
                     VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, IP, 4991);
+                    Debug.WriteLine($"[FlexPilot-VITA] StartUDP: VitaSocket bound on port {VitaSock?.Port ?? -1}");
                 }
             }
+
+            Debug.WriteLine($"[FlexPilot-VITA] StartUDP: IsWan={IsWan}, UDPPort={UDPPort}, _connected={_connected}");
 
             Thread t = new Thread(new ThreadStart(ProcessUDPPackets_ThreadFunction));
             t.Name = "UDP Packet Processing Thread";
