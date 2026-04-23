@@ -759,9 +759,15 @@ namespace Flex.Smoothlake.FlexLib
         private uint _current_frame = 0;
         private int _frame_bins = 0;
         private const int ERROR_THRESHOLD = 10;
+        private const int WIDTH_CHANGE_THRESHOLD = 4; // consecutive packets before accepting new width
         private bool _expecting_new_frame = true;
         private int _consecutiveFrameErrors = 0;
         private int _lastIncompleteFrameBins = 0;
+
+        // Hysteresis for total_bins_in_frame auto-adjust: prevents oscillation when
+        // SmartSDR and FlexPilot send competing xpixels commands in companion mode.
+        private int _pendingWidth;
+        private int _pendingWidthCount;
 
         // Adds data to the FFT buffer from the radio -- not intended to be used by the client
         private int _addDataCallCount;
@@ -776,16 +782,41 @@ namespace Flex.Smoothlake.FlexLib
                 Debug.WriteLine($"PAN DIAG: AddData call#{_addDataCallCount} drops={_addDataDropCount} frames={_addDataFrameReadyCount} width={_width} bufLen={_buf?.Length ?? -1} start_bin={start_bin} dataLen={data.Length} total_bins={total_bins_in_frame} frame={frame} frame_bins={_frame_bins} expecting={_expecting_new_frame}");
             }
 
-            // Auto-adjust width from actual VITA-49 packet data.
-            // Old radios (6000-series) may send a different number of bins than requested via xpixels.
+            // Auto-adjust width from actual VITA-49 packet data with hysteresis.
+            // Require WIDTH_CHANGE_THRESHOLD consecutive packets with the same new value
+            // before switching. This prevents oscillation when competing xpixels commands
+            // cause the radio to alternate total_bins_in_frame values (e.g., companion mode).
             if (total_bins_in_frame > 0 && (int)total_bins_in_frame != _width)
             {
-                Debug.WriteLine("Panadapter: Adjusting width from " + _width + " to " + total_bins_in_frame + " (from VITA packet)");
-                _width = (int)total_bins_in_frame;
-                _buf = new ushort[_width];
-                _frame_bins = 0;
-                _expecting_new_frame = true;
-                _consecutiveFrameErrors = 0;
+                if ((int)total_bins_in_frame == _pendingWidth)
+                {
+                    _pendingWidthCount++;
+                }
+                else
+                {
+                    _pendingWidth = (int)total_bins_in_frame;
+                    _pendingWidthCount = 1;
+                }
+
+                if (_pendingWidthCount >= WIDTH_CHANGE_THRESHOLD)
+                {
+                    Debug.WriteLine("Panadapter: Adjusting width from " + _width + " to " + total_bins_in_frame + " (from VITA packet, " + _pendingWidthCount + " consecutive)");
+                    _width = (int)total_bins_in_frame;
+                    _buf = new ushort[_width];
+                    _frame_bins = 0;
+                    _expecting_new_frame = true;
+                    _consecutiveFrameErrors = 0;
+                    _pendingWidthCount = 0;
+                }
+
+                // While width is mismatched and pending, drop the packet to avoid buffer issues
+                if ((int)total_bins_in_frame != _width)
+                    return;
+            }
+            else
+            {
+                // Width matches — reset pending state
+                _pendingWidthCount = 0;
             }
 
             if (start_bin + data.Length > _width)
@@ -1319,13 +1350,16 @@ namespace Flex.Smoothlake.FlexLib
                                 continue;
                             }
 
+                            // Do NOT override _width from x_pixels status when VITA packets
+                            // provide total_bins_in_frame (the ground truth). On the 6700,
+                            // the radio may report x_pixels=1004 (its internal/previous value)
+                            // while actually sending 100-bin VITA packets, causing _width to
+                            // oscillate between 1004 and 100 on every packet — allocating
+                            // buffers and resetting frame assembly each time.
+                            // The VITA auto-adjust in AddData is authoritative.
                             if ((int)temp != _width && temp > 0)
                             {
-                                Debug.WriteLine("Panadapter: Radio reports x_pixels=" + temp + ", adjusting internal width from " + _width);
-                                _width = (int)temp;
-                                _buf = new ushort[_width];
-                                _frame_bins = 0;
-                                _expecting_new_frame = true;
+                                Debug.WriteLine("Panadapter: Radio reports x_pixels=" + temp + " (internal width=" + _width + ", ignoring — VITA auto-adjust is authoritative)");
                             }
                         }
                         break;

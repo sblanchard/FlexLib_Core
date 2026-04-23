@@ -2423,7 +2423,9 @@ namespace Flex.Smoothlake.FlexLib
             fall.AddData(packet.tile, packet.header.packet_count);
         }
 
-        private int last_packet_count = LAST_PACKET_COUNT_UNINITIALIZED;
+        // Per-stream sequence tracking: VITA-49 packet_count is per-stream (4-bit, 0-15).
+        // Radios like the 6700 send meter packets from multiple streams, each with their own counter.
+        private readonly Dictionary<uint, int> _meterStreamLastPacketCount = new();
         private void ProcessMeterDataPacket(VitaMeterPacket packet)
         {
 
@@ -2442,9 +2444,14 @@ namespace Flex.Smoothlake.FlexLib
 
             _semNewMeterPacket.Set();
 
-            // lost packet diagnostics
+            // lost packet diagnostics — tracked per stream_id
             int packet_count = packet.header.packet_count;
+            uint stream_id = packet.stream_id;
             MeterPacketTotalCount++;
+
+            if (!_meterStreamLastPacketCount.TryGetValue(stream_id, out int last_packet_count))
+                last_packet_count = LAST_PACKET_COUNT_UNINITIALIZED;
+
             //normal case -- this is the next packet we are looking for, or it is the first one
             if (packet_count == (last_packet_count + 1) % 16 || last_packet_count == LAST_PACKET_COUNT_UNINITIALIZED)
             {
@@ -2452,11 +2459,11 @@ namespace Flex.Smoothlake.FlexLib
             }
             else
             {
-                Debug.WriteLine("Meter Packet: Expected " + ((last_packet_count + 1) % 16) + "  got " + packet_count);
+                Debug.WriteLine("Meter Packet: Expected " + ((last_packet_count + 1) % 16) + "  got " + packet_count + " (stream 0x" + stream_id.ToString("X") + ")");
                 MeterPacketErrorCount++;
             }
 
-            last_packet_count = packet_count;
+            _meterStreamLastPacketCount[stream_id] = packet_count;
 
 
             //for (int i = 0; i < packet.NumMeters; i++)
@@ -2472,7 +2479,7 @@ namespace Flex.Smoothlake.FlexLib
         {
             _meterPacketErrorCount = 0;
             _meterPacketTotalCount = 0;
-            last_packet_count = LAST_PACKET_COUNT_UNINITIALIZED;
+            _meterStreamLastPacketCount.Clear();
         }
 
         private void ProcessMeterDataPacket_ThreadFunction()
