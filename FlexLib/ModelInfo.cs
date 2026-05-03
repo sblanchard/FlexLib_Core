@@ -384,6 +384,44 @@ public class ModelInfo
             }
         },
         {
+            "AU-510M", new()
+            {
+                Platform = RadioPlatform.BigBend,
+                IsMModel = true,
+                IsDiversityAllowed = false,
+                HasOledDisplay = false,
+                IsOscillatorSelectAvailable = true,
+                HasBacklitFrontPanel = false,
+                HasTransmitter = true,
+                HasLoopA = false,
+                HasLoopB = false,
+                Has4Meters = false,
+                Has2Meters = false,
+                MaxDaxIqChannels = 2,
+                ImageSource = "pack://application:,,,/FlexLib;component/Images/6600.png",
+                SliceList = new List<string> {"A", "B"}.ToImmutableList()
+            }
+        },
+        {
+            "AU-520M", new()
+            {
+                Platform = RadioPlatform.BigBend,
+                IsMModel = true,
+                IsDiversityAllowed = true,
+                HasOledDisplay = false,
+                IsOscillatorSelectAvailable = true,
+                HasBacklitFrontPanel = false,
+                HasTransmitter = true,
+                HasLoopA = false,
+                HasLoopB = false,
+                Has4Meters = false,
+                Has2Meters = false,
+                MaxDaxIqChannels = 4,
+                ImageSource = "pack://application:,,,/FlexLib;component/Images/6600.png",
+                SliceList = new List<string> {"A", "B", "C", "D"}.ToImmutableList()
+            }
+        },
+        {
             "RT-2122", new()
             {
                 Platform = RadioPlatform.DragonFire,

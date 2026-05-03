@@ -677,11 +677,10 @@ namespace Flex.Smoothlake.FlexLib
         {
             _addDataCallCount++;
 
-            // Log first 5 tiles for diagnostics (helps debug fragmentation/stretching)
+            // First-tile diagnostics (keep in debugger, no console spam)
             if (_addDataCallCount <= 5)
             {
                 Debug.WriteLine($"Waterfall::AddData #{_addDataCallCount}: DataLen={tile.Data.Length}, TotalBins={tile.TotalBinsInFrame}, Width={tile.Width}, FirstBin={tile.FirstBinIndex}, Timecode={tile.Timecode}, InternalWidth={_width}");
-                Console.Error.WriteLine($"Waterfall::AddData #{_addDataCallCount}: DataLen={tile.Data.Length}, TotalBins={tile.TotalBinsInFrame}, Width={tile.Width}, FirstBin={tile.FirstBinIndex}, Timecode={tile.Timecode}, InternalWidth={_width}");
             }
 
             // Track last tile values for external diagnostics

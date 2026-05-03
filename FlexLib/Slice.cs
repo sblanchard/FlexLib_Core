@@ -1472,13 +1472,27 @@ namespace Flex.Smoothlake.FlexLib
             get { return _rxErrorMHz; }
         }
 
-        private bool _esc;
+        private bool _escEnabled;
         /// <summary>
-        /// Gets the Enhanced Signal Clarity (ESC) enabled state.
+        /// Gets or sets the Enhanced Signal Clarity (ESC) enabled state.
+        /// On the diversity parent slice the setter sends <c>slice set &lt;idx&gt; esc=on|off</c>
+        /// to the radio; on the child slice it only mirrors the parent's reported state.
         /// </summary>
-        public bool ESC
+        public bool ESCEnabled
         {
-            get { return _esc; }
+            get => _escEnabled;
+            set
+            {
+                // Always raise the change notification — child slices mirror parent state
+                // and need to re-evaluate even when the value is unchanged on the wire.
+                _escEnabled = value;
+
+                if (!DiversityChild)
+                {
+                    _radio.SendCommand($"slice set {_index} esc={(_escEnabled ? "on" : "off")}");
+                }
+                RaisePropertyChanged(nameof(ESCEnabled));
+            }
         }
 
         private double _escGain;
@@ -3920,11 +3934,11 @@ namespace Flex.Smoothlake.FlexLib
                                     continue;
                                 }
 
-                                if (_esc == Convert.ToBoolean(temp))
+                                if (_escEnabled == Convert.ToBoolean(temp))
                                     continue;
 
-                                _esc = Convert.ToBoolean(temp);
-                                RaisePropertyChanged("ESC");
+                                _escEnabled = Convert.ToBoolean(temp);
+                                RaisePropertyChanged(nameof(ESCEnabled));
                             }
                             break;
 
@@ -4042,22 +4056,27 @@ namespace Flex.Smoothlake.FlexLib
         /// <summary>
         /// Sends a CW autotune command to zero-beat the current CW signal.
         /// </summary>
-        /// <param name="enable">null for one-shot, true for continuous enable, false for continuous disable</param>
-        public void SendCWAutotuneCommand(bool? enable)
+        /// <param name="isIntermittent">
+        /// null for one-shot, true to enable continuous (intermittent) auto-tune,
+        /// false to disable continuous mode.
+        /// </param>
+        /// <remarks>
+        /// SmartSDR 4.2.x firmware accepts only the <c>slice auto_tune</c> verb with
+        /// an explicit <c>int=&lt;0|1&gt;</c> flag. The older positional <c>slice cw_autotune
+        /// &lt;idx&gt; &lt;0|1&gt;</c> form is silently dropped on 4.2+ radios.
+        /// </remarks>
+        public void SendCWAutotuneCommand(bool? isIntermittent)
         {
             if (!_demodMode.Contains("CW", StringComparison.OrdinalIgnoreCase))
                 return;
 
-            if (enable == null)
+            if (isIntermittent is null)
             {
-                // One-shot autotune
-                _radio.SendCommand("slice cw_autotune " + _index);
+                _radio.SendCommand($"slice auto_tune {_index}");
+                return;
             }
-            else
-            {
-                // Continuous autotune mode
-                _radio.SendCommand("slice cw_autotune " + _index + " " + (enable.Value ? "1" : "0"));
-            }
+
+            _radio.SendCommand($"slice auto_tune {_index} int={Convert.ToByte(isIntermittent.Value)}");
         }
 
         public override string ToString()
