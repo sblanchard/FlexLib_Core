@@ -6704,6 +6704,20 @@ namespace Flex.Smoothlake.FlexLib
                 return _meters.FirstOrDefault(m => m.Name == s);
         }
 
+        /// <summary>
+        /// Snapshot of every meter the radio has reported. Useful for diagnostics
+        /// and for subscribing to meters whose name isn't covered by the typed
+        /// DataReady event dispatch table in AddMeter().
+        /// </summary>
+        public ImmutableList<Meter> Meters
+        {
+            get
+            {
+                lock (_meters)
+                    return _meters.ToImmutableList();
+            }
+        }
+
         public ImmutableList<Meter> FindMetersByAmplifier(Amplifier amp)
         {
             lock (_meters)
