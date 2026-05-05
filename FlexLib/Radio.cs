@@ -6732,6 +6732,13 @@ namespace Flex.Smoothlake.FlexLib
                     $"0x{x.SourceIndex:X8}" == tuner.Handle)).ToImmutableList();
         }
 
+        /// <summary>
+        /// Fired after a meter has been added to the radio's meter collection.
+        /// Use this to subscribe to meters whose names aren't covered by the
+        /// typed DataReady events above (PA efficiency, fan speed, etc.).
+        /// </summary>
+        public event EventHandler<Meter> MeterAdded;
+
         private void AddMeter(Meter m)
         {
             lock (_meters)
@@ -6760,6 +6767,8 @@ namespace Flex.Smoothlake.FlexLib
                 m.DataReady += new Meter.DataReadyEventHandler(HWAlc_DataReady);
             else if (m.Name == "+13.8A") // A: before the fuse
                 m.DataReady += new Meter.DataReadyEventHandler(Volts_DataReady);
+
+            MeterAdded?.Invoke(this, m);
         }
 
         private void RemoveMeter(Meter m)
