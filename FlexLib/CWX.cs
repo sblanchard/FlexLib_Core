@@ -322,6 +322,24 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private bool _daxSidetoneEnabled;
+        /// <summary>
+        /// Gets whether DAX sidetone is enabled for CWX.
+        /// </summary>
+        public bool DaxSidetoneEnabled
+        {
+            get { return _daxSidetoneEnabled; }
+        }
+
+        private bool _mfSidetoneEnabled;
+        /// <summary>
+        /// Gets whether MF sidetone is enabled for CWX.
+        /// </summary>
+        public bool MfSidetoneEnabled
+        {
+            get { return _mfSidetoneEnabled; }
+        }
+
         public delegate void MessageQueuedEventHandler(int block, int radio_index);
         public event MessageQueuedEventHandler MessageQueued;
 
@@ -495,6 +513,44 @@ namespace Flex.Smoothlake.FlexLib
 
                             _qskEnabled = Convert.ToBoolean(temp);
                             RaisePropertyChanged("QskEnabled");
+                        }
+                        break;
+
+                    case "dax_sidetone_enabled":
+                        {
+                            byte temp;
+                            bool b = byte.TryParse(value, out temp);
+
+                            if (!b)
+                            {
+                                Debug.WriteLine("CWX::StatusUpdate: Invalid value (" + kv + ")");
+                                continue;
+                            }
+
+                            if (_daxSidetoneEnabled == Convert.ToBoolean(temp))
+                                continue;
+
+                            _daxSidetoneEnabled = Convert.ToBoolean(temp);
+                            RaisePropertyChanged("DaxSidetoneEnabled");
+                        }
+                        break;
+
+                    case "mf_sidetone_enabled":
+                        {
+                            byte temp;
+                            bool b = byte.TryParse(value, out temp);
+
+                            if (!b)
+                            {
+                                Debug.WriteLine("CWX::StatusUpdate: Invalid value (" + kv + ")");
+                                continue;
+                            }
+
+                            if (_mfSidetoneEnabled == Convert.ToBoolean(temp))
+                                continue;
+
+                            _mfSidetoneEnabled = Convert.ToBoolean(temp);
+                            RaisePropertyChanged("MfSidetoneEnabled");
                         }
                         break;
 

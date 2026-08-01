@@ -1,4 +1,4 @@
-﻿// ****************************************************************************
+// ****************************************************************************
 ///*!	\file Radio.cs
 // *	\brief Represents a single radio
 // *
@@ -101,6 +101,7 @@ namespace Flex.Smoothlake.FlexLib
         XVTR_RX_ONLY,
         NO_TX_ASSIGNED,
         TGXL,
+        AMP,
     }
 
     /// <summary>
@@ -161,6 +162,8 @@ namespace Flex.Smoothlake.FlexLib
         external,
         [Description("GPSDO")]
         gpsdo,
+        [Description("OCXO-GPSDO")]
+        ocxo_gpsdo,
         [Description("TCXO")]
         tcxo
     }    
@@ -168,6 +171,29 @@ namespace Flex.Smoothlake.FlexLib
     #endregion
 
     public delegate void ReplyHandler(int seq, uint resp_val, string s);
+
+    public class SmartSdrCommandErrorException : Exception
+    {
+        public uint responseValue;
+
+        public SmartSdrCommandErrorException()
+        {
+        }
+
+        public SmartSdrCommandErrorException(string message) : base(message)
+        {
+        }
+
+        public SmartSdrCommandErrorException(string message, Exception inner) : base(message, inner)
+        {
+        }
+
+        public SmartSdrCommandErrorException(string message, uint responseValue) : this(message)
+        {
+            this.responseValue = responseValue;
+        }
+    }
+
     public class Radio : ObservableObject
     {
         #region Variables
@@ -389,6 +415,25 @@ namespace Flex.Smoothlake.FlexLib
         {
             get => _apd;
         }
+
+        private HAAPI _haapi;
+        /// <summary>
+        /// Ham-Aided API client model: external amplifier monitoring + fault aggregator.
+        /// </summary>
+        public HAAPI HAAPI => _haapi;
+
+        private NAVTEX _navtex;
+        /// <summary>
+        /// NAVTEX waveform client model. Orchestrates a single slice in NT mode.
+        /// </summary>
+        public NAVTEX NAVTEX => _navtex;
+
+        private FeatureLicense _featureLicense;
+        /// <summary>
+        /// Feature license tier and per-feature enable/disable model. Updated by the
+        /// <c>license …</c> status sub.
+        /// </summary>
+        public FeatureLicense FeatureLicense => _featureLicense;
 
         private string[] _logLevels;
         public string[] LogLevels
@@ -1733,6 +1778,10 @@ namespace Flex.Smoothlake.FlexLib
             _ale4G = new ALE4G(this);
             _aleComposite = new ALEComposite(this);
             _apd = new APD(this);
+            _haapi = new HAAPI(this);
+            _navtex = new NAVTEX(this);
+            _featureLicense = new FeatureLicense(this);
+            InitFilterPresets();
 
             IsWan = isWan;
 
@@ -1997,12 +2046,16 @@ namespace Flex.Smoothlake.FlexLib
             SendCommand("sub radio all");
             SendCommand("sub codec all");
             SendCommand("sub apd all");
+            SendCommand("sub display_marker all");
+            SendCommand("sub filt_preset all");
+            SendCommand("sub ha_api amplifier");
+            SendCommand("sub ha_api fault");
+            SendCommand("sub license all");
+            SendCommand("sub navtex all");
+            SendCommand("sub waveform all");
 
             // ensure that packets are manually fragmented to avoid network issues
             SendRadioMTUCommand(_mtu);
-
-            // Send reduced bandwidth DAX packets
-            SendCommand("client set send_reduced_bw_dax=1");
 
             Connected = true;
 
@@ -2097,6 +2150,8 @@ namespace Flex.Smoothlake.FlexLib
              * we don't recursively loop since the Disconnect() in
              * commandCommunication will raise an event
              */
+
+            _apd?.Exit();
 
             if (_commandCommunication != null)
             {
@@ -2364,6 +2419,9 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _fftThreadPacketCount;
+        private int _fftThreadNullPanCount;
+
         private void ProcessFFTDataPacket_ThreadFunction()
         {
             VitaFFTPacket packet = null;
@@ -2374,10 +2432,16 @@ namespace Flex.Smoothlake.FlexLib
                 if (!_connected) break;
                 while (try_dequeue_result = FFTPacketQueue.TryDequeue(out packet))
                 {
+                    _fftThreadPacketCount++;
                     Panadapter pan = FindPanadapterByStreamID(packet.stream_id);
-                    if (pan == null) continue;
+                    if (pan == null)
+                    {
+                        if (++_fftThreadNullPanCount % 100 == 1)
+                            Debug.WriteLine($"FFT DIAG: pan==null for stream_id=0x{packet.stream_id:X} (null count={_fftThreadNullPanCount}, total={_fftThreadPacketCount})");
+                        continue;
+                    }
 
-                    pan.AddData(packet.payload, packet.start_bin_index, packet.frame_index, packet.header.packet_count);
+                    pan.AddData(packet.payload, packet.start_bin_index, packet.frame_index, packet.header.packet_count, packet.total_bins_in_frame);
                 }
             }
         }
@@ -2401,11 +2465,6 @@ namespace Flex.Smoothlake.FlexLib
                     wfCount = _waterfalls.Count;
                     wfIds = string.Join(", ", _waterfalls.Select(w => $"0x{w.StreamID:X}"));
                 }
-                Console.WriteLine($"[FlexLib] WF-PKT #{diagCount}: stream_id=0x{packet.stream_id:X}, " +
-                    $"found={fall != null}, waterfalls=[{wfIds}] (count={wfCount}), " +
-                    $"tile: W={packet.tile.Width}, H={packet.tile.Height}, " +
-                    $"TotalBins={packet.tile.TotalBinsInFrame}, FirstBin={packet.tile.FirstBinIndex}, " +
-                    $"DataLen={packet.tile.Data.Length}");
             }
 
             if (fall == null)
@@ -2415,23 +2474,20 @@ namespace Flex.Smoothlake.FlexLib
                 // one waterfall, auto-remap to accept the actual data stream_id.
                 lock (_waterfalls)
                 {
-                    if (_waterfalls.Count >= 1)
+                    if (_waterfalls.Count == 1)
                     {
-                        // Always remap to first waterfall when stream_id doesn't match.
-                        // For single-session server usage, there's only one active waterfall.
+                        // Only remap when exactly one waterfall exists (single panadapter).
+                        // With 2+ waterfalls, remapping to _waterfalls[0] would route the
+                        // second panadapter's data to the wrong waterfall object.
                         fall = _waterfalls[0];
                         if (_waterfallRemappedStreamId != packet.stream_id)
                         {
                             _waterfallRemappedStreamId = packet.stream_id;
-                            Console.WriteLine($"[FlexLib] WATERFALL STREAM_ID REMAP: " +
-                                $"packet uses 0x{packet.stream_id:X}, waterfall object is 0x{fall.StreamID:X}. " +
-                                $"Auto-remapping to accept data. (waterfalls count={_waterfalls.Count})");
                         }
                     }
                     else
                     {
-                        if (_waterfallDropCount++ <= 5 || _waterfallDropCount % 1000 == 0)
-                            Console.WriteLine($"[FlexLib] WATERFALL DROP #{_waterfallDropCount}: no waterfalls in list, stream_id=0x{packet.stream_id:X}");
+                        _waterfallDropCount++;
                         return; // No waterfalls at all
                     }
                 }
@@ -2440,7 +2496,9 @@ namespace Flex.Smoothlake.FlexLib
             fall.AddData(packet.tile, packet.header.packet_count);
         }
 
-        private int last_packet_count = LAST_PACKET_COUNT_UNINITIALIZED;
+        // Per-stream sequence tracking: VITA-49 packet_count is per-stream (4-bit, 0-15).
+        // Radios like the 6700 send meter packets from multiple streams, each with their own counter.
+        private readonly Dictionary<uint, int> _meterStreamLastPacketCount = new();
         private void ProcessMeterDataPacket(VitaMeterPacket packet)
         {
 
@@ -2459,9 +2517,14 @@ namespace Flex.Smoothlake.FlexLib
 
             _semNewMeterPacket.Set();
 
-            // lost packet diagnostics
+            // lost packet diagnostics — tracked per stream_id
             int packet_count = packet.header.packet_count;
+            uint stream_id = packet.stream_id;
             MeterPacketTotalCount++;
+
+            if (!_meterStreamLastPacketCount.TryGetValue(stream_id, out int last_packet_count))
+                last_packet_count = LAST_PACKET_COUNT_UNINITIALIZED;
+
             //normal case -- this is the next packet we are looking for, or it is the first one
             if (packet_count == (last_packet_count + 1) % 16 || last_packet_count == LAST_PACKET_COUNT_UNINITIALIZED)
             {
@@ -2469,11 +2532,11 @@ namespace Flex.Smoothlake.FlexLib
             }
             else
             {
-                Debug.WriteLine("Meter Packet: Expected " + ((last_packet_count + 1) % 16) + "  got " + packet_count);
+                Debug.WriteLine("Meter Packet: Expected " + ((last_packet_count + 1) % 16) + "  got " + packet_count + " (stream 0x" + stream_id.ToString("X") + ")");
                 MeterPacketErrorCount++;
             }
 
-            last_packet_count = packet_count;
+            _meterStreamLastPacketCount[stream_id] = packet_count;
 
 
             //for (int i = 0; i < packet.NumMeters; i++)
@@ -2489,7 +2552,7 @@ namespace Flex.Smoothlake.FlexLib
         {
             _meterPacketErrorCount = 0;
             _meterPacketTotalCount = 0;
-            last_packet_count = LAST_PACKET_COUNT_UNINITIALIZED;
+            _meterStreamLastPacketCount.Clear();
         }
 
         private void ProcessMeterDataPacket_ThreadFunction()
@@ -2528,6 +2591,7 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _opusStreamMissCount;
         private void ProcessOpusDataPacket(VitaOpusDataPacket packet)
         {
             RXRemoteAudioStream remoteAudioRX = FindRXRemoteAudioStreamByStreamID(packet.stream_id);
@@ -2536,6 +2600,21 @@ namespace Flex.Smoothlake.FlexLib
                 remoteAudioRX.AddRXData(packet);
                 return;
             }
+
+            // Opus packet arrived but no matching stream_id — route to any available
+            // RXRemoteAudioStream WITHOUT changing its StreamID. Changing StreamID is dangerous
+            // because a subsequent "stream <old_id> removed" from the radio would delete our stream.
+            lock (_rxRemoteAudioStreams)
+            {
+                if (_rxRemoteAudioStreams.Count > 0)
+                {
+                    remoteAudioRX = _rxRemoteAudioStreams[0];
+                    remoteAudioRX.AddRXData(packet);
+                    return;
+                }
+            }
+
+            _opusStreamMissCount++;
         }
 
         private void ProcessIFDataPacket(VitaIFDataPacket packet)
@@ -2741,6 +2820,71 @@ namespace Flex.Smoothlake.FlexLib
                     else
                         _aleComposite.ParseStatus(tokens[1].Substring("ale ".Length));
                     break;
+
+                case "ha_api":
+                    _haapi.ParseStatus(tokens[1].Substring("ha_api ".Length));
+                    break;
+
+                case "navtex":
+                    _navtex.ParseStatus(tokens[1].Substring("navtex ".Length));
+                    break;
+
+                case "filt_preset":
+                    ParseFilterPresetStatus(tokens[1].Substring("filt_preset ".Length));
+                    break;
+
+                case "license":
+                    FeatureLicense.ParseLicenseStatus(tokens[1].Substring("license ".Length));
+                    break;
+
+                case "display_marker":
+                    {
+                        // Format: display_marker group=IARU1 id=1 [removed | label=… start_freq=… …]
+                        if (words.Length < 3)
+                        {
+                            Debug.WriteLine($"ParseStatus: display_marker missing group/id ({s})");
+                            break;
+                        }
+                        string[] groupWords = words[1].Split('=');
+                        if (groupWords.Length != 2 || groupWords[0] != "group") break;
+                        string group = groupWords[1];
+
+                        string[] idWords = words[2].Split('=');
+                        if (idWords.Length != 2 || idWords[0] != "id") break;
+                        if (!uint.TryParse(idWords[1], out uint id)) break;
+
+                        bool addNew = false;
+                        DisplayMarker marker = FindDisplayMarkerByGroupAndId(group, id);
+                        if (marker == null)
+                        {
+                            if (s.Contains("removed")) break;
+                            marker = new DisplayMarker(this, group, id);
+                            addNew = true;
+                        }
+
+                        if (s.Contains("removed"))
+                        {
+                            RemoveDisplayMarker(marker);
+                        }
+                        else
+                        {
+                            int skipLength = "display_marker group=".Length + group.Length
+                                + " id=".Length + idWords[1].Length + 1;
+                            string update = tokens[1].Substring(skipLength);
+                            marker.StatusUpdate(update);
+                        }
+
+                        if (addNew) AddDisplayMarker(marker);
+                    }
+                    break;
+
+                // ALE multipoint/station-group are extensions on ALEComposite that the fork
+                // hasn't ported yet. Trace-and-ignore until ALEComposite gains the parsers.
+                case "ale_multipoint":
+                case "ale_station_group":
+                    Debug.WriteLine($"ParseStatus: route '{words[0]}' subscribed but ALEComposite extension not yet ported — ignoring ({tokens[1]})");
+                    break;
+
                 case "amplifier":
                     ParseAmplifierStatus(tokens[1].Substring("amplifier ".Length)); // remove the "amplifier "
                     break;
@@ -3098,12 +3242,6 @@ namespace Flex.Smoothlake.FlexLib
                         // Pass along key value pairs for everything after "stream <streamid> type=<type>"
                         string statusUpdateKeyValuePairs = tokens[1].Substring("stream ".Length + words[1].Length + " type=".Length + type.Length); // stream <stream_id>
 
-                        // Debug: Log ALL stream status messages - visible in terminal
-                        var streamMsg = $"[FlexLib] STREAM STATUS: type={type}, stream_id=0x{stream_id:X}, kvPairs={statusUpdateKeyValuePairs}";
-                        Debug.WriteLine(streamMsg);
-                        Console.WriteLine(streamMsg);
-                        Console.Error.WriteLine(streamMsg);
-
                         switch (type)
                         {
                             case "dax_rx":
@@ -3386,13 +3524,8 @@ namespace Flex.Smoothlake.FlexLib
 
         private void ParseRemoteAudioTXStatus(uint stream_id, string statusUpdateKeyValuePairs)
         {
-            Console.WriteLine("[FlexLib] === ParseRemoteAudioTXStatus ENTERED ===");
-            Console.Error.WriteLine("[FlexLib] === ParseRemoteAudioTXStatus ENTERED ===");
-
             var msg = $"[FlexLib] ParseRemoteAudioTXStatus: stream_id=0x{stream_id:X}, kvPairs={statusUpdateKeyValuePairs}";
             Debug.WriteLine(msg);
-            Console.WriteLine(msg);
-            Console.Error.WriteLine(msg);
             TXRemoteAudioLogCallback?.Invoke(msg);
 
             bool addNewRemoteAudioTX = false;
@@ -3636,6 +3769,17 @@ namespace Flex.Smoothlake.FlexLib
                                 RaisePropertyChanged("LineoutMute");
                             }
                             break;
+
+                        case "external_pa_allowed":
+                            {
+                                if (!byte.TryParse(value, out var temp))
+                                {
+                                    Debug.WriteLine("Radio::ParseRadioStatus - external_pa_allowed: Invalid value (" + kv + ")");
+                                    continue;
+                                }
+                                ExternalPaAllowed = Convert.ToBoolean(temp);
+                                break;
+                            }
 
                         case "nickname":
                             {
@@ -4131,6 +4275,26 @@ namespace Flex.Smoothlake.FlexLib
             return SendReplyCommand(GetNextSeqNum(), handler, s);
         }
 
+        public Task<string> SendCommandAsync(string message)
+        {
+            var tcs = new TaskCompletionSource<string>();
+
+            SendReplyCommand(CommandCompleted, message);
+
+            return tcs.Task;
+
+            void CommandCompleted(int sequence, uint responseValue, string info)
+            {
+                if (responseValue != 0)
+                {
+                    tcs.TrySetException(new SmartSdrCommandErrorException(info, responseValue));
+                    return;
+                }
+
+                tcs.TrySetResult(info);
+            }
+        }
+
         #endregion
 
         #region TNF Routines
@@ -4312,6 +4476,190 @@ namespace Flex.Smoothlake.FlexLib
             }
 
             SendCommand("tnf create freq=" + StringHelper.DoubleToString(freq, "f6"));
+        }
+
+        #endregion
+
+        #region DisplayMarker Routines
+
+        private List<DisplayMarker> _displayMarkers = new();
+        public readonly object DisplayMarkersLockObj = new();
+        public List<DisplayMarker> DisplayMarkers
+        {
+            get
+            {
+                lock (DisplayMarkersLockObj)
+                    return _displayMarkers;
+            }
+        }
+
+        private DisplayMarker FindDisplayMarkerByGroupAndId(string group, uint id)
+        {
+            lock (DisplayMarkersLockObj)
+                return _displayMarkers.FirstOrDefault(x =>
+                    string.Equals(x.Group, group, StringComparison.OrdinalIgnoreCase) && x.ID == id);
+        }
+
+        internal void AddDisplayMarker(DisplayMarker marker)
+        {
+            lock (DisplayMarkersLockObj)
+            {
+                if (_displayMarkers.Contains(marker)) return;
+                _displayMarkers.Add(marker);
+            }
+            OnDisplayMarkerAdded(marker);
+        }
+
+        internal void RemoveDisplayMarker(DisplayMarker marker)
+        {
+            lock (DisplayMarkersLockObj)
+            {
+                if (!_displayMarkers.Contains(marker)) return;
+                _displayMarkers.Remove(marker);
+            }
+            OnDisplayMarkerRemoved(marker);
+        }
+
+        public delegate void DisplayMarkerAddedEventHandler(DisplayMarker marker);
+        public event DisplayMarkerAddedEventHandler DisplayMarkerAdded;
+        private void OnDisplayMarkerAdded(DisplayMarker marker) => DisplayMarkerAdded?.Invoke(marker);
+
+        public delegate void DisplayMarkerRemovedEventHandler(DisplayMarker marker);
+        public event DisplayMarkerRemovedEventHandler DisplayMarkerRemoved;
+        private void OnDisplayMarkerRemoved(DisplayMarker marker) => DisplayMarkerRemoved?.Invoke(marker);
+
+        #endregion
+
+        #region Filter Preset Routines
+
+        public const int NUM_FILT_PRESETS = 6;
+
+        public object FilterPresets => null;
+
+        private Filter[] _filterPresetsSSB;
+        private Filter[] _filterPresetsAM;
+        private Filter[] _filterPresetsCW;
+        private Filter[] _filterPresetsDigital;
+        private Filter[] _filterPresetsRTTY;
+
+        private void InitFilterPresets()
+        {
+            _filterPresetsSSB = new Filter[NUM_FILT_PRESETS];
+            _filterPresetsAM = new Filter[NUM_FILT_PRESETS];
+            _filterPresetsCW = new Filter[NUM_FILT_PRESETS];
+            _filterPresetsDigital = new Filter[NUM_FILT_PRESETS];
+            _filterPresetsRTTY = new Filter[NUM_FILT_PRESETS];
+            for (int i = 0; i < NUM_FILT_PRESETS; i++)
+            {
+                _filterPresetsSSB[i] = new Filter("N/A", 0, 0);
+                _filterPresetsAM[i] = new Filter("N/A", 0, 0);
+                _filterPresetsCW[i] = new Filter("N/A", 0, 0);
+                _filterPresetsDigital[i] = new Filter("N/A", 0, 0);
+                _filterPresetsRTTY[i] = new Filter("N/A", 0, 0);
+            }
+        }
+
+        private void ParseFilterPresetStatus(string s)
+        {
+            // [ssb || am || cw || digital || rtty] [0..5] name=[4 char] low=[int] high=[int]
+            string[] words = s.Split(' ');
+            if (words.Length < 2) return;
+            string mode_group_str = words[0].ToLower();
+            if (!uint.TryParse(words[1], out uint preset_index))
+            {
+                Debug.WriteLine($"Radio::ParseFilterPresetStatus: Invalid index ({words[1]})");
+                return;
+            }
+            if (preset_index >= NUM_FILT_PRESETS)
+            {
+                Debug.WriteLine($"Radio::ParseFilterPresetStatus: Invalid preset value ({preset_index})");
+                return;
+            }
+
+            FilterPresetModeGroup mode_group;
+            try { mode_group = FilterPresetEnumHelpers.GetModeGroupFromString(mode_group_str); }
+            catch
+            {
+                Debug.WriteLine($"Radio::ParseFilterPresetStatus: Invalid mode group ({mode_group_str})");
+                return;
+            }
+
+            Filter filter = GetFilterPreset(mode_group, preset_index);
+            if (filter == null) return;
+
+            string name = filter.Name;
+            int low_hz = filter.LowCut;
+            int high_hz = filter.HighCut;
+            for (int i = 2; i < words.Length; i++)
+            {
+                string[] tokens = words[i].Split('=');
+                if (tokens.Length != 2)
+                {
+                    Debug.WriteLine($"Radio::ParseFilterPresetStatus: Invalid k/v ({words[i]})");
+                    continue;
+                }
+                switch (tokens[0].ToLower())
+                {
+                    case "name": name = tokens[1]; break;
+                    case "low":
+                        if (!int.TryParse(tokens[1], out low_hz))
+                            Debug.WriteLine($"Radio::ParseFilterPresetStatus: Invalid Low ({tokens[1]})");
+                        break;
+                    case "high":
+                        if (!int.TryParse(tokens[1], out high_hz))
+                            Debug.WriteLine($"Radio::ParseFilterPresetStatus: Invalid High ({tokens[1]})");
+                        break;
+                    default:
+                        Debug.WriteLine($"Radio::ParseFilterPresetStatus: Unrecognized key {tokens[0]}");
+                        break;
+                }
+                UpdateFilterPreset(mode_group, preset_index, name, low_hz, high_hz);
+            }
+        }
+
+        public Filter GetFilterPreset(FilterPresetModeGroup mode_group, uint preset_index)
+        {
+            if (preset_index >= NUM_FILT_PRESETS) return null;
+            return mode_group switch
+            {
+                FilterPresetModeGroup.SSB => _filterPresetsSSB[preset_index],
+                FilterPresetModeGroup.AM => _filterPresetsAM[preset_index],
+                FilterPresetModeGroup.CW => _filterPresetsCW[preset_index],
+                FilterPresetModeGroup.Digital => _filterPresetsDigital[preset_index],
+                FilterPresetModeGroup.RTTY => _filterPresetsRTTY[preset_index],
+                _ => null,
+            };
+        }
+
+        public Filter[] GetFilterPresetGroup(FilterPresetModeGroup mode_group) =>
+            mode_group switch
+            {
+                FilterPresetModeGroup.SSB => _filterPresetsSSB,
+                FilterPresetModeGroup.AM => _filterPresetsAM,
+                FilterPresetModeGroup.CW => _filterPresetsCW,
+                FilterPresetModeGroup.Digital => _filterPresetsDigital,
+                FilterPresetModeGroup.RTTY => _filterPresetsRTTY,
+                _ => null,
+            };
+
+        public void UpdateFilterPreset(FilterPresetModeGroup mode, uint preset_index, string name, int low, int high)
+        {
+            GetFilterPreset(mode, preset_index)?.Update(name, low, high);
+            RaisePropertyChanged(nameof(FilterPresets));
+        }
+
+        public void SaveFilterPreset(FilterPresetModeGroup mode, uint preset_index, string name, int low, int high)
+        {
+            string mode_group_str = FilterPresetEnumHelpers.GetModeGroupString(mode);
+            string cmd = $"filt_preset save group={mode_group_str} num={preset_index} low={low} high={high} ";
+            if (!string.IsNullOrEmpty(name)) cmd += $"name={name}";
+            SendCommand(cmd);
+        }
+
+        public void ResetFilterPreset(FilterPresetModeGroup mode)
+        {
+            string mode_group_str = FilterPresetEnumHelpers.GetModeGroupString(mode);
+            SendCommand($"filt_preset reset group={mode_group_str}");
         }
 
         #endregion
@@ -5580,7 +5928,7 @@ namespace Flex.Smoothlake.FlexLib
             return null;
         }
 
-        internal DAXRXAudioStream FindDAXRXAudioStreamByDAXChannel(int daxChannel)
+        public DAXRXAudioStream FindDAXRXAudioStreamByDAXChannel(int daxChannel)
         {
             lock (_daxRXAudioStream)
             {
@@ -5774,6 +6122,33 @@ namespace Flex.Smoothlake.FlexLib
                 _rxRemoteAudioStreams.Add(newRemoteAudioRX);
         }
 
+        public RXRemoteAudioStream FindRXRemoteAudioStreamForClient()
+        {
+            lock (_rxRemoteAudioStreams)
+            {
+                foreach (RXRemoteAudioStream remoteAudioRX in _rxRemoteAudioStreams)
+                {
+                    if (remoteAudioRX.ClientHandle == this.ClientHandle)
+                        return remoteAudioRX;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Returns the first registered RXRemoteAudioStream regardless of client handle.
+        ///     Used as fallback when client_handle hasn't been assigned yet (e.g., Aurora firmware delay).
+        /// </summary>
+        public RXRemoteAudioStream FindAnyRXRemoteAudioStream()
+        {
+            lock (_rxRemoteAudioStreams)
+            {
+                if (_rxRemoteAudioStreams.Count > 0)
+                    return _rxRemoteAudioStreams[0];
+            }
+            return null;
+        }
+
         internal RXRemoteAudioStream FindRXRemoteAudioStreamByStreamID(uint stream_id)
         {
             lock (_rxRemoteAudioStreams)
@@ -5806,18 +6181,21 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        /// <summary>
+        /// Set DAX reduced bandwidth mode. When enabled (true), DAX sends ~12.8kHz (half rate).
+        /// When disabled (false), DAX sends full 24kHz matching Remote Audio RX format.
+        /// </summary>
+        public void SetReducedDaxBandwidth(bool reduced)
+        {
+            SendCommand("client set send_reduced_bw_dax=" + (reduced ? "1" : "0"));
+        }
+
         public void RequestRemoteAudioTXStream()
         {
             // Request TX Remote Audio stream - per API docs, compression parameter is optional for TX
             // The radio auto-selects opus compression for TX remote audio
-            // Use reply handler to see what the radio responds with
-            Console.WriteLine("[FlexLib] === RequestRemoteAudioTXStream ENTERED ===");
-            Console.Error.WriteLine("[FlexLib] === RequestRemoteAudioTXStream ENTERED ===");
-
             var msg = "[FlexLib] RequestRemoteAudioTXStream: Sending 'stream create type=remote_audio_tx'";
             Debug.WriteLine(msg);
-            Console.WriteLine(msg);
-            Console.Error.WriteLine(msg);
 
             try
             {
@@ -5825,20 +6203,10 @@ namespace Flex.Smoothlake.FlexLib
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"[FlexLib] TXRemoteAudioLogCallback threw: {ex.Message}");
+                Debug.WriteLine($"[FlexLib] TXRemoteAudioLogCallback threw: {ex.Message}");
             }
 
-            try
-            {
-                SendReplyCommand(new ReplyHandler(TXRemoteAudioStreamReplyHandler), "stream create type=remote_audio_tx");
-                Console.WriteLine("[FlexLib] SendReplyCommand completed successfully");
-                Console.Error.WriteLine("[FlexLib] SendReplyCommand completed successfully");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"[FlexLib] SendReplyCommand threw: {ex.Message}");
-                throw;
-            }
+            SendReplyCommand(new ReplyHandler(TXRemoteAudioStreamReplyHandler), "stream create type=remote_audio_tx");
         }
 
         /// <summary>
@@ -5848,14 +6216,8 @@ namespace Flex.Smoothlake.FlexLib
 
         private void TXRemoteAudioStreamReplyHandler(int seq, uint resp_val, string reply)
         {
-            Console.WriteLine("[FlexLib] === TXRemoteAudioStreamReplyHandler ENTERED ===");
-            Console.Error.WriteLine("[FlexLib] === TXRemoteAudioStreamReplyHandler ENTERED ===");
-
-            // Log the response for debugging
             var msg = $"[FlexLib] TXRemoteAudioStream Reply: seq={seq}, resp=0x{resp_val:X}, reply={reply}";
             Debug.WriteLine(msg);
-            Console.WriteLine(msg);
-            Console.Error.WriteLine(msg);
             TXRemoteAudioLogCallback?.Invoke(msg);
 
             // Common response codes:
@@ -6326,6 +6688,27 @@ namespace Flex.Smoothlake.FlexLib
                             RaisePropertyChanged("StaticNetmask");
                         }
                         break;
+
+                    case "iaru_region":
+                        {
+                            if (int.TryParse(value, out int iaruRegion) && iaruRegion >= 1 && iaruRegion <= 3)
+                                IARURegion = iaruRegion;
+                        }
+                        break;
+
+                    case "diversity_allowed":
+                        {
+                            if (!byte.TryParse(value, out byte temp))
+                            {
+                                Debug.WriteLine($"Radio::ParseNetParamsStatus - '{kv}' is not a valid key/value pair");
+                                continue;
+                            }
+                            // Status-driven override of the model-derived default. Once the radio
+                            // reports its own capability we trust that exclusively.
+                            _diversityAllowedOverride = Convert.ToBoolean(temp);
+                            RaisePropertyChanged(nameof(DiversityIsAllowed));
+                        }
+                        break;
                 }
             }
         }
@@ -6347,6 +6730,20 @@ namespace Flex.Smoothlake.FlexLib
                 return _meters.FirstOrDefault(m => m.Name == s);
         }
 
+        /// <summary>
+        /// Snapshot of every meter the radio has reported. Useful for diagnostics
+        /// and for subscribing to meters whose name isn't covered by the typed
+        /// DataReady event dispatch table in AddMeter().
+        /// </summary>
+        public ImmutableList<Meter> Meters
+        {
+            get
+            {
+                lock (_meters)
+                    return _meters.ToImmutableList();
+            }
+        }
+
         public ImmutableList<Meter> FindMetersByAmplifier(Amplifier amp)
         {
             lock (_meters)
@@ -6361,6 +6758,13 @@ namespace Flex.Smoothlake.FlexLib
                     $"0x{x.SourceIndex:X8}" == tuner.Handle)).ToImmutableList();
         }
 
+        /// <summary>
+        /// Fired after a meter has been added to the radio's meter collection.
+        /// Use this to subscribe to meters whose names aren't covered by the
+        /// typed DataReady events above (PA efficiency, fan speed, etc.).
+        /// </summary>
+        public event EventHandler<Meter> MeterAdded;
+
         private void AddMeter(Meter m)
         {
             lock (_meters)
@@ -6368,11 +6772,6 @@ namespace Flex.Smoothlake.FlexLib
                 if (!_meters.Contains(m))
                 {
                     _meters.Add(m);
-                    // Diagnostic: Log when important meters are added
-                    if (m.Name == "MIC" || m.Name == "MICPEAK" || m.Name == "FWDPWR" || m.Name == "SWR")
-                    {
-                        Console.WriteLine($"[FlexLib] AddMeter: {m.Name} (Source={m.Source}, Index={m.SourceIndex})");
-                    }
                 }
             }
 
@@ -6394,6 +6793,8 @@ namespace Flex.Smoothlake.FlexLib
                 m.DataReady += new Meter.DataReadyEventHandler(HWAlc_DataReady);
             else if (m.Name == "+13.8A") // A: before the fuse
                 m.DataReady += new Meter.DataReadyEventHandler(Volts_DataReady);
+
+            MeterAdded?.Invoke(this, m);
         }
 
         private void RemoveMeter(Meter m)
@@ -6931,7 +7332,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_txreqRCAEnabled != value)
                 {
                     _txreqRCAEnabled = value;
-                    SendCommand("interlock rca_txreq_enable=" + Convert.ToByte(_txreqRCAEnabled));
+                    SendCommand("interlock rca_txreq_enable=" + (_txreqRCAEnabled ? "T" : "F"));
                     RaisePropertyChanged("TXReqRCAEnabled");
                 }
             }
@@ -6950,7 +7351,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_txreqACCEnabled != value)
                 {
                     _txreqACCEnabled = value;
-                    SendCommand("interlock acc_txreq_enable=" + Convert.ToByte(_txreqACCEnabled));
+                    SendCommand("interlock acc_txreq_enable=" + (_txreqACCEnabled ? "T" : "F"));
                     RaisePropertyChanged("TXReqACCEnabled");
                 }
             }
@@ -6971,7 +7372,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_txreqRCAPolarity != value)
                 {
                     _txreqRCAPolarity = value;
-                    SendCommand("interlock rca_txreq_polarity=" + Convert.ToByte(_txreqRCAPolarity));
+                    SendCommand("interlock rca_txreq_polarity=" + (_txreqRCAPolarity ? "T" : "F"));
                     RaisePropertyChanged("TXReqRCAPolarity");
                 }
             }
@@ -6992,7 +7393,7 @@ namespace Flex.Smoothlake.FlexLib
                 if (_txreqACCPolarity != value)
                 {
                     _txreqACCPolarity = value;
-                    SendCommand("interlock acc_txreq_polarity=" + Convert.ToByte(_txreqACCPolarity));
+                    SendCommand("interlock acc_txreq_polarity=" + (_txreqACCPolarity ? "T" : "F"));
                     RaisePropertyChanged("TXReqACCPolarity");
                 }
             }
@@ -7314,6 +7715,7 @@ namespace Flex.Smoothlake.FlexLib
                 case "XVTR_RX_ONLY": reason = InterlockReason.XVTR_RX_ONLY; break;
                 case "NO_TX_ASSIGNED": reason = InterlockReason.NO_TX_ASSIGNED; break;
                 case "AMP:TG": reason = InterlockReason.TGXL; break;
+                case "AMP:AG": reason = InterlockReason.AMP; break;
             }
 
             return reason;
@@ -7480,11 +7882,14 @@ namespace Flex.Smoothlake.FlexLib
                     case "reason":
                         {
                             InterlockReason reason = ParseInterlockReason(value);
-                            if (!string.IsNullOrEmpty(value) && reason == InterlockReason.None && !value.Contains("PG-XL"))
+                            if (!string.IsNullOrEmpty(value) && reason == InterlockReason.None && !value.Contains("PG-XL") && !value.StartsWith("AMP:"))
                             {
                                 Debug.WriteLine("ParseInterlockStatus: Error - Invalid reason (" + value + ")");
                                 continue;
                             }
+                            // Map any unknown AMP:* reasons to AMP
+                            if (reason == InterlockReason.None && value.StartsWith("AMP:"))
+                                reason = InterlockReason.AMP;
 
                             InterlockReason = reason;
                         }
@@ -10382,14 +10787,22 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        // Status-driven override populated from the radio's "diversity_allowed" net params key.
+        // null means "radio has not reported yet, fall back to the model-derived default."
+        private bool? _diversityAllowedOverride;
+
         /// <summary>
-        /// Returns true if Diversity is allowed on the radio model.
+        /// Returns true if Diversity is allowed on the radio. 4.2.18+ firmware reports
+        /// this directly via the <c>diversity_allowed</c> net params key; older firmware
+        /// is approximated from the model.
         /// </summary>
         public bool DiversityIsAllowed
         {
             get
             {
-                bool ret_val = false;
+                if (_diversityAllowedOverride.HasValue)
+                    return _diversityAllowedOverride.Value;
+
                 switch (_model)
                 {
                     case "FLEX-6600":
@@ -10398,11 +10811,9 @@ namespace Flex.Smoothlake.FlexLib
                     case "FLEX-6700R":
                     case "FLEX-8600":
                     case "FLEX-8600M":
-                        ret_val = true;
-                        break;
+                        return true;
                 }
-
-                return ret_val;
+                return false;
             }
         }
 
@@ -10565,7 +10976,29 @@ namespace Flex.Smoothlake.FlexLib
                             RaisePropertyChanged("ATUUsingMemory");
                             break;
                         }
+
+                    case "version":
+                        {
+                            ATUVersion = value;
+                            break;
+                        }
                 }
+            }
+        }
+
+        private string _atuVersion = string.Empty;
+        /// <summary>
+        /// Firmware version of the radio's internal ATU, reported via the ATU status block.
+        /// Empty string until the radio reports it.
+        /// </summary>
+        public string ATUVersion
+        {
+            get => _atuVersion;
+            internal set
+            {
+                if (_atuVersion == value) return;
+                _atuVersion = value ?? string.Empty;
+                RaisePropertyChanged(nameof(ATUVersion));
             }
         }
 
@@ -12476,6 +12909,39 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _iaruRegion;
+        /// <summary>
+        /// Gets the IARU region (1, 2, or 3) reported by the radio's net params status.
+        /// 0 means "not yet reported" — older firmware may never set this.
+        /// </summary>
+        public int IARURegion
+        {
+            get => _iaruRegion;
+            internal set
+            {
+                if (_iaruRegion == value) return;
+                _iaruRegion = value;
+                RaisePropertyChanged(nameof(IARURegion));
+            }
+        }
+
+        private bool _externalPaAllowed;
+        /// <summary>
+        /// True if the radio reports that it permits an external PA (gates SmartSignal /
+        /// APD external-feedback features). Set from the <c>external_pa_allowed</c>
+        /// status key. Older firmware may never report this; the default is false.
+        /// </summary>
+        public bool ExternalPaAllowed
+        {
+            get => _externalPaAllowed;
+            internal set
+            {
+                if (_externalPaAllowed == value) return;
+                _externalPaAllowed = value;
+                RaisePropertyChanged(nameof(ExternalPaAllowed));
+            }
+        }
+
         /// <summary>
         /// For internal use only.
         /// </summary>
@@ -14174,14 +14640,6 @@ namespace Flex.Smoothlake.FlexLib
             try
             {
                 _vitaPacketTotal++;
-                // Log VITA-49 packet type summary periodically for diagnostics
-                if (_vitaPacketTotal == 100 || _vitaPacketTotal == 500 || _vitaPacketTotal % 5000 == 0)
-                {
-                    Console.WriteLine($"[FlexLib] VITA-49 SUMMARY after {_vitaPacketTotal} packets: " +
-                        $"FFT={_vitaFFTPackets}, Waterfall={_vitaWaterfallPackets}, " +
-                        $"DAX={_vitaDAXPackets}, Meter={_vitaMeterPackets}, Opus={_vitaOpusPackets}, " +
-                        $"FFT_KB={_countFFT/1024}, WF_KB={_countWaterfall/1024}, DAX_KB={_countDAX/1024}");
-                }
 
                 switch (vita_preamble.header.pkt_type)
                 {
@@ -14321,10 +14779,26 @@ namespace Flex.Smoothlake.FlexLib
             Interlocked.Exchange(ref _cmdSequenceNumber, offset);
         }
 
+        private long _udpCallbackCount;
         private void UDPDataReceivedCallback(IPEndPoint ep, byte[] data, int bytes)
         {
+            var count = System.Threading.Interlocked.Increment(ref _udpCallbackCount);
+
             // if we aren't connected, we shouldn't build up a queue of unprocessed UDP data
-            if (!_connected) return;
+            if (!_connected)
+            {
+                if (count <= 5)
+                    Debug.WriteLine($"[FlexPilot-VITA] UDP callback #{count}: DROPPED (_connected=false), {bytes} bytes from {ep}");
+                return;
+            }
+
+            if (count <= 10 || count % 1000 == 0)
+            {
+                uint streamId = 0;
+                if (bytes >= 8)
+                    streamId = (uint)((data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7]);
+                Debug.WriteLine($"[FlexPilot-VITA] UDP callback #{count}: {bytes} bytes from {ep}, stream_id=0x{streamId:X8}, queueSize={UDPCallbackQueue.Count}");
+            }
 
             // Fire raw packet callback before internal processing — lets WAN proxy
             // forward packets to the tunnel with minimal latency.
@@ -14404,16 +14878,20 @@ namespace Flex.Smoothlake.FlexLib
                 IPAddress localBindIp = _commandCommunication.LocalIP;
                 if (localBindIp != null)
                 {
-                    Debug.WriteLine($"StartUDP: LOCAL connection, binding VitaSocket to TCP source IP {localBindIp}");
+                    Debug.WriteLine($"[FlexPilot-VITA] StartUDP: LOCAL connection, binding VitaSocket to TCP source IP {localBindIp}, radio IP={IP}");
                     VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, localBindIp, IP, 4991);
+                    Debug.WriteLine($"[FlexPilot-VITA] StartUDP: VitaSocket bound on port {VitaSock?.Port ?? -1}, localBindIp={localBindIp}");
                 }
                 else
                 {
                     // Fallback to old behavior if LocalIP is not available
-                    Debug.WriteLine("StartUDP: LOCAL connection, but LocalIP not available, using default binding");
+                    Debug.WriteLine("[FlexPilot-VITA] StartUDP: LOCAL connection, but LocalIP not available, using default binding");
                     VitaSock = new VitaSocket(4991, UDPDataReceivedCallback, IP, 4991);
+                    Debug.WriteLine($"[FlexPilot-VITA] StartUDP: VitaSocket bound on port {VitaSock?.Port ?? -1}");
                 }
             }
+
+            Debug.WriteLine($"[FlexPilot-VITA] StartUDP: IsWan={IsWan}, UDPPort={UDPPort}, _connected={_connected}");
 
             Thread t = new Thread(new ThreadStart(ProcessUDPPackets_ThreadFunction));
             t.Name = "UDP Packet Processing Thread";

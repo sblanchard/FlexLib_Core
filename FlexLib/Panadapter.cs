@@ -321,6 +321,38 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        /// <summary>
+        ///     Force-sends xpixels and ypixels to the radio using the "double-tap" technique.
+        ///     6000-series firmware ignores display dimension updates when the new value equals
+        ///     the current value. To work around this, we first send a dummy size, wait briefly,
+        ///     then send the real size. This ensures the radio always processes our request.
+        ///     See: https://github.com/akrpic77/station-manager-app/pull/39
+        /// </summary>
+        public void ForceSendDimensions(int width, int height)
+        {
+            if (_buf == null || _buf.Length < width)
+                _buf = new ushort[width];
+
+            // Send dimensions directly. Don't set _width/_height before the command —
+            // AddData's auto-adjust (line 775) will sync _width to actual VITA packet
+            // total_bins_in_frame, which ensures DataReady fires correctly regardless
+            // of whether the radio accepts our xpixels value.
+            _width = width;
+            _height = height;
+            _radio.SendCommand("display pan set 0x" + _streamID.ToString("X") + " xpixels=" + _width + " ypixels=" + _height);
+        }
+
+        /// <summary>
+        ///     Send dummy dimensions (100x100) to force the radio to see a value change,
+        ///     then send real dimensions. 6000-series firmware ignores updates when
+        ///     new value equals current value. Must be called with async delay between.
+        ///     See: https://github.com/akrpic77/station-manager-app/pull/39
+        /// </summary>
+        public void SendDummyDimensions()
+        {
+            _radio.SendCommand("display pan set 0x" + _streamID.ToString("X") + " xpixels=100 ypixels=100");
+        }
+
         private string _band;
         public string Band
         {
@@ -681,6 +713,24 @@ namespace Flex.Smoothlake.FlexLib
             }
         }
 
+        private int _noiseFloorPosition;
+        /// <summary>
+        /// Gets or sets the noise floor position for the panadapter.
+        /// </summary>
+        public int NoiseFloorPosition
+        {
+            get { return _noiseFloorPosition; }
+        }
+
+        private bool _noiseFloorPositionEnable;
+        /// <summary>
+        /// Gets or sets whether noise floor position is enabled.
+        /// </summary>
+        public bool NoiseFloorPositionEnable
+        {
+            get { return _noiseFloorPositionEnable; }
+        }
+
         private int _fftPacketTotalCount = 0;
         public int FFTPacketTotalCount
         {
@@ -727,18 +777,70 @@ namespace Flex.Smoothlake.FlexLib
         private uint _current_frame = 0;
         private int _frame_bins = 0;
         private const int ERROR_THRESHOLD = 10;
+        private const int WIDTH_CHANGE_THRESHOLD = 4; // consecutive packets before accepting new width
         private bool _expecting_new_frame = true;
+        private int _consecutiveFrameErrors = 0;
+        private int _lastIncompleteFrameBins = 0;
+
+        // Hysteresis for total_bins_in_frame auto-adjust: prevents oscillation when
+        // SmartSDR and FlexPilot send competing xpixels commands in companion mode.
+        private int _pendingWidth;
+        private int _pendingWidthCount;
 
         // Adds data to the FFT buffer from the radio -- not intended to be used by the client
-        internal void AddData(ushort[] data, uint start_bin, uint frame, int packet_count)
+        private int _addDataCallCount;
+        private int _addDataDropCount;
+        private int _addDataFrameReadyCount;
+
+        internal void AddData(ushort[] data, uint start_bin, uint frame, int packet_count, uint total_bins_in_frame = 0)
         {
-            //Debug.WriteLine("AddData: start_bin:"+start_bin+" frame:"+frame);
-            // check boundaries
-           // Debug.WriteLine("Frame: {0}", frame);
+            // Diagnostic: log every 500 calls to track packet flow
+            if (++_addDataCallCount % 500 == 1)
+            {
+                Debug.WriteLine($"PAN DIAG: AddData call#{_addDataCallCount} drops={_addDataDropCount} frames={_addDataFrameReadyCount} width={_width} bufLen={_buf?.Length ?? -1} start_bin={start_bin} dataLen={data.Length} total_bins={total_bins_in_frame} frame={frame} frame_bins={_frame_bins} expecting={_expecting_new_frame}");
+            }
+
+            // Auto-adjust width from actual VITA-49 packet data with hysteresis.
+            // Require WIDTH_CHANGE_THRESHOLD consecutive packets with the same new value
+            // before switching. This prevents oscillation when competing xpixels commands
+            // cause the radio to alternate total_bins_in_frame values (e.g., companion mode).
+            if (total_bins_in_frame > 0 && (int)total_bins_in_frame != _width)
+            {
+                if ((int)total_bins_in_frame == _pendingWidth)
+                {
+                    _pendingWidthCount++;
+                }
+                else
+                {
+                    _pendingWidth = (int)total_bins_in_frame;
+                    _pendingWidthCount = 1;
+                }
+
+                if (_pendingWidthCount >= WIDTH_CHANGE_THRESHOLD)
+                {
+                    Debug.WriteLine("Panadapter: Adjusting width from " + _width + " to " + total_bins_in_frame + " (from VITA packet, " + _pendingWidthCount + " consecutive)");
+                    _width = (int)total_bins_in_frame;
+                    _buf = new ushort[_width];
+                    _frame_bins = 0;
+                    _expecting_new_frame = true;
+                    _consecutiveFrameErrors = 0;
+                    _pendingWidthCount = 0;
+                }
+
+                // While width is mismatched and pending, drop the packet to avoid buffer issues
+                if ((int)total_bins_in_frame != _width)
+                    return;
+            }
+            else
+            {
+                // Width matches — reset pending state
+                _pendingWidthCount = 0;
+            }
 
             if (start_bin + data.Length > _width)
             {
-                Debug.WriteLine("PAN Packet too large for current width");
+                _addDataDropCount++;
+                Debug.WriteLine($"PAN DROP: too large start_bin={start_bin} dataLen={data.Length} width={_width} total_bins={total_bins_in_frame}");
                 _expecting_new_frame = true;
                 return;
             }
@@ -746,6 +848,8 @@ namespace Flex.Smoothlake.FlexLib
             // prevent array out of bounds exception for Array.Copy
             if (_buf == null || data.Length > _buf.Length)
             {
+                _addDataDropCount++;
+                Debug.WriteLine($"PAN DROP: buf null/small buf={_buf?.Length ?? -1} dataLen={data.Length} width={_width}");
                 // allocate a new buffer for future data
                 _buf = new ushort[_width];
 
@@ -762,7 +866,7 @@ namespace Flex.Smoothlake.FlexLib
                 return;
             }
 
-            // Frame is changing 
+            // Frame is changing
             if (frame != _current_frame)
             {
                 // New frame so add to count
@@ -770,9 +874,37 @@ namespace Flex.Smoothlake.FlexLib
 
                 // Is this expected ? (we just finished a previous frame)
                 if (!_expecting_new_frame)
-                { 
+                {
                     Debug.WriteLine("Expected frame {0} but got frame {1}", _current_frame, frame);
                     FFTPacketErrorCount++;
+
+                    // Track consecutive frame errors for width auto-detection fallback.
+                    // If total_bins_in_frame is 0 (old firmware) and x_pixels status
+                    // didn't arrive, we detect the actual frame size from the consistent
+                    // incomplete bin count across multiple frames.
+                    if (_frame_bins > 0 && _frame_bins == _lastIncompleteFrameBins)
+                    {
+                        _consecutiveFrameErrors++;
+                    }
+                    else
+                    {
+                        _consecutiveFrameErrors = 1;
+                    }
+                    _lastIncompleteFrameBins = _frame_bins;
+
+                    // After enough consecutive frames with the same incomplete bin count,
+                    // that IS the actual frame width from the radio
+                    if (_consecutiveFrameErrors >= ERROR_THRESHOLD && _lastIncompleteFrameBins > 0 && _lastIncompleteFrameBins != _width)
+                    {
+                        Debug.WriteLine("Panadapter: Auto-detected width=" + _lastIncompleteFrameBins + " from " + _consecutiveFrameErrors + " consecutive frames (was " + _width + ")");
+                        _width = _lastIncompleteFrameBins;
+                        _buf = new ushort[_width];
+                        _consecutiveFrameErrors = 0;
+                    }
+                }
+                else
+                {
+                    _consecutiveFrameErrors = 0;
                 }
 
                 // Set new frame and clear the bins
@@ -781,7 +913,14 @@ namespace Flex.Smoothlake.FlexLib
                 _expecting_new_frame = false;
             }
 
-            // copy data into the buffer
+            // copy data into the buffer (re-check bounds after potential _buf reallocation above)
+            if (_buf == null || start_bin + data.Length > _buf.Length)
+            {
+                _addDataDropCount++;
+                Debug.WriteLine($"PAN DROP: pre-copy bounds start_bin={start_bin} dataLen={data.Length} bufLen={_buf?.Length ?? -1}");
+                _expecting_new_frame = true;
+                return;
+            }
             Array.Copy(data, 0, _buf, start_bin, data.Length);
 
             // update bin data
@@ -790,6 +929,7 @@ namespace Flex.Smoothlake.FlexLib
             // if the buffer is full, fire the event
             if (_frame_bins == _width)
             {
+                _addDataFrameReadyCount++;
                 try
                 {
                     OnDataReady(this, _buf);
@@ -800,6 +940,7 @@ namespace Flex.Smoothlake.FlexLib
                 }
 
                 _expecting_new_frame = true;
+                _consecutiveFrameErrors = 0;
 
                 // allocate a new buffer for future data
                 _buf = new ushort[_width];
@@ -1227,13 +1368,16 @@ namespace Flex.Smoothlake.FlexLib
                                 continue;
                             }
 
-                            if ((int)temp != _width)
+                            // Do NOT override _width from x_pixels status when VITA packets
+                            // provide total_bins_in_frame (the ground truth). On the 6700,
+                            // the radio may report x_pixels=1004 (its internal/previous value)
+                            // while actually sending 100-bin VITA packets, causing _width to
+                            // oscillate between 1004 and 100 on every packet — allocating
+                            // buffers and resetting frame assembly each time.
+                            // The VITA auto-adjust in AddData is authoritative.
+                            if ((int)temp != _width && temp > 0)
                             {
-                                //Size = new Size((int)temp, _size.Height);
-                                //if (buf.Length < _size.Width)
-                                //  buf = new ushort[(int)_size.Width];
-
-                                //RaisePropertyChanged("Size");
+                                Debug.WriteLine("Panadapter: Radio reports x_pixels=" + temp + " (internal width=" + _width + ", ignoring — VITA auto-adjust is authoritative)");
                             }
                         }
                         break;
@@ -1256,13 +1400,48 @@ namespace Flex.Smoothlake.FlexLib
                                 continue;
                             }
 
-                            if ((int)temp != _height)
+                            if ((int)temp != _height && temp > 0)
                             {
-                                //Size = new Size(_size.Width, (int)temp);
-                                //if (buf.Length < _size.Width)
-                                //  buf = new ushort[(int)_size.Width];
-                                // RaisePropertyChanged("Size");
+                                Debug.WriteLine("Panadapter: Radio reports y_pixels=" + temp + ", adjusting internal height from " + _height);
+                                _height = (int)temp;
+                                RaisePropertyChanged("Height");
                             }
+                        }
+                        break;
+
+                    case "noise_floor_position":
+                        {
+                            int temp;
+                            bool b = int.TryParse(value, out temp);
+                            if (!b)
+                            {
+                                Debug.WriteLine("Panadapter::StatusUpdate: Invalid value (" + kv + ")");
+                                continue;
+                            }
+
+                            if (_noiseFloorPosition == temp)
+                                continue;
+
+                            _noiseFloorPosition = temp;
+                            RaisePropertyChanged("NoiseFloorPosition");
+                        }
+                        break;
+
+                    case "noise_floor_position_enable":
+                        {
+                            uint temp;
+                            bool b = uint.TryParse(value, out temp);
+                            if (!b || temp > 1)
+                            {
+                                Debug.WriteLine("Panadapter::StatusUpdate: Invalid value (" + kv + ")");
+                                continue;
+                            }
+
+                            if (_noiseFloorPositionEnable == Convert.ToBoolean(temp))
+                                continue;
+
+                            _noiseFloorPositionEnable = Convert.ToBoolean(temp);
+                            RaisePropertyChanged("NoiseFloorPositionEnable");
                         }
                         break;
 

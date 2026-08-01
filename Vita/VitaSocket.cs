@@ -31,6 +31,9 @@ namespace Vita
             get { return port; }
         }
 
+        private long _packetCount;
+        public long PacketCount => System.Threading.Interlocked.Read(ref _packetCount);
+
         //private IPAddress ip;
         public IPAddress IP
         {
@@ -199,6 +202,10 @@ namespace Vita
                 EndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
                 int num_bytes = socket.EndReceiveFrom(ar, ref remoteEndPoint);
                 byte[] buf = (byte[])ar.AsyncState;
+
+                long count = System.Threading.Interlocked.Increment(ref _packetCount);
+                if (count == 1)
+                    Debug.WriteLine($"VitaSocket: FIRST UDP packet received! {num_bytes} bytes from {remoteEndPoint}");
 
                 if (callback != null)
                     callback((IPEndPoint)remoteEndPoint, buf, num_bytes);
